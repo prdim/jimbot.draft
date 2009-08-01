@@ -33,7 +33,7 @@ import ru.jimbot.util.Log;
 /**
  *
  * @author Prolubnikov Dmitry
- */;
+ */
 public class ChatProps implements AbstractProps {
 	public static HashMap<String,ChatProps> props = new HashMap<String,ChatProps>();
     public String PROPS_FILE = "";

@@ -40,7 +40,7 @@ import ru.jimbot.util.MainProps;
 /**
  *
  * @author Prolubnikov Dmitry
- */;
+ */
 public class AnekCommandProc extends AbstractCommandProcessor {
     public AnekServer srv;
     public ConcurrentHashMap <String,StateUin> uq;
