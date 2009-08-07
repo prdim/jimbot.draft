@@ -21,6 +21,7 @@ package ru.jimbot.modules;
 import ru.jimbot.modules.chat.Users;
 import ru.jimbot.protocol.IcqProtocol;
 import ru.jimbot.protocol.ProtocolListener;
+import ru.jimbot.protocol.AbstractProtocol;
 
 
 /**
@@ -29,10 +30,10 @@ import ru.jimbot.protocol.ProtocolListener;
  */
 public class MsgReceiver implements ProtocolListener {
     MsgInQueue iq;
-    IcqProtocol iprot;
+    AbstractProtocol iprot;
     
     /** Creates a new instance of MsgReciver */
-    public MsgReceiver(MsgInQueue q, IcqProtocol ip) {
+    public MsgReceiver(MsgInQueue q, AbstractProtocol ip) {
         iq=q;
         iprot = ip;
         ip.addListener(this);

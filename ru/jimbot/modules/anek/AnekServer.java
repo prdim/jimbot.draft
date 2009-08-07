@@ -25,6 +25,7 @@ import ru.jimbot.modules.MsgInQueue;
 import ru.jimbot.modules.UINmanager;
 import ru.jimbot.modules.WorkScript;
 import ru.jimbot.protocol.IcqProtocol;
+import ru.jimbot.protocol.AbstractProtocol;
 import ru.jimbot.util.MainProps;
 
 /**
@@ -61,7 +62,7 @@ public class AnekServer extends AbstractServer{
      public void start(){
          con.uins.start();
          for(int i=0;i<con.uins.count();i++){
-             inq.addReceiver((IcqProtocol)con.uins.proc.get(i));
+             inq.addReceiver((AbstractProtocol)con.uins.proc.get(i));
          }
          inq.start();
          // Удалить из запуска инициализацию базы. Она должна проходить по мере необходимости.
@@ -96,7 +97,7 @@ public class AnekServer extends AbstractServer{
     	 return inq.size();
      }
      
-     public IcqProtocol getIcqProcess(int baseUin) {
+     public AbstractProtocol getProtocol(int baseUin) {
     	 return con.uins.proc.get(baseUin);
      }
 }

@@ -74,8 +74,7 @@ import ru.jimbot.util.MainProps;
  * @author Prolubnikov Dmitry
  *
  */
-class IcqProtocol extends AbstractProtocol
-						 implements MessagingListener, StatusListener, XStatusListener, 
+class IcqProtocol implements AbstractProtocol, MessagingListener, StatusListener, XStatusListener,
 						 ContactListListener, MetaInfoListener, Observer {
 	private OscarConnection con = null;
 	private AbstractProps props;
