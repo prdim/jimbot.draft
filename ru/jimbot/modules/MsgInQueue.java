@@ -26,6 +26,7 @@ import ru.jimbot.modules.chat.Users;
 //import ru.jimbot.protocol.IcqProtocol;
 import ru.jimbot.util.Log;
 import ru.jimbot.protocol.AbstractProtocol;
+import ru.jimbot.core.Protocol;
 
 /**
  * Очередь входящих сообщений
@@ -69,37 +70,28 @@ public class MsgInQueue implements Runnable {
 			return false;
     	}
     }
-    
-//    private synchronized void addMsgCount(){
-//    	msgCountAll++;
-//    	long c = System.currentTimeMillis();
-//    	if((c-msgTime[0])>60000)
-//    		msgCount[0] = msgCountAll-msgCount[0];
-//    	if((c-msgTime[1])>300000)
-//    		msgCount[1] = msgCountAll-msgCount[1];
-//    	if((c-msgTime[2])>3600000)
-//    		msgCount[2] = msgCountAll-msgCount[2];
-//    	if((c-msgTime[3])>86400000)
-//    		msgCount[3] = msgCountAll-msgCount[3];
-//    }
-    
-//    public synchronized int getMsgCount(int i){
-//    	if(i>3) return msgCountAll;
-//    	return msgCount[i];
-//    }
-    
+
+    /**
+     * Запуск процесса
+     */
     public void start(){
         th = new Thread(this,"msg_in");
         th.setPriority(Thread.NORM_PRIORITY);
         th.start();
     }
-    
+
+    /**
+     * Остановка процесса
+     */
     public synchronized void stop() {
         th = null;
         receivers = new Vector<MsgReceiver>();
         notify();
     }
-    
+
+    /**
+     * Обработка сообщения в очереди
+     */
     private void parseMsg(){
         try{
             if(q.size()==0) return;
@@ -136,7 +128,7 @@ public class MsgInQueue implements Runnable {
         receivers.add(new MsgReceiver(this,ip));
     }
     
-    public void addMsg(AbstractProtocol proc, String sn, String msg, boolean isOffline){
+    public void addMsg(Protocol proc, String sn, String msg, boolean isOffline){
         if(isOffline && ignoreOffline) {
             Log.info("OFFLINE: " + sn + " - " + msg);
             return;
@@ -153,7 +145,7 @@ public class MsgInQueue implements Runnable {
         	
     }
     
-    public void addStatus(AbstractProtocol proc, String sn, String st){
+    public void addStatus(Protocol proc, String sn, String st){
 //        Log.info("ADD status in queue");
         MsgQueueElement m = new MsgQueueElement(sn, st, proc);
         m.type = MsgQueueElement.TYPE_STATUS;
