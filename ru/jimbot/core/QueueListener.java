@@ -19,15 +19,9 @@
 package ru.jimbot.core;
 
 /**
- * Интерфейс для слушателя событий протокола IM
- *
+ * Интерфейс слушателя очереди сообщений. Как входящей, так и исходящей.
  * @author Prolubnikov Dmitry
  */
-public interface ProtocolListener {
-    public void onTextMessage(Message m);
-    public void onStatusMessage(Message m);
-    public void onError(Message m);
-    public void logOn();
-    public void logOff();
-    public void onOtherMessage(Message m);
+public interface QueueListener {
+    public void onMessage(Message m);
 }

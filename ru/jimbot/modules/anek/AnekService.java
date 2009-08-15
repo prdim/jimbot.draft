@@ -20,6 +20,7 @@ package ru.jimbot.modules.anek;
 
 import ru.jimbot.core.Service;
 import ru.jimbot.core.Protocol;
+import ru.jimbot.core.DefaultService;
 import ru.jimbot.modules.AbstractProps;
 import ru.jimbot.modules.MsgInQueue;
 import ru.jimbot.modules.MsgOutQueue;
@@ -32,12 +33,13 @@ import java.util.HashMap;
  * 
  * @author Prolubnikov Dmitry
  */
-public class AnekService implements Service {
+public class AnekService extends DefaultService {
     private String name = ""; // Имя сервиса
     private HashMap<String, Protocol> prots = new HashMap<String, Protocol>(); // Ссылки на протоколы
     private MsgInQueue inq = new MsgInQueue(new AnekCommandProc());
     private MsgOutQueue outq = new MsgOutQueue();
     private AnekCommandProc cmd = new AnekCommandProc();
+
     public AnekService(String name) {
         this.name = name;
     }

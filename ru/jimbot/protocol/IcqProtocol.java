@@ -294,7 +294,7 @@ class IcqProtocol implements AbstractProtocol, MessagingListener, StatusListener
 	 * ошибка авторизации
 	 */
 	public void onAuthorizationFailed(LoginErrorEvent arg0) {
-		Log.error("Authorization Failed! You UIN or Password is not valid");
+        Log.error(arg0.getErrorMessage());
 //		System.out.println("Authorization Failed! You UIN or Password is not valid");
 		
 	}

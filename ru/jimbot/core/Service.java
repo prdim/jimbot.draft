@@ -62,4 +62,5 @@ public interface Service {
      * @return
      */
     public DBAdaptor getDB();
+    
 }

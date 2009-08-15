@@ -19,15 +19,13 @@
 package ru.jimbot.core;
 
 /**
- * Интерфейс для слушателя событий протокола IM
- *
+ * Интерфейс слушателя команд для управления IM протоколом
  * @author Prolubnikov Dmitry
  */
-public interface ProtocolListener {
-    public void onTextMessage(Message m);
-    public void onStatusMessage(Message m);
-    public void onError(Message m);
+public interface CommandProtocolListener {
+    public void setChangeStatus(int id, String text);
+    public void setChangeXStatus(int id, String text);
+    public void sendMessage(String in, String out, String text);
     public void logOn();
     public void logOff();
-    public void onOtherMessage(Message m);
 }
