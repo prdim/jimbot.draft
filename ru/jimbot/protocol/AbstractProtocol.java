@@ -18,8 +18,6 @@
 
 package ru.jimbot.protocol;
 
-import ru.jimbot.modules.MsgOutQueue;
-
 /**
  * Интерфейс к реализации протокола передачи данных
  *

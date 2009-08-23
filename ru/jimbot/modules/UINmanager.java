@@ -21,6 +21,7 @@ package ru.jimbot.modules;
 import java.util.Vector;
 
 import ru.jimbot.protocol.IcqProtocol;
+import ru.jimbot.core.AbstractProps;
 
 /**
  *

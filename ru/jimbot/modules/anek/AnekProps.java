@@ -24,7 +24,7 @@ import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Properties;
 
-import ru.jimbot.modules.AbstractProps;
+import ru.jimbot.core.AbstractProps;
 import ru.jimbot.table.UserPreference;
 import ru.jimbot.util.Log;
 

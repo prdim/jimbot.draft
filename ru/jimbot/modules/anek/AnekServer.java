@@ -19,12 +19,11 @@
 package ru.jimbot.modules.anek;
 
 import ru.jimbot.db.DBAdaptor;
-import ru.jimbot.modules.AbstractProps;
+import ru.jimbot.core.AbstractProps;
 import ru.jimbot.modules.AbstractServer;
-import ru.jimbot.modules.MsgInQueue;
+import ru.jimbot.core.MsgInQueue;
 import ru.jimbot.modules.UINmanager;
 import ru.jimbot.modules.WorkScript;
-import ru.jimbot.protocol.IcqProtocol;
 import ru.jimbot.protocol.AbstractProtocol;
 import ru.jimbot.util.MainProps;
 

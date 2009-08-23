@@ -18,6 +18,8 @@
 
 package ru.jimbot.modules.anek;
 
+import ru.jimbot.core.Service;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -36,9 +38,10 @@ public class AnekWork {
     private Vector<Integer> adsKey; //= new Vector<Integer>();
     private String serviceName = "";
     private String host, name, user, pass;
+    private Service srv;
     
     /** Creates a new instance of AnekWork */
-    public AnekWork(String name) {
+    public AnekWork(String name, Service srv) {
     	serviceName = name;
     	host = AnekProps.getInstance(name).getStringProperty("db.host");
     	this.name = AnekProps.getInstance(name).getStringProperty("db.dbname");
@@ -48,7 +51,7 @@ public class AnekWork {
     
     public void initDB() {
         try{
-            db = new DBAneks();
+            db = new DBAneks(srv);
             db.openConnection(host, name, user, pass);
             maxAnek=count();
             readAdsKey();

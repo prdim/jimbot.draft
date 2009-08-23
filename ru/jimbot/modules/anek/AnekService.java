@@ -18,13 +18,9 @@
 
 package ru.jimbot.modules.anek;
 
-import ru.jimbot.core.Service;
-import ru.jimbot.core.Protocol;
-import ru.jimbot.core.DefaultService;
-import ru.jimbot.modules.AbstractProps;
-import ru.jimbot.modules.MsgInQueue;
-import ru.jimbot.modules.MsgOutQueue;
+import ru.jimbot.core.*;
 import ru.jimbot.db.DBAdaptor;
+import ru.jimbot.util.Log;
 
 import java.util.HashMap;
 
@@ -33,29 +29,40 @@ import java.util.HashMap;
  * 
  * @author Prolubnikov Dmitry
  */
-public class AnekService extends DefaultService {
+public class AnekService extends DefaultService implements DbStatusListener {
     private String name = ""; // Имя сервиса
     private HashMap<String, Protocol> prots = new HashMap<String, Protocol>(); // Ссылки на протоколы
-    private MsgInQueue inq = new MsgInQueue(new AnekCommandProc());
-    private MsgOutQueue outq = new MsgOutQueue();
-    private AnekCommandProc cmd = new AnekCommandProc();
+    private MsgInQueue inq;
+    private MsgOutQueue outq;
+    private AnekProps props;
+    private DBAneks db;
+    private AnekWork aw;
+//    private AnekCommandProc cmd = new AnekCommandProc();
 
     public AnekService(String name) {
         this.name = name;
+        aw = new AnekWork(name, this);
     }
 
     /**
      * Запуск сервиса
      */
     public void start() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        inq = new MsgInQueue(this);
+        props = AnekProps.getInstance(name);
+        // TODO ...
+        aw.initDB();
+        db = aw.db;
     }
 
     /**
      * Остановка сервиса
      */
     public void stop() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        inq.stop();
+        inq = null;
+        aw.closeDB();
+        // TODO ...
     }
 
     /**
@@ -65,7 +72,7 @@ public class AnekService extends DefaultService {
      * @return
      */
     public Protocol getProtocol(String screenName) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return prots.get(screenName);
     }
 
     /**
@@ -74,7 +81,7 @@ public class AnekService extends DefaultService {
      * @return
      */
     public String getName() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return name;
     }
 
     /**
@@ -83,7 +90,7 @@ public class AnekService extends DefaultService {
      * @return
      */
     public AbstractProps getProps() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return props;
     }
 
     /**
@@ -92,6 +99,23 @@ public class AnekService extends DefaultService {
      * @return
      */
     public DBAdaptor getDB() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return db;
+    }
+
+    /**
+     * Соединение с базой произошло, можно запускать УИНы
+     * @param db - ссылка на базу
+     */
+    public void onConnect(DBAdaptor db) {
+        // TODO подключение номеров
+    }
+
+    /**
+     * При подключении к базе произошла ошибка
+     * @param e
+     */
+    public void onError(String e) {
+        Log.error("Ошибка соединения с базой данных. Отключаю сервис " + name);
+        stop();
     }
 }

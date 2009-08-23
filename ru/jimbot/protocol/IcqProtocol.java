@@ -63,8 +63,9 @@ import ru.caffeineim.protocols.icq.setting.enumerations.PostBackgroundEnum;
 import ru.caffeineim.protocols.icq.setting.enumerations.StatusModeEnum;
 import ru.caffeineim.protocols.icq.setting.enumerations.XStatusModeEnum;
 import ru.caffeineim.protocols.icq.tool.OscarInterface;
-import ru.jimbot.modules.AbstractProps;
-import ru.jimbot.modules.MsgOutQueue;
+import ru.jimbot.core.AbstractProps;
+import ru.jimbot.core.MsgOutQueue;
+import ru.jimbot.core.Protocol;
 import ru.jimbot.modules.chat.Users;
 import ru.jimbot.util.Log;
 import ru.jimbot.util.MainProps;
@@ -74,7 +75,7 @@ import ru.jimbot.util.MainProps;
  * @author Prolubnikov Dmitry
  *
  */
-class IcqProtocol implements AbstractProtocol, MessagingListener, StatusListener, XStatusListener,
+class IcqProtocol implements Protocol, MessagingListener, StatusListener, XStatusListener,
 						 ContactListListener, MetaInfoListener, Observer {
 	private OscarConnection con = null;
 	private AbstractProps props;
@@ -85,7 +86,7 @@ class IcqProtocol implements AbstractProtocol, MessagingListener, StatusListener
 		server = MainProps.getServer();
 		port = MainProps.getPort();
 		
-		mq = new MsgOutQueue(this, props.getIntProperty("bot.pauseOut"), 
+		mq = new MsgOutQueue(this, props.getIntProperty("bot.pauseOut"),
                 props.getIntProperty("bot.pauseRestart"), 
                 props.getIntProperty("bot.msgOutLimit"));
 //        mq.start();
@@ -105,13 +106,43 @@ class IcqProtocol implements AbstractProtocol, MessagingListener, StatusListener
 
 	}
 
-	@Override
+    /**
+     * Установить параметры соединения
+     *
+     * @param server
+     * @param port
+     * @param screenName
+     * @param pass
+     */
+    public void setConnectData(String server, int port, String screenName, String pass) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    /**
+     * Возвращает УИН
+     *
+     * @return
+     */
+    public String getScreenName() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
 	public void addContactList(String sn) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
+    /**
+     * Добавить слушатель
+     *
+     * @param p
+     */
+    public void addListener(ProtocolListener p) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
 	public void connect() {
 		mq.start();
 		con = new OscarConnection(server, port, screenName, password);

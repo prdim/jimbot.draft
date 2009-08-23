@@ -20,7 +20,9 @@ package ru.jimbot.core;
 
 import ru.jimbot.core.Protocol;
 import ru.jimbot.db.DBAdaptor;
-import ru.jimbot.modules.AbstractProps;
+import ru.jimbot.core.AbstractProps;
+
+import java.util.List;
 
 /**
  * Интерфейс для всех сервисов бота
@@ -62,5 +64,28 @@ public interface Service {
      * @return
      */
     public DBAdaptor getDB();
-    
+
+    /**
+     * Засунуть объект в хранилище данных
+     * @param key
+     * @param o
+     */
+    public void addDataStorage(String key, Object o);
+
+    /**
+     * Получить объект из хранилища
+     * @param key
+     * @return
+     */
+    public Object getDataStorage(String key);
+
+    public List<DbStatusListener> getDbStatusListeners();
+    void addDbStatusListener(DbStatusListener e);
+    boolean removeDbStatusListener(DbStatusListener e);
+    public void addProtocolListener(ProtocolListener e);
+    public boolean removeProtocolListener(ProtocolListener e);
+    public List<ProtocolListener> getProtocolListeners();
+    public void addParserListener(QueueListener e);
+    public boolean removeParserListener(QueueListener e);
+    public List<QueueListener> getParserListeners();
 }

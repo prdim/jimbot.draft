@@ -27,6 +27,9 @@ import java.sql.Timestamp;
 import java.util.Vector;
 
 import ru.jimbot.util.Log;
+import ru.jimbot.core.Service;
+import ru.jimbot.core.DbStatusListener;
+import ru.jimbot.core.DefaultService;
 
 /**
  * Базовый клас для работы с базой данных.
@@ -37,9 +40,26 @@ public abstract class DBAdaptor {
     private Connection db;
     private String host, name, user, pass;
     private long lastConnect = 0;
+    private Service srv;
     
     /** Creates a new instance of DBAdaptor */
-    public DBAdaptor() throws Exception {
+    public DBAdaptor(Service s) {
+        srv = s;
+    }
+
+    /**
+     * Сообщении об успешном подключении к БД
+     */
+    public void notifyConnect() {
+        for(DbStatusListener i:srv.getDbStatusListeners()){
+            i.onConnect(this);
+        }
+    }
+
+    public void notifyError(String e) {
+        for(DbStatusListener i:srv.getDbStatusListeners()){
+            i.onError(e);
+        }
     }
     
     public static Timestamp getTS(Timestamp t){
@@ -98,6 +118,7 @@ public abstract class DBAdaptor {
                 f=false;
                 lastConnect = System.currentTimeMillis();
                 Log.talk("Ошибка подключения к базе данных!!!");
+                notifyError(ex.getMessage());
             }
         return f;
     }    

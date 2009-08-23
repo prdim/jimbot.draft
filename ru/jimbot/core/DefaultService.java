@@ -15,7 +15,29 @@ public abstract class DefaultService implements Service {
     private List<QueueListener> inQueueList = new Vector<QueueListener>();
     private List<QueueListener> outQueueList = new Vector<QueueListener>();
     private List<QueueListener> parserList = new Vector<QueueListener>();
+    private List<DbStatusListener> dbList = new Vector<DbStatusListener>();
     private HashMap<String, Protocol> protocols = new HashMap<String, Protocol>();
+    private HashMap<String, Object> storage = new HashMap<String, Object>();
+
+    /**
+     * Засунуть объект в хранилище данных
+     *
+     * @param key
+     * @param o
+     */
+    public void addDataStorage(String key, Object o) {
+        storage.put(key, o);
+    }
+
+    /**
+     * Получить объект из хранилища
+     *
+     * @param key
+     * @return
+     */
+    public Object getDataStorage(String key) {
+        return storage.get(key);
+    }
 
     /**
      * Добавляет новый уин и объект протокола
@@ -158,5 +180,17 @@ public abstract class DefaultService implements Service {
      */
     public List<QueueListener> getParserListeners() {
         return parserList;
+    }
+
+    public void addDbStatusListener(DbStatusListener e) {
+        dbList.add(e);
+    }
+
+    public boolean removeDbStatusListener(DbStatusListener e) {
+        return dbList.remove(e);
+    }
+
+    public List<DbStatusListener> getDbStatusListeners() {
+        return dbList;
     }
 }

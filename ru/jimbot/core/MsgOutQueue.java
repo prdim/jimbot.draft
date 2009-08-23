@@ -16,9 +16,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package ru.jimbot.modules;
+package ru.jimbot.core;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.HashMap;
 
 import ru.jimbot.protocol.IcqProtocol;
 import ru.jimbot.util.Log;
@@ -31,18 +32,20 @@ import ru.jimbot.util.MainProps;
 public class MsgOutQueue implements Runnable {
     int counter=0;
     int maxCounter=144; //Период переподключения
-    public IcqProtocol proc;
+    public Protocol proc;
     private Thread th;
     int sleepAmount = 5000;
-    ConcurrentLinkedQueue <Msg> q;
+//    ConcurrentLinkedQueue <Msg> q;
     private long stopCon = 0; // Время разрыва связи
     private int PAUSE_OUT, PAUSE_RESTART, MSG_OUT_LIMIT;
     private int p_restart = 30000;
     private int lostMsg = 0; // Счетчик пропущенных сообщений
     private long t = 0; // Время последнего отправленного сообщения
+
+    private HashMap<String, ConcurrentLinkedQueue<Message>> q = new HashMap<String, ConcurrentLinkedQueue<Message>>();
     
     /** Creates a new instance of MsgOutQueue */
-    public MsgOutQueue(IcqProtocol pr, int pout, int prestart, int mlimit) {
+    public MsgOutQueue(Protocol pr, int pout, int prestart, int mlimit) {
         PAUSE_OUT = pout; PAUSE_RESTART=prestart; MSG_OUT_LIMIT=mlimit;
         sleepAmount = PAUSE_OUT; //Props.getIntProperty("bot.pauseOut");
         proc = pr;
@@ -66,7 +69,7 @@ public class MsgOutQueue implements Runnable {
    
     public void add(String uin, String msg, int type) {
         if(q.size()>MSG_OUT_LIMIT /*Props.getIntProperty("bot.msgOutLimit")*/) {
-        	Log.info("OUT MESSAGE IS LOST: " + proc.baseUin + ">>" + uin + " : " + msg);
+        	Log.info("OUT MESSAGE IS LOST: " + proc.getScreenName() + ">>" + uin + " : " + msg);
         	lostMsg++;
         	return;
         }

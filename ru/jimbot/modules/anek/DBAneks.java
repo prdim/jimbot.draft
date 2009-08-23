@@ -25,6 +25,7 @@ import java.util.Vector;
 
 import ru.jimbot.db.DBAdaptor;
 import ru.jimbot.db.DBObject;
+import ru.jimbot.core.Service;
 
 /**
  *
@@ -33,10 +34,8 @@ import ru.jimbot.db.DBObject;
 public class DBAneks extends DBAdaptor{
     
     /** Creates a new instance of DBAneks */
-    public DBAneks() throws Exception  {
-//        this.DRIVER = "org.hsqldb.jdbcDriver";
-//        this.URL = "jdbc:hsqldb:file:";
-//        this.dbName = "db/aneks";
+    public DBAneks(Service s) {
+        super(s);
     }
     
     public void createDB(){

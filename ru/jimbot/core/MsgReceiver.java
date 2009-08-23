@@ -16,12 +16,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package ru.jimbot.modules;
+package ru.jimbot.core;
 
 import ru.jimbot.modules.chat.Users;
-import ru.jimbot.protocol.IcqProtocol;
 import ru.jimbot.protocol.ProtocolListener;
 import ru.jimbot.protocol.AbstractProtocol;
+import ru.jimbot.core.MsgInQueue;
 
 
 /**

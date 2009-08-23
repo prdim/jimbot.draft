@@ -18,14 +18,41 @@
 
 package ru.jimbot.core;
 
+import java.util.List;
+
 /**
  * Интерфейс команды бота.
  *
  * @author Prolubnikov Dmitry
  */
 public interface Command {
+
+    /**
+     * Инициализация. Вызывается при создании экземпляра класса.
+     */
+    public void init();
+
     /**
      * Выполнение команды
+     * @return - результат выполнения для потока исходящих сообщений
      */
-    public void execute();
+    public String execute();
+
+    /**
+     * Если результат выполнения - пуская строка, получить результат здесь. Сообщение для конкретного получателя.
+     * @return - сообщение
+     */
+    public Message getOutMessage();
+
+    /**
+     * Указание сообщения, над которым должна быть выполнена данная команда.
+     * @param m
+     */
+    public void setInMessage(Message m);
+
+    /**
+     * Список ключевых слов, по которым можно вызвать эту команду
+     * @return
+     */
+    public List getCommandPatterns();
 }

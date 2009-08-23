@@ -22,6 +22,8 @@ import java.util.Vector;
 
 import ru.jimbot.db.DBAdaptor;
 import ru.jimbot.protocol.IcqProtocol;
+import ru.jimbot.core.AbstractProps;
+
 /**
  *
  * @author Prolubnikov Dmitry
