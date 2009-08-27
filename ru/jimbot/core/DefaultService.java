@@ -1,8 +1,6 @@
 package ru.jimbot.core;
 
-import java.util.List;
-import java.util.Vector;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Определение общих для всех сервисов функций - добавление и удаление слушателей
@@ -10,8 +8,8 @@ import java.util.HashMap;
  * @author Prolubnikov Dmitry
  */
 public abstract class DefaultService implements Service {
+    private HashMap<String, CommandProtocolListener> comProtList = new HashMap<String, CommandProtocolListener>();
     private List<ProtocolListener> protList = new Vector<ProtocolListener>();
-    private List<CommandProtocolListener> comProtList = new Vector<CommandProtocolListener>();
     private List<QueueListener> inQueueList = new Vector<QueueListener>();
     private List<QueueListener> outQueueList = new Vector<QueueListener>();
     private List<QueueListener> parserList = new Vector<QueueListener>();
@@ -58,6 +56,15 @@ public abstract class DefaultService implements Service {
     }
 
     /**
+     * Список УИНов ко всем установленным протоколам
+     *
+     * @return
+     */
+    public Set<String> getAllProtocols() {
+        return protocols.keySet();
+    }
+
+    /**
      * Добавляем новый слушатель протокола IM
      * @param e
      */
@@ -71,7 +78,7 @@ public abstract class DefaultService implements Service {
      * @return
      */
     public boolean removeProtocolListener(ProtocolListener e){
-        return protList.remove(e);
+        protList.remove(e);
     }
 
     /**
@@ -87,7 +94,7 @@ public abstract class DefaultService implements Service {
      * @param e
      */
     public void addCommandProtocolListener(CommandProtocolListener e) {
-        comProtList.add(e);
+        comProtList.put(e.getScreenName(), e);
     }
 
     /**
@@ -95,16 +102,25 @@ public abstract class DefaultService implements Service {
      * @param e
      * @return
      */
-    public boolean removeCommandProtocolListener(CommandProtocolListener e) {
-        return comProtList.remove(e);
+    public void removeCommandProtocolListener(CommandProtocolListener e) {
+        comProtList.remove(e.getScreenName());
     }
 
     /**
      * Возвращает список слушателей
      * @return
      */
-    public List<CommandProtocolListener> getCommandProtocolListeners() {
-        return comProtList;
+    public Collection<CommandProtocolListener> getCommandProtocolListeners() {
+        return comProtList.values();
+    }
+
+    /**
+     * Возвращает слушателя с нужным УИНом
+     * @param screenName
+     * @return
+     */
+    public CommandProtocolListener getCommandProtocolListener(String screenName) {
+        return comProtList.get(screenName);
     }
 
     /**

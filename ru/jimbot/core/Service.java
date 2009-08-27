@@ -23,6 +23,8 @@ import ru.jimbot.db.DBAdaptor;
 import ru.jimbot.core.AbstractProps;
 
 import java.util.List;
+import java.util.Set;
+import java.util.Collection;
 
 /**
  * Интерфейс для всех сервисов бота
@@ -46,6 +48,12 @@ public interface Service {
      * @return
      */
     public Protocol getProtocol(String screenName);
+
+    /**
+     * Список УИНов ко всем установленным протоколам
+     * @return
+     */
+    public Set<String> getAllProtocols();
 
     /**
      * Возвращает имя данного сервиса
@@ -88,4 +96,8 @@ public interface Service {
     public void addParserListener(QueueListener e);
     public boolean removeParserListener(QueueListener e);
     public List<QueueListener> getParserListeners();
+    public void addCommandProtocolListener(CommandProtocolListener e);
+    public void removeCommandProtocolListener(CommandProtocolListener e);
+    public Collection<CommandProtocolListener> getCommandProtocolListeners();
+    public CommandProtocolListener getCommandProtocolListener(String screenName);
 }

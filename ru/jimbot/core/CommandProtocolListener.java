@@ -28,4 +28,5 @@ public interface CommandProtocolListener {
     public void sendMessage(String in, String out, String text);
     public void logOn();
     public void logOff();
+    public String getScreenName();
 }

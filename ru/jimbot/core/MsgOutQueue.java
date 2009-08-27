@@ -42,149 +42,183 @@ public class MsgOutQueue implements Runnable {
     private int lostMsg = 0; // Счетчик пропущенных сообщений
     private long t = 0; // Время последнего отправленного сообщения
 
-    private HashMap<String, ConcurrentLinkedQueue<Message>> q = new HashMap<String, ConcurrentLinkedQueue<Message>>();
+    private HashMap<String, ConcurrentLinkedQueue<Message>> q;
+    private Service srv;
     
-    /** Creates a new instance of MsgOutQueue */
-    public MsgOutQueue(Protocol pr, int pout, int prestart, int mlimit) {
-        PAUSE_OUT = pout; PAUSE_RESTART=prestart; MSG_OUT_LIMIT=mlimit;
-        sleepAmount = PAUSE_OUT; //Props.getIntProperty("bot.pauseOut");
-        proc = pr;
-        q = new ConcurrentLinkedQueue<Msg>();
-    }    
-    
+    public MsgOutQueue(Service s) {
+        srv = s;
+        q = new HashMap<String, ConcurrentLinkedQueue<Message>>();
+        for(String i:srv.getAllProtocols()) {
+            q.put(i, new ConcurrentLinkedQueue<Message>());
+        }
+    }
+
+    private void notify(Message m) {
+        srv.getCommandProtocolListener(m.getSnOut()).sendMessage(m.getSnIn(), m.getSnOut(), m.getMsg());
+//        for(CommandProtocolListener i:srv.getCommandProtocolListeners()){
+//            i.sendMessage(m.getSnIn(), m.getSnOut(), m.getMsg());
+//        }
+    }
+//    public MsgOutQueue(Protocol pr, int pout, int prestart, int mlimit) {
+//        PAUSE_OUT = pout; PAUSE_RESTART=prestart; MSG_OUT_LIMIT=mlimit;
+//        sleepAmount = PAUSE_OUT; //Props.getIntProperty("bot.pauseOut");
+//        proc = pr;
+//        q = new ConcurrentLinkedQueue<Msg>();
+//    }
+
     public void start(){
         th = new Thread(this,"msg_out");
         th.setPriority(Thread.NORM_PRIORITY);
         th.start();
     }
-    
+
     public synchronized void stop() {
         th = null;
         notify();
     }
-     
-    public void add(String uin, String msg){
-    	add(uin, msg, 0);
-    }
-   
-    public void add(String uin, String msg, int type) {
-        if(q.size()>MSG_OUT_LIMIT /*Props.getIntProperty("bot.msgOutLimit")*/) {
-        	Log.info("OUT MESSAGE IS LOST: " + proc.getScreenName() + ">>" + uin + " : " + msg);
-        	lostMsg++;
-        	return;
-        }
-        if(type!=Msg.TYPE_MSG){
-        	q.add(new Msg(uin, msg, type));
-        	return;
-        }
-        int maxLenMsg = proc.getProps().getIntProperty("chat.MaxOutMsgSize");
-        int maxCountMsg = proc.getProps().getIntProperty("chat.MaxOutMsgCount");
-        int m = (msg.length()/maxLenMsg+1) > maxCountMsg ? maxCountMsg : (msg.length()/maxLenMsg+1);
-        for(int i=0; i<m; i++){
-        	if(((i+1)*maxLenMsg-1)<msg.length()){
-        		if(i==(maxCountMsg-1))
-        			q.add(new Msg(uin,msg.substring(i*maxLenMsg, (i+1)*maxLenMsg) + 
-        					"\nЧасть сообщения была обрезана...", 0));
-        		else
-        			q.add(new Msg(uin,msg.substring(i*maxLenMsg, (i+1)*maxLenMsg), 0));
-        	} else
-        		q.add(new Msg(uin,msg.substring(i*maxLenMsg, msg.length()), 0));
-        }
-   }
-    
-    public int getLostMsgCount(){
-    	return lostMsg;
-    }
-    
+
     private void send() {
-    	if((System.currentTimeMillis()-t)<=sleepAmount) return;
-    	t = System.currentTimeMillis();
-    	try {
-            Msg m;
-            if(q.size()<=0) return;
-            m = q.poll();
-            switch (m.type){
-            case Msg.TYPE_INFO:
-            	proc.userInfoRequest(m.uin, m.text);
-            	break;
-            case Msg.TYPE_AUTH:
-            	proc.authRequest(m.uin, m.text);
-            	break;
-            case Msg.TYPE_MSG:
-            default:
-            	proc.sendMsg(m.uin,m.text);
-            }   		
-    	} catch (Exception ex){
-    		Log.info("ERROR send msg over " + proc.baseUin);
-    		stopCon=System.currentTimeMillis();
-    		ex.printStackTrace();
-    	}
-    }
-    
-    public int size() {
-        return q.size();
-    }
-    
-    public void testOnline(){
-        try{
-            if(proc==null) {
-                stopCon=0;
-                return;
+        // TODO Синхронизация
+        if((System.currentTimeMillis()-t)<=sleepAmount) return;
+        t = System.currentTimeMillis();
+        try {
+            for(String s:q.keySet()) {
+                if(!q.get(s).isEmpty()){
+                    notify(q.get(s).poll());
+                }
             }
-            //TODO Как сообщить сюда о запуске процесса?
-//            if(!proc.con.srv.isRun) {
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void add(Message m) {
+        // TODO Синхронизация
+        
+    }
+
+//    public void add(String uin, String msg){
+//    	add(uin, msg, 0);
+//    }
+//
+//    public void add(String uin, String msg, int type) {
+//        if(q.size()>MSG_OUT_LIMIT /*Props.getIntProperty("bot.msgOutLimit")*/) {
+//        	Log.info("OUT MESSAGE IS LOST: " + proc.getScreenName() + ">>" + uin + " : " + msg);
+//        	lostMsg++;
+//        	return;
+//        }
+//        if(type!=Msg.TYPE_MSG){
+//        	q.add(new Msg(uin, msg, type));
+//        	return;
+//        }
+//        int maxLenMsg = proc.getProps().getIntProperty("chat.MaxOutMsgSize");
+//        int maxCountMsg = proc.getProps().getIntProperty("chat.MaxOutMsgCount");
+//        int m = (msg.length()/maxLenMsg+1) > maxCountMsg ? maxCountMsg : (msg.length()/maxLenMsg+1);
+//        for(int i=0; i<m; i++){
+//        	if(((i+1)*maxLenMsg-1)<msg.length()){
+//        		if(i==(maxCountMsg-1))
+//        			q.add(new Msg(uin,msg.substring(i*maxLenMsg, (i+1)*maxLenMsg) +
+//        					"\nЧасть сообщения была обрезана...", 0));
+//        		else
+//        			q.add(new Msg(uin,msg.substring(i*maxLenMsg, (i+1)*maxLenMsg), 0));
+//        	} else
+//        		q.add(new Msg(uin,msg.substring(i*maxLenMsg, msg.length()), 0));
+//        }
+//   }
+//
+//    public int getLostMsgCount(){
+//    	return lostMsg;
+//    }
+//
+//    private void send() {
+//    	if((System.currentTimeMillis()-t)<=sleepAmount) return;
+//    	t = System.currentTimeMillis();
+//    	try {
+//            Msg m;
+//            if(q.size()<=0) return;
+//            m = q.poll();
+//            switch (m.type){
+//            case Msg.TYPE_INFO:
+//            	proc.userInfoRequest(m.uin, m.text);
+//            	break;
+//            case Msg.TYPE_AUTH:
+//            	proc.authRequest(m.uin, m.text);
+//            	break;
+//            case Msg.TYPE_MSG:
+//            default:
+//            	proc.sendMsg(m.uin,m.text);
+//            }
+//    	} catch (Exception ex){
+//    		Log.info("ERROR send msg over " + proc.baseUin);
+//    		stopCon=System.currentTimeMillis();
+//    		ex.printStackTrace();
+//    	}
+//    }
+//
+//    public int size() {
+//        return q.size();
+//    }
+//
+//    public void testOnline(){
+//        try{
+//            if(proc==null) {
 //                stopCon=0;
 //                return;
 //            }
-            if(proc.isOnLine()) {
-                stopCon=0;
-                counter=0;
-                p_restart=30000;
-                return;
-            }
-            if(stopCon>0) {
-                if((System.currentTimeMillis()-stopCon)>=p_restart/*PAUSE_RESTART/*Props.getIntProperty("bot.pauseRestart")*/){
-                    MainProps.nextServer();
-                    proc.server = MainProps.getServer();
-                    proc.port = MainProps.getPort();
-                    Log.info("Попытка нового подключения... " + proc.server + ":" + proc.port);
-                    proc.reConnect();
-                    stopCon=System.currentTimeMillis();
-                    p_restart = (p_restart>=PAUSE_RESTART) ? PAUSE_RESTART : p_restart*2;
-                }
-            } else {
-                Log.info("Ожидание подключения...");
-                stopCon = System.currentTimeMillis();
-            }
-        } catch (Exception ex){
-            ex.printStackTrace();
-        }
-    }
-    
+//            //TODO Как сообщить сюда о запуске процесса?
+////            if(!proc.con.srv.isRun) {
+////                stopCon=0;
+////                return;
+////            }
+//            if(proc.isOnLine()) {
+//                stopCon=0;
+//                counter=0;
+//                p_restart=30000;
+//                return;
+//            }
+//            if(stopCon>0) {
+//                if((System.currentTimeMillis()-stopCon)>=p_restart/*PAUSE_RESTART/*Props.getIntProperty("bot.pauseRestart")*/){
+//                    MainProps.nextServer();
+//                    proc.server = MainProps.getServer();
+//                    proc.port = MainProps.getPort();
+//                    Log.info("Попытка нового подключения... " + proc.server + ":" + proc.port);
+//                    proc.reConnect();
+//                    stopCon=System.currentTimeMillis();
+//                    p_restart = (p_restart>=PAUSE_RESTART) ? PAUSE_RESTART : p_restart*2;
+//                }
+//            } else {
+//                Log.info("Ожидание подключения...");
+//                stopCon = System.currentTimeMillis();
+//            }
+//        } catch (Exception ex){
+//            ex.printStackTrace();
+//        }
+//    }
+
     public void run() {
-        Thread me = Thread.currentThread(); 
+        Thread me = Thread.currentThread();
         while (th == me) {
-        		testOnline();
+//        		testOnline();
         		send();
             try {
                 Thread.sleep(100);
-            } catch (InterruptedException e) { break; }             
+            } catch (InterruptedException e) { break; }
         }
         th=null;
     }
-    
-    public class Msg{
-    	public static final int TYPE_MSG = 0; // Обычное сообщение
-    	public static final int TYPE_INFO = 1; // запрос инфы
-    	public static final int TYPE_AUTH = 2; // запрос авторизации
-        public String uin="";
-        public String text = "";
-        public int type = 0;
-        
-        public Msg(String _uin, String msg, int _type) {
-            uin = _uin;
-            text = msg;
-            type = _type;
-        }
-     }
+
+//    public class Msg{
+//    	public static final int TYPE_MSG = 0; // Обычное сообщение
+//    	public static final int TYPE_INFO = 1; // запрос инфы
+//    	public static final int TYPE_AUTH = 2; // запрос авторизации
+//        public String uin="";
+//        public String text = "";
+//        public int type = 0;
+//
+//        public Msg(String _uin, String msg, int _type) {
+//            uin = _uin;
+//            text = msg;
+//            type = _type;
+//        }
+//     }
 }
