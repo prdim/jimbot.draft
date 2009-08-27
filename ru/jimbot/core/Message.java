@@ -42,6 +42,17 @@ public class Message {
         this.type = type;
     }
 
+    /**
+     * Возвращает копию себя, но с другим текстом
+     * (Использую для разбивки сообщения на части или создания серии сообщений одному адресату)
+     * @return
+     */
+    public Message getCopy(String s) {
+        Message m = new Message(snIn, snOut, s, type);
+        m.setTime(time);
+        return m;
+    }
+
     public String getSnIn() {
         return snIn;
     }

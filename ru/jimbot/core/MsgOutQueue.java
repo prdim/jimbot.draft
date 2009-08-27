@@ -26,6 +26,7 @@ import ru.jimbot.util.Log;
 import ru.jimbot.util.MainProps;
 
 /**
+ * Очередь исходящих сообщений
  *
  * @author Prolubnikov Dmitry
  */
@@ -48,11 +49,16 @@ public class MsgOutQueue implements Runnable {
     public MsgOutQueue(Service s) {
         srv = s;
         q = new HashMap<String, ConcurrentLinkedQueue<Message>>();
+        // TODO Определить пораметры и константы
         for(String i:srv.getAllProtocols()) {
             q.put(i, new ConcurrentLinkedQueue<Message>());
         }
     }
 
+    /**
+     * Извещаем слушателей команд для отправки сообщений
+     * @param m
+     */
     private void notify(Message m) {
         srv.getCommandProtocolListener(m.getSnOut()).sendMessage(m.getSnIn(), m.getSnOut(), m.getMsg());
 //        for(CommandProtocolListener i:srv.getCommandProtocolListeners()){
@@ -66,18 +72,27 @@ public class MsgOutQueue implements Runnable {
 //        q = new ConcurrentLinkedQueue<Msg>();
 //    }
 
+    /**
+     * Запуск потока
+     */
     public void start(){
         th = new Thread(this,"msg_out");
         th.setPriority(Thread.NORM_PRIORITY);
         th.start();
     }
 
+    /**
+     * Остановка потока
+     */
     public synchronized void stop() {
         th = null;
         notify();
     }
 
-    private void send() {
+    /**
+     * Отправляем очередное сообщение из очереди
+     */
+    private synchronized void send() {
         // TODO Синхронизация
         if((System.currentTimeMillis()-t)<=sleepAmount) return;
         t = System.currentTimeMillis();
@@ -92,9 +107,38 @@ public class MsgOutQueue implements Runnable {
         }
     }
 
-    public void add(Message m) {
+    /**
+     * Добавить новое сообщение в очередь
+     * @param m
+     */
+    public synchronized void add(Message m) {
         // TODO Синхронизация
-        
+        try {
+            if(q.get(m.getSnIn()).size()>MSG_OUT_LIMIT) {
+                Log.info("OUT MESSAGE IS LOST: " + m.getSnIn() + ">>" + m.getSnOut() + " : " + m.getMsg());
+                lostMsg++;
+                return;
+            }
+            if(m.getType()!=Message.TYPE_TEXT){
+                q.get(m.getSnIn()).add(m);
+                return;
+            }
+            int maxLenMsg = srv.getProps().getIntProperty("chat.MaxOutMsgSize");
+            int maxCountMsg = srv.getProps().getIntProperty("chat.MaxOutMsgCount");
+            int k = (m.getMsg().length()/maxLenMsg+1) > maxCountMsg ? maxCountMsg : (m.getMsg().length()/maxLenMsg+1);
+            for(int i=0; i<k; i++){
+                if(((i+1)*maxLenMsg-1)<m.getMsg().length()){
+                    if(i==(maxCountMsg-1))
+                        q.get(m.getSnIn()).add(m.getCopy(m.getMsg().substring(i*maxLenMsg, (i+1)*maxLenMsg) +
+                                "\nЧасть сообщения была обрезана..."));
+                    else
+                        q.get(m.getSnIn()).add(m.getCopy(m.getMsg().substring(i*maxLenMsg, (i+1)*maxLenMsg)));
+                } else
+                    q.get(m.getSnIn()).add(m.getCopy(m.getMsg().substring(i*maxLenMsg, m.getMsg().length())));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 //    public void add(String uin, String msg){
@@ -125,11 +169,11 @@ public class MsgOutQueue implements Runnable {
 //        		q.add(new Msg(uin,msg.substring(i*maxLenMsg, msg.length()), 0));
 //        }
 //   }
-//
-//    public int getLostMsgCount(){
-//    	return lostMsg;
-//    }
-//
+
+    public int getLostMsgCount(){
+    	return lostMsg;
+    }
+
 //    private void send() {
 //    	if((System.currentTimeMillis()-t)<=sleepAmount) return;
 //    	t = System.currentTimeMillis();
@@ -154,11 +198,16 @@ public class MsgOutQueue implements Runnable {
 //    		ex.printStackTrace();
 //    	}
 //    }
-//
-//    public int size() {
-//        return q.size();
-//    }
-//
+
+    public int size(String s) {
+        try{
+            return q.get(s).size();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
 //    public void testOnline(){
 //        try{
 //            if(proc==null) {
