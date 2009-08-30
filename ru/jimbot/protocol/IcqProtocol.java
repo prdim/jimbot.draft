@@ -63,9 +63,7 @@ import ru.caffeineim.protocols.icq.setting.enumerations.PostBackgroundEnum;
 import ru.caffeineim.protocols.icq.setting.enumerations.StatusModeEnum;
 import ru.caffeineim.protocols.icq.setting.enumerations.XStatusModeEnum;
 import ru.caffeineim.protocols.icq.tool.OscarInterface;
-import ru.jimbot.core.AbstractProps;
-import ru.jimbot.core.MsgOutQueue;
-import ru.jimbot.core.Protocol;
+import ru.jimbot.core.*;
 import ru.jimbot.modules.chat.Users;
 import ru.jimbot.util.Log;
 import ru.jimbot.util.MainProps;
@@ -75,32 +73,62 @@ import ru.jimbot.util.MainProps;
  * @author Prolubnikov Dmitry
  *
  */
-class IcqProtocol implements Protocol, MessagingListener, StatusListener, XStatusListener,
-						 ContactListListener, MetaInfoListener, Observer {
+public class IcqProtocol implements Protocol, MessagingListener, StatusListener, XStatusListener,
+						 ContactListListener, MetaInfoListener, Observer, CommandProtocolListener {
 	private OscarConnection con = null;
-	private AbstractProps props;
+//	private AbstractProps props;
 	private String lastInfo = "";
+    private Service srv; // Ссылка на сервис
+    private String screenName; // УИН
+    private int screenNameID = 0; // ИД УИНа в настройках (чтобы вытащить параметры, пароль и т.п.
 	
-	public IcqProtocol(AbstractProps props) {
-		this.props = props;
-		server = MainProps.getServer();
-		port = MainProps.getPort();
+	public IcqProtocol(Service s, int id) {
+//		this.props = props;
+//		server = MainProps.getServer();
+//		port = MainProps.getPort();
 		
-		mq = new MsgOutQueue(this, props.getIntProperty("bot.pauseOut"),
-                props.getIntProperty("bot.pauseRestart"), 
-                props.getIntProperty("bot.msgOutLimit"));
-//        mq.start();
+//		mq = new MsgOutQueue(this, props.getIntProperty("bot.pauseOut"),
+//                props.getIntProperty("bot.pauseRestart"),
+//                props.getIntProperty("bot.msgOutLimit"));
+        srv = s;
+        screenNameID = id;
+        screenName = srv.getProps().getUin(id);
+        // Добавляемся в слушатели
+        srv.addCommandProtocolListener(this);
 	}
+
+    private void notifyMsg(Message m) {
+        for(ProtocolListener i:srv.getProtocolListeners()) {
+            i.onTextMessage(m);
+        }
+    }
+
+    private void notifyStatus(Message m) {
+        for(ProtocolListener i:srv.getProtocolListeners()) {
+            i.onStatusMessage(m);
+        }
+    }
+
+    private void notifyLogon() {
+        for(ProtocolListener i:srv.getProtocolListeners()) {
+            i.logOn();
+        }
+    }
+
+    private void notifyLogout() {
+        for(ProtocolListener i:srv.getProtocolListeners()) {
+            i.logOff();
+        }
+    }
 	
-	public AbstractProps getProps(){
-		return props;
-	}
+//	public AbstractProps getProps(){
+//		return props;
+//	}
 	
-	public int getOuteqSize(){
-		return mq.size();
-	}
-	
-	@Override
+//	public int getOuteqSize(){
+//		return mq.size();
+//	}
+
 	public void RemoveContactList(String sn) {
 		// TODO Auto-generated method stub
 
@@ -124,10 +152,9 @@ class IcqProtocol implements Protocol, MessagingListener, StatusListener, XStatu
      * @return
      */
     public String getScreenName() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return screenName;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
 	public void addContactList(String sn) {
 		// TODO Auto-generated method stub
 
@@ -136,16 +163,14 @@ class IcqProtocol implements Protocol, MessagingListener, StatusListener, XStatu
     /**
      * Добавить слушатель
      *
-     * @param p
      */
-    public void addListener(ProtocolListener p) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+//    public void addListener(ProtocolListener p) {
+//        //To change body of implemented methods use File | Settings | File Templates.
+//    }
 
-    @Override
 	public void connect() {
-		mq.start();
-		con = new OscarConnection(server, port, screenName, password);
+//		mq.start();
+		con = new OscarConnection(MainProps.getServer(), MainProps.getPort(), screenName, srv.getProps().getPass(screenNameID));
 		con.getPacketAnalyser().setDebug(false);
 		con.getPacketAnalyser().setDump(false);
 		con.addMessagingListener(this);
@@ -165,28 +190,29 @@ class IcqProtocol implements Protocol, MessagingListener, StatusListener, XStatu
 	public void reConnect(){
 		try {
 			con.close();
-			con.removeContactListListener(this);
-			con.removeMessagingListener(this);
-			con.removeStatusListener(this);
-			con.removeXStatusListener(this);
-			con.deleteObservers();
-			con = null;
+            notifyLogout();
+//			con.removeContactListListener(this);
+//			con.removeMessagingListener(this);
+//			con.removeStatusListener(this);
+//			con.removeXStatusListener(this);
+//			con.deleteObservers();
+//			con = null;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		con = new OscarConnection(server, port, screenName, password);
-		con.getPacketAnalyser().setDebug(false);
-		con.getPacketAnalyser().setDump(false);
-		con.addMessagingListener(this);
-		con.addStatusListener(this);
-        con.addXStatusListener(this);
-        con.addContactListListener(this);
-        con.addObserver(this);
+//		con = new OscarConnection(server, port, screenName, password);
+//		con.getPacketAnalyser().setDebug(false);
+//		con.getPacketAnalyser().setDump(false);
+//		con.addMessagingListener(this);
+//		con.addStatusListener(this);
+//        con.addXStatusListener(this);
+//        con.addContactListListener(this);
+//        con.addObserver(this);
+        con.getClient().connectToServer();
 	}
 
-	@Override
 	public void disconnect() {
-		mq.stop();
+//		mq.stop();
 		try {
 //			System.out.println("Close: " + con.getUserId());
 			con.close();
@@ -195,26 +221,25 @@ class IcqProtocol implements Protocol, MessagingListener, StatusListener, XStatu
 			con.removeStatusListener(this);
 			con.removeXStatusListener(this);
 			con.deleteObservers();
+            notifyLogout();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 
 	}
 
-	@Override
-	public void getMsg(String sendSN, String recivSN, String msg,
-			boolean isOffline) {
-		protList.getMsg(sendSN, recivSN, msg, isOffline);
+//	@Override
+//	public void getMsg(String sendSN, String recivSN, String msg,
+//			boolean isOffline) {
+//		protList.getMsg(sendSN, recivSN, msg, isOffline);
+//
+//	}
 
-	}
-
-	@Override
 	public void getStatus(String sn, int status) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	public boolean isOnLine() {
 		if(con==null) return false;
 		return con.isLogged();
@@ -226,7 +251,6 @@ class IcqProtocol implements Protocol, MessagingListener, StatusListener, XStatu
 //		return true;
 //	}
 
-	@Override
 	public void sendMsg(String sn, String msg) {
 		try {
 			OscarInterface.sendBasicMessage(con, sn, msg);
@@ -238,7 +262,6 @@ class IcqProtocol implements Protocol, MessagingListener, StatusListener, XStatu
 
 	}
 
-	@Override
 	public void setStatus(int status) {
 		// TODO Auto-generated method stub
 
@@ -251,9 +274,9 @@ class IcqProtocol implements Protocol, MessagingListener, StatusListener, XStatu
 		return true;
 	}
 
-	public boolean isNoAuthUin(String uin){
-		return props.getBooleanProperty("chat.isAuthRequest");
-	}
+//	public boolean isNoAuthUin(String uin){
+//		return props.getBooleanProperty("chat.isAuthRequest");
+//	}
 	
 	public void authRequest(String uin, String msg){
 		try {
@@ -280,10 +303,16 @@ class IcqProtocol implements Protocol, MessagingListener, StatusListener, XStatu
 		// Сервисное сообщение от УИНа 1
 		if(e.getSenderID().equals("1")){
 		    Log.error("Ошибка совместимости клиента ICQ. Будет произведена попытка переподключения...");
-		    try{con.close();} catch (Exception ex) {ex.printStackTrace();}
+		    try{
+                con.close();
+                notifyLogout();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
 		    return;
 		}
-		protList.getMsg(e.getSenderID(), screenName, e.getMessage(), false);
+        notifyMsg(new Message(e.getSenderID(),screenName,e.getMessage(),Message.TYPE_TEXT));
+//		protList.getMsg(e.getSenderID(), screenName, e.getMessage(), false);
 	}
 
 	public void onIncomingUrl(IncomingUrlEvent e) {
@@ -335,13 +364,15 @@ class IcqProtocol implements Protocol, MessagingListener, StatusListener, XStatu
 	 */
 	public void onIncomingUser(IncomingUserEvent e) {
 		Log.debug(e.getIncomingUserId() + " has just signed on.");
-		protList.getStatus(e.getIncomingUserId(), 0);
+        notifyStatus(new Message(e.getIncomingUserId(),screenName,e.getStatusMode().toString(), e.getStatusFlag().getFlag()));
+//		protList.getStatus(e.getIncomingUserId(), 0);
 //		System.out.println(e.getIncomingUserId() + " has just signed on.");
 		
 	}
 
 	public void onLogout() {
-		Log.error("Разрыв соединения: " + screenName + " - " + server + ":" + port);
+		Log.error("Разрыв соединения: " + screenName /*+ " - " + server + ":" + port*/);
+        notifyLogout();
 //		try {
 //			con.close();
 //		} catch (IOException e) {		
@@ -354,7 +385,8 @@ class IcqProtocol implements Protocol, MessagingListener, StatusListener, XStatu
 	 */
 	public void onOffgoingUser(OffgoingUserEvent e) {
 //		Log.info(e.getOffgoingUserId() + " went offline.");
-		protList.getStatus(e.getOffgoingUserId(), -1);
+        notifyStatus(new Message(e.getOffgoingUserId(),screenName,"",-1));
+//		protList.getStatus(e.getOffgoingUserId(), -1);
 //		System.out.println(e.getOffgoingUserId() + " went offline.");
 		
 	}
@@ -374,9 +406,9 @@ class IcqProtocol implements Protocol, MessagingListener, StatusListener, XStatu
 	public void onXStatusRequest(XStatusRequestEvent e) {
 		// Посылаем свой статус, если просят
     	try {
-    		OscarInterface.sendXStatus(con, new XStatusModeEnum(props.getIntProperty("icq.xstatus")), 
-    				props.getStringProperty("icq.STATUS_MESSAGE1"), 
-    				props.getStringProperty("icq.STATUS_MESSAGE2"), e.getTime(), e.getMsgID(), e.getSenderID(), e.getSenderTcpVersion());
+    		OscarInterface.sendXStatus(con, new XStatusModeEnum(srv.getProps().getIntProperty("icq.xstatus")),
+    				srv.getProps().getStringProperty("icq.STATUS_MESSAGE1"),
+    				srv.getProps().getStringProperty("icq.STATUS_MESSAGE2"), e.getTime(), e.getMsgID(), e.getSenderID(), e.getSenderTcpVersion());
     	}
     	catch(ConvertStringException ex) {
     		System.err.println(ex.getMessage());
@@ -384,10 +416,15 @@ class IcqProtocol implements Protocol, MessagingListener, StatusListener, XStatu
 		
 	}
 
-	// Метод будет вызван при установке соединения
+    /**
+     * Метод будет вызван при установке соединения
+     * @param arg0
+     * @param arg1
+     */
 	public void update(Observable arg0, Object arg1) {
-		OscarInterface.changeStatus(con, new StatusModeEnum(props.getIntProperty("icq.status")));
-		OscarInterface.changeXStatus(con, new XStatusModeEnum(props.getIntProperty("icq.xstatus")));
+		OscarInterface.changeStatus(con, new StatusModeEnum(srv.getProps().getIntProperty("icq.status")));
+		OscarInterface.changeXStatus(con, new XStatusModeEnum(srv.getProps().getIntProperty("icq.xstatus")));
+        notifyLogon();
 	}
 
 	public void onSsiAuthReply(SsiAuthReplyEvent arg0) {
@@ -437,7 +474,7 @@ class IcqProtocol implements Protocol, MessagingListener, StatusListener, XStatu
 		u.email = e.getEmail();
 		u.city = e.getHomeCity();
 		u.country = e.getHomeCountry().getCountry();
-		protList.getInfo(u, 1);
+//		protList.getInfo(u, 1);
 		
 //		System.out.println("Basic User Info: ");
 //    	System.out.println("  Nick Name = "  + e.getNickName());
@@ -517,7 +554,7 @@ class IcqProtocol implements Protocol, MessagingListener, StatusListener, XStatu
 		u.fname = e.getFirstName();
 		u.lname = e.getLastName();
 		u.email = e.getEmail();
-		protList.getInfo(u, 1);
+//		protList.getInfo(u, 1);
 		
 //		System.out.println("Short User Info: ");
 //    	System.out.println("  Nick Name = "  + e.getNickName());
@@ -544,4 +581,54 @@ class IcqProtocol implements Protocol, MessagingListener, StatusListener, XStatu
 		
 	}
 
+    /**
+     * Слушатель команд управления протоколом
+     */
+
+    /**
+     * Установить статус
+     *
+     * @param id
+     * @param text
+     */
+    public void setChangeStatus(int id, String text) {
+        srv.getProps().setIntProperty("icq.status", id);
+        OscarInterface.changeStatus(con, new StatusModeEnum(srv.getProps().getIntProperty("icq.status")));
+    }
+
+    /**
+     * Установить Х-статус
+     *
+     * @param id
+     * @param text
+     */
+    public void setChangeXStatus(int id, String text) {
+        srv.getProps().setIntProperty("icq.xstatus", id);
+        OscarInterface.changeXStatus(con, new XStatusModeEnum(srv.getProps().getIntProperty("icq.xstatus")));
+    }
+
+    /**
+     * Отправить текстовое сообщение
+     *
+     * @param in   - от кого
+     * @param out  - кому
+     * @param text - сообщение
+     */
+    public void sendMessage(String in, String out, String text) {
+        if(screenName.equalsIgnoreCase(in)) sendMsg(out,text);
+    }
+
+    /**
+     * Подключиться к серверу
+     */
+    public void logOn() {
+        connect();
+    }
+
+    /**
+     * Отключиться от сервера
+     */
+    public void logOff() {
+        disconnect();
+    }
 }

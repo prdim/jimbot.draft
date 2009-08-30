@@ -64,48 +64,21 @@ public class UserWork {
         	this.name = ChatProps.getInstance(name).getStringProperty("db.dbname");
         	user = ChatProps.getInstance(name).getStringProperty("db.user");
         	pass = ChatProps.getInstance(name).getStringProperty("db.pass");
-            db = new DBChat(name);
+            // TODO !!!
+//            db = new DBChat(name);
             db.openConnection(host, this.name, user, pass);
-//            Sms.setDB(db);
             uc = new ConcurrentHashMap<String,Users>();
             uu = new ConcurrentHashMap<Integer,String>();
             auth = new ConcurrentHashMap<Integer,HashSet<String>>();
-//            ignor = new ArrayList();
             currCountUser=0;
             clearStatusUsers();
             rw = new RoomWork(db);
             rw.fillCash();
-//            readIgnore();
         } catch (Exception ex){
             ex.printStackTrace();
         }
     }
-    
-//    public void readIgnore(){
-//        String s;
-//        try{
-//            BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream("ignore.txt"),"windows-1251")); 
-//            while (r.ready()){
-//                s = r.readLine();
-//                if(!s.equals("")){
-//                    ignor.add(s);
-//                }
-//            }
-//            r.close();
-//        } catch (Exception ex){
-//            ex.printStackTrace();
-//        }
-//    }
-    
-//    public boolean testIgnor(String sn){
-//        if(ignor == null) return false;
-//        if(ignor.isEmpty()) return false;
-//        return ignor.contains(sn);
-//    }
-    
-//    public void ignore(String sn){
-//        ignor.add(sn);
-//    }
+
     
     public void closeDB(){
         db.shutdown();

@@ -19,18 +19,10 @@
 package ru.jimbot.core;
 
 import java.util.HashMap;
-import java.util.Vector;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import ru.jimbot.modules.chat.Users;
-import ru.jimbot.core.MsgReceiver;
-import ru.jimbot.modules.AbstractCommandProcessor;
-import ru.jimbot.modules.MsgQueueElement;
-import ru.jimbot.modules.MsgStatCounter;
 //import ru.jimbot.protocol.IcqProtocol;
-import ru.jimbot.util.Log;
-import ru.jimbot.protocol.AbstractProtocol;
-import ru.jimbot.core.Protocol;
+
 
 /**
  * Очередь входящих сообщений

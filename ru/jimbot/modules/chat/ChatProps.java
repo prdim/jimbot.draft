@@ -363,7 +363,8 @@ public class ChatProps implements AbstractProps {
     	appProps.remove("conn.pass"+(uinCount()-1));
     	setIntProperty("conn.uinCount", uinCount()-1);
     }
-    
+
+    // TODO Соинхронизация при одновременном чтении и изменении настроек    
     public void registerProperties(Properties _appProps) {
         appProps = _appProps;
     }

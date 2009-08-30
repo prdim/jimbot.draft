@@ -167,10 +167,10 @@ public class ChatQueue implements Runnable {
 			// есть в очередях
 			for (String c : uq.keySet()) {
 				String s = createMsg(c);
-				((ChatCommandProc) srv.cmd).testState(c);
-				if (!s.equals("") && uq.containsKey(c))
-					srv.getIcqProcess(uq.get(c).baseUin).mq.add(uq.get(c).uin,
-							s);
+//				((ChatCommandProc) srv.cmd).testState(c);
+//				if (!s.equals("") && uq.containsKey(c))
+//					srv.getIcqProcess(uq.get(c).baseUin).mq.add(uq.get(c).uin,
+//							s);
 			}
 			// Очищаем очереди чата (все сообщения в них уже обработаны
 			for (int room : mmq.keySet()) {

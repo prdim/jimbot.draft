@@ -40,7 +40,7 @@ public abstract class DBAdaptor {
     private Connection db;
     private String host, name, user, pass;
     private long lastConnect = 0;
-    private Service srv;
+    protected Service srv;
     
     /** Creates a new instance of DBAdaptor */
     public DBAdaptor(Service s) {
@@ -113,6 +113,7 @@ public abstract class DBAdaptor {
             try {
                 Class.forName("com.mysql.jdbc.Driver");
                 db = DriverManager.getConnection("jdbc:mysql://" + host + "/" + name, user, pass);
+                notifyConnect();
             } catch (Exception ex) {
                 ex.printStackTrace();
                 f=false;

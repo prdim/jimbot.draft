@@ -236,6 +236,7 @@ public class AnekProps implements AbstractProps {
         }
     }
 
+    // TODO Соинхронизация при одновременном чтении и изменении настроек
     public void registerProperties(Properties _appProps) {
         appProps = _appProps;
     }

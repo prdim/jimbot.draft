@@ -23,10 +23,42 @@ package ru.jimbot.core;
  * @author Prolubnikov Dmitry
  */
 public interface CommandProtocolListener {
+
+    /**
+     * Установить статус
+     * @param id
+     * @param text
+     */
     public void setChangeStatus(int id, String text);
+
+    /**
+     * Установить Х-статус
+     * @param id
+     * @param text
+     */
     public void setChangeXStatus(int id, String text);
+
+    /**
+     * Отправить текстовое сообщение
+     * @param in - от кого
+     * @param out - кому
+     * @param text - сообщение
+     */
     public void sendMessage(String in, String out, String text);
+
+    /**
+     * Подключиться к серверу
+     */
     public void logOn();
+
+    /**
+     * Отключиться от сервера
+     */
     public void logOff();
+
+    /**
+     * Возвращает УИН слушателя
+     * @return
+     */
     public String getScreenName();
 }

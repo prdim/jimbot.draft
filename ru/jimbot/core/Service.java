@@ -25,6 +25,7 @@ import ru.jimbot.core.AbstractProps;
 import java.util.List;
 import java.util.Set;
 import java.util.Collection;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Интерфейс для всех сервисов бота
@@ -41,6 +42,12 @@ public interface Service {
      * Остановка сервиса
      */
     public void stop();
+
+    /**
+     * Сервис запущен?
+     * @return
+     */
+    public boolean isRun();
 
     /**
      * Возвращает екземпляр протокола по УИНу
@@ -86,6 +93,24 @@ public interface Service {
      * @return
      */
     public Object getDataStorage(String key);
+
+    /**
+     * Возвращает очередб входящих
+     * @return
+     */
+    public MsgInQueue getInQueue();
+
+    /**
+     * Возвращает очередь исходящих для заданного уина
+     * @return
+     */
+    public ConcurrentLinkedQueue<Message> getOutQueue(String sn);
+
+    /**
+     * возвращает очередь исходящих
+     * @return
+     */
+    public MsgOutQueue getOutQueue();
 
     public List<DbStatusListener> getDbStatusListeners();
     void addDbStatusListener(DbStatusListener e);

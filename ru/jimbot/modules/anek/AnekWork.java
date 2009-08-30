@@ -43,6 +43,7 @@ public class AnekWork {
     /** Creates a new instance of AnekWork */
     public AnekWork(String name, Service srv) {
     	serviceName = name;
+        this.srv = srv;
     	host = AnekProps.getInstance(name).getStringProperty("db.host");
     	this.name = AnekProps.getInstance(name).getStringProperty("db.dbname");
     	user = AnekProps.getInstance(name).getStringProperty("db.user");

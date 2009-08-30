@@ -185,7 +185,7 @@ public class MainPage extends HttpServlet {
     		    s += "<TD> </TD>";
     		s += "<TD><A HREF=\"" + con.getURI() + "?uid=" + uid + 
 			"&page=srvs_stats&ns="+n+"\">Статистика</A></TD>";
-    		if(Manager.getInstance().getService(n).isRun){
+    		if(Manager.getInstance().getService(n).isRun()){
     			s += "<TD><A HREF=\"" + con.getURI() + "?uid=" + uid + 
     				"&page=srvs_stop&ns="+n+"\">Stop</A></TD>";
     		} else {
@@ -246,13 +246,14 @@ public class MainPage extends HttpServlet {
     			con.getURI() + "?uid=" + uid + "&page=srvs_stats&ns="+ ns + "\" />" +
     			"<TITLE>JimBot "+MainProps.VERSION+" </TITLE></HEAD>" + SrvUtil.BODY +
                 "<H3>Статистика работы " + ns + "</H3>");
-    	con.print("Очередь входящих сообщений: " + Manager.getInstance().getService(ns).getIneqSize() + "<br>");
+    	con.print("Очередь входящих сообщений: " + Manager.getInstance().getService(ns).getInQueue().size() + "<br>");
     	con.print("Очередь исходящих сообщений: <br>");
     	for(int i=0;i<Manager.getInstance().getService(ns).getProps().uinCount();i++){
-    		con.print(">> " + Manager.getInstance().getService(ns).getProps().getUin(i) + 
-    				(Manager.getInstance().getService(ns).getIcqProcess(i).isOnLine() ? "  [ ON]  " : "  [OFF]  ") +
-    				Manager.getInstance().getService(ns).getIcqProcess(i).getOuteqSize() + 
-    				", потери:" + Manager.getInstance().getService(ns).getIcqProcess(i).mq.getLostMsgCount() + "<br>");
+            String sn = Manager.getInstance().getService(ns).getProps().getUin(i);
+    		con.print(">> " + sn +
+    				(Manager.getInstance().getService(ns).getProtocol(sn).isOnLine() ? "  [ ON]  " : "  [OFF]  ") +
+    				Manager.getInstance().getService(ns).getOutQueue(sn).size() +
+    				", потери:" + Manager.getInstance().getService(ns).getOutQueue().getLostMsgCount() + "<br>");
     	}
     	con.print("<br>Статистика принятых сообщений по номерам:<br>");
     	String s = "<TABLE BORDER=\"1\"><TR><TD>UIN</TD><TD>1 минута</TD><TD>5 митут</TD><TD>60 минут</TD><TD>24 часа</TD><TD>Всего</TD></TR>";
@@ -770,40 +771,40 @@ public class MainPage extends HttpServlet {
         con.print(SrvUtil.HTML_HEAD + "<TITLE>JimBot "+MainProps.VERSION+" </TITLE></HEAD>" + SrvUtil.BODY +
                 "<H2>Панель управления ботом</H2>" +
                 "<H3>Управление полномочиями пользователей</H3>");
-        String[] gr = Manager.getInstance().getService(ns).getProps().getStringProperty("auth.groups").split(";");
-        Set<String> au = ((ChatCommandProc)Manager.getInstance().getService(ns).cmd).getAuthObjects().keySet();
-        Map m = ((ChatCommandProc)Manager.getInstance().getService(ns).cmd).getAuthObjects();
-        HashSet[] grs = new HashSet[gr.length];
-        for(int i=0; i<gr.length; i++){
-            grs[i] = new HashSet<String>();
-            try {
-                String[] s = Manager.getInstance().getService(ns).getProps().getStringProperty("auth.group_"+gr[i]).split(";");
-                if(s.length>0)
-                    for(int j=0;j<s.length; j++)
-                        grs[i].add(s[j]);
-            } catch (Exception ex) {}
-        }
-        String s = "<FORM METHOD=POST ACTION=\"" + con.getURI() +
-        "\"><INPUT TYPE=hidden NAME=\"page\" VALUE=\"user_auth_props_in\">" +
-        "<INPUT TYPE=hidden NAME=\"ns\" VALUE=\"" +ns + "\">" +
-        "<INPUT TYPE=hidden NAME=\"uid\" VALUE=\"" + userID + "\">";
-        s += "<TABLE><tbody><TR style=\"background-color: rgb(217, 217, 200);\"><TH ALIGN=LEFT>";
-        for(int i=0;i<gr.length;i++)
-            s += "<TD><b><u>" + gr[i] + "</u></b></TD>";
-        s += "</TR>";
-        for(String ss:au){
-            s += "<TR style=\"background-color: rgb(217, 217, 200);\" " +
-            		"onmouseover=\"this.style.backgroundColor='#ecece4'\" " +
-            		"onmouseout=\"this.style.backgroundColor='#d9d9c8'\">" +
-            		"<TH ALIGN=LEFT>" + m.get(ss) + "  [" + ss + "]</TD>";
-            for(int i=0; i<gr.length; i++){
-                s += "<TD><INPUT TYPE=CHECKBOX NAME=\"" + gr[i] + "_" + ss +
-                    "\" VALUE=\"true\" " + (grs[i].contains(ss) ? "CHECKED" : "") + "></TD>";
-            }
-            s += "</TR>";
-        }
-        s += "</tbody></TABLE><P><INPUT TYPE=submit VALUE=\"Сохранить\"></FORM>";
-        con.print(s);
+//        String[] gr = Manager.getInstance().getService(ns).getProps().getStringProperty("auth.groups").split(";");
+//        Set<String> au = ((ChatCommandProc)Manager.getInstance().getService(ns).cmd).getAuthObjects().keySet();
+//        Map m = ((ChatCommandProc)Manager.getInstance().getService(ns).cmd).getAuthObjects();
+//        HashSet[] grs = new HashSet[gr.length];
+//        for(int i=0; i<gr.length; i++){
+//            grs[i] = new HashSet<String>();
+//            try {
+//                String[] s = Manager.getInstance().getService(ns).getProps().getStringProperty("auth.group_"+gr[i]).split(";");
+//                if(s.length>0)
+//                    for(int j=0;j<s.length; j++)
+//                        grs[i].add(s[j]);
+//            } catch (Exception ex) {}
+//        }
+//        String s = "<FORM METHOD=POST ACTION=\"" + con.getURI() +
+//        "\"><INPUT TYPE=hidden NAME=\"page\" VALUE=\"user_auth_props_in\">" +
+//        "<INPUT TYPE=hidden NAME=\"ns\" VALUE=\"" +ns + "\">" +
+//        "<INPUT TYPE=hidden NAME=\"uid\" VALUE=\"" + userID + "\">";
+//        s += "<TABLE><tbody><TR style=\"background-color: rgb(217, 217, 200);\"><TH ALIGN=LEFT>";
+//        for(int i=0;i<gr.length;i++)
+//            s += "<TD><b><u>" + gr[i] + "</u></b></TD>";
+//        s += "</TR>";
+//        for(String ss:au){
+//            s += "<TR style=\"background-color: rgb(217, 217, 200);\" " +
+//            		"onmouseover=\"this.style.backgroundColor='#ecece4'\" " +
+//            		"onmouseout=\"this.style.backgroundColor='#d9d9c8'\">" +
+//            		"<TH ALIGN=LEFT>" + m.get(ss) + "  [" + ss + "]</TD>";
+//            for(int i=0; i<gr.length; i++){
+//                s += "<TD><INPUT TYPE=CHECKBOX NAME=\"" + gr[i] + "_" + ss +
+//                    "\" VALUE=\"true\" " + (grs[i].contains(ss) ? "CHECKED" : "") + "></TD>";
+//            }
+//            s += "</TR>";
+//        }
+//        s += "</tbody></TABLE><P><INPUT TYPE=submit VALUE=\"Сохранить\"></FORM>";
+//        con.print(s);
         con.print("<P><A HREF=\"" + con.getURI() + "?uid=" + uid + "&page=main_page\">" +
         "Назад</A><br>");
         con.print("</FONT></BODY></HTML>");
@@ -820,36 +821,36 @@ public class MainPage extends HttpServlet {
             SrvUtil.error(con,"Отсутствует сервис с таким именем!");
             return;
         }
-        String[] gr = Manager.getInstance().getService(ns).getProps().getStringProperty("auth.groups").split(";");
-        Set<String> au = ((ChatCommandProc)Manager.getInstance().getService(ns).cmd).getAuthObjects().keySet();
-        HashSet[] grs = new HashSet[gr.length];
-        for(int i=0; i<gr.length; i++){
-            grs[i] = new HashSet<String>();
-            try {
-                String[] s = Manager.getInstance().getService(ns).getProps().getStringProperty("auth.group_"+gr[i]).split(";");
-                if(s.length>0)
-                    for(int j=0;j<s.length; j++)
-                        grs[i].add(s[j]);
-            } catch (Exception ex) {}
-        }
-        for(int i=0; i<gr.length; i++){
-            for(String s:au){
-                boolean b = SrvUtil.getBoolVal(con, gr[i] + "_" + s);
-                if(b && !grs[i].contains(s))
-                    grs[i].add(s);
-                else if(!b && grs[i].contains(s))
-                    grs[i].remove(s);
-            }
-        }
-        for(int i=0; i<gr.length; i++){
-            String s = "";
-            for(Object c:grs[i]){
-                s += c.toString() + ";";
-            }
-            s = s.substring(0, s.length()-1);
-            Manager.getInstance().getService(ns).getProps().setStringProperty("auth.group_"+gr[i], s);
-        }
-        Manager.getInstance().getService(ns).getProps().save();
+//        String[] gr = Manager.getInstance().getService(ns).getProps().getStringProperty("auth.groups").split(";");
+//        Set<String> au = ((ChatCommandProc)Manager.getInstance().getService(ns).cmd).getAuthObjects().keySet();
+//        HashSet[] grs = new HashSet[gr.length];
+//        for(int i=0; i<gr.length; i++){
+//            grs[i] = new HashSet<String>();
+//            try {
+//                String[] s = Manager.getInstance().getService(ns).getProps().getStringProperty("auth.group_"+gr[i]).split(";");
+//                if(s.length>0)
+//                    for(int j=0;j<s.length; j++)
+//                        grs[i].add(s[j]);
+//            } catch (Exception ex) {}
+//        }
+//        for(int i=0; i<gr.length; i++){
+//            for(String s:au){
+//                boolean b = SrvUtil.getBoolVal(con, gr[i] + "_" + s);
+//                if(b && !grs[i].contains(s))
+//                    grs[i].add(s);
+//                else if(!b && grs[i].contains(s))
+//                    grs[i].remove(s);
+//            }
+//        }
+//        for(int i=0; i<gr.length; i++){
+//            String s = "";
+//            for(Object c:grs[i]){
+//                s += c.toString() + ";";
+//            }
+//            s = s.substring(0, s.length()-1);
+//            Manager.getInstance().getService(ns).getProps().setStringProperty("auth.group_"+gr[i], s);
+//        }
+//        Manager.getInstance().getService(ns).getProps().save();
         printOkMsg(con,"user_group_props");
     }
     

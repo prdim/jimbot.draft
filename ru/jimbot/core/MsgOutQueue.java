@@ -20,10 +20,7 @@ package ru.jimbot.core;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.HashMap;
-
-import ru.jimbot.protocol.IcqProtocol;
 import ru.jimbot.util.Log;
-import ru.jimbot.util.MainProps;
 
 /**
  * Очередь исходящих сообщений
@@ -53,6 +50,10 @@ public class MsgOutQueue implements Runnable {
         for(String i:srv.getAllProtocols()) {
             q.put(i, new ConcurrentLinkedQueue<Message>());
         }
+    }
+
+    public ConcurrentLinkedQueue<Message> getUinQueue(String sn) {
+        return q.get(sn);
     }
 
     /**

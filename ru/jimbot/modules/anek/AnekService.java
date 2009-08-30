@@ -21,6 +21,7 @@ package ru.jimbot.modules.anek;
 import ru.jimbot.core.*;
 import ru.jimbot.db.DBAdaptor;
 import ru.jimbot.util.Log;
+import ru.jimbot.protocol.IcqProtocol;
 
 import java.util.HashMap;
 
@@ -32,15 +33,15 @@ import java.util.HashMap;
 public class AnekService extends DefaultService implements DbStatusListener {
     private String name = ""; // Имя сервиса
     private HashMap<String, Protocol> prots = new HashMap<String, Protocol>(); // Ссылки на протоколы
-    private MsgInQueue inq;
-    private MsgOutQueue outq;
     private AnekProps props;
     private DBAneks db;
     private AnekWork aw;
-//    private AnekCommandProc cmd = new AnekCommandProc();
+    private boolean start = false;
+    private AnekCommandProc cmd;
 
     public AnekService(String name) {
         this.name = name;
+        props = AnekProps.getInstance(name);
         aw = new AnekWork(name, this);
     }
 
@@ -49,10 +50,18 @@ public class AnekService extends DefaultService implements DbStatusListener {
      */
     public void start() {
         inq = new MsgInQueue(this);
-        props = AnekProps.getInstance(name);
+        outq = new MsgOutQueue(this);
+        for(int i=0;i<props.uinCount();i++) {
+            prots.put(props.getUin(i), new IcqProtocol(this, i));
+        }
+        inq.start();
+        outq.start();
+        cmd = new AnekCommandProc(this);
         // TODO ...
+        addDbStatusListener(this);
         aw.initDB();
         db = aw.db;
+        start = true;
     }
 
     /**
@@ -61,8 +70,23 @@ public class AnekService extends DefaultService implements DbStatusListener {
     public void stop() {
         inq.stop();
         inq = null;
+        outq.stop();
+        outq = null;
         aw.closeDB();
-        // TODO ...
+        for(CommandProtocolListener i:getCommandProtocolListeners()) {
+            i.logOff();
+        }
+        start = false;
+        // TODO Подумать как лучше убрать ссылки и слушатели очередей, парсеров команд, протоколом и т.п.
+    }
+
+    /**
+     * Сервис запущен?
+     *
+     * @return
+     */
+    public boolean isRun() {
+        return start;
     }
 
     /**
@@ -107,7 +131,9 @@ public class AnekService extends DefaultService implements DbStatusListener {
      * @param db - ссылка на базу
      */
     public void onConnect(DBAdaptor db) {
-        // TODO подключение номеров
+        for(CommandProtocolListener i:getCommandProtocolListeners()) {
+            i.logOn();
+        }
     }
 
     /**

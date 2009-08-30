@@ -33,10 +33,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import ru.jimbot.modules.AbstractServer;
 import ru.jimbot.modules.anek.AnekServer;
+import ru.jimbot.modules.anek.AnekService;
 import ru.jimbot.modules.chat.ChatServer;
 import ru.jimbot.modules.http.Server;
 import ru.jimbot.util.Log;
 import ru.jimbot.util.MainProps;
+import ru.jimbot.core.Service;
 
 /**
  * Управление сервисами бота
@@ -45,7 +47,7 @@ import ru.jimbot.util.MainProps;
  * 
  */
 public class Manager {
-	private HashMap<String,AbstractServer> services = new HashMap<String,AbstractServer>();
+	private HashMap<String, Service> services = new HashMap<String, Service>();
 	private Monitor2 mon = new Monitor2();
 	private static Manager mn = null;
 	private ConcurrentHashMap<String, Object> data = null;
@@ -149,7 +151,7 @@ public class Manager {
      */
     public void testDB(){
     	for(String s : services.keySet()){
-    		if(services.get(s).isRun){
+    		if(services.get(s).isRun()){
     			try {
     				if(services.get(s).getDB().isClosed()){
     					services.get(s).getDB().getDb();
@@ -197,11 +199,11 @@ public class Manager {
 	 */
 	public void addService(String name, String type) {
 		if(type.equals("chat")){
-			services.put(name, new ChatServer(name));
-//			MainProps.addService(name, type);
+//			services.put(name, new ChatServer(name));
+            // TODO ...
 		} else if (type.equals("anek")){
-			services.put(name, new AnekServer(name));
-//			MainProps.addService(name, type);
+//			services.put(name, new AnekServer(name));
+            services.put(name, new AnekService(name));
 		} else {
 			Log.error("Неизвестный тип сервиса: "+type);
 		}		
@@ -254,7 +256,7 @@ public class Manager {
 	 * Запуск всех сервисов
 	 */
 	public void startAll() {
-		for(AbstractServer s : services.values()){
+		for(Service s : services.values()){
 			if(s.getProps().isAutoStart()) s.start();
 		}
 	}
@@ -263,8 +265,8 @@ public class Manager {
 	 * Остановка всех сервисов
 	 */
 	public void stopAll() {
-		for(AbstractServer s : services.values()){
-			if(s.isRun)s.stop();
+		for(Service s : services.values()){
+			if(s.isRun())s.stop();
 		}
 	}
 	
@@ -273,7 +275,7 @@ public class Manager {
 	 * @param name
 	 * @return
 	 */
-	public AbstractServer getService(String name) {
+	public Service getService(String name) {
 		return services.get(name);
 	}
 	
@@ -284,7 +286,7 @@ public class Manager {
 	 */
 	public boolean isRun(String name) {
 		if(services.containsKey(name))
-			return services.get(name).isRun;
+			return services.get(name).isRun();
 		else
 			return false;
 	}

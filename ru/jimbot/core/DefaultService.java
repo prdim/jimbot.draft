@@ -1,6 +1,7 @@
 package ru.jimbot.core;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Определение общих для всех сервисов функций - добавление и удаление слушателей
@@ -16,6 +17,8 @@ public abstract class DefaultService implements Service {
     private List<DbStatusListener> dbList = new Vector<DbStatusListener>();
     private HashMap<String, Protocol> protocols = new HashMap<String, Protocol>();
     private HashMap<String, Object> storage = new HashMap<String, Object>();
+    protected MsgInQueue inq;
+    protected MsgOutQueue outq;
 
     /**
      * Засунуть объект в хранилище данных
@@ -35,6 +38,33 @@ public abstract class DefaultService implements Service {
      */
     public Object getDataStorage(String key) {
         return storage.get(key);
+    }
+
+    /**
+     * Возвращает очередб входящих
+     *
+     * @return
+     */
+    public MsgInQueue getInQueue() {
+        return inq;
+    }
+
+    /**
+     * Возвращает очередь исходящих для заданного уина
+     *
+     * @return
+     */
+    public ConcurrentLinkedQueue<Message> getOutQueue(String sn) {
+        return outq.getUinQueue(sn);
+    }
+
+    /**
+     * возвращает очередь исходящих
+     *
+     * @return
+     */
+    public MsgOutQueue getOutQueue() {
+        return outq;
     }
 
     /**
@@ -78,7 +108,7 @@ public abstract class DefaultService implements Service {
      * @return
      */
     public boolean removeProtocolListener(ProtocolListener e){
-        protList.remove(e);
+        return protList.remove(e);
     }
 
     /**

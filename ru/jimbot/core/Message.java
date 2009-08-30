@@ -40,6 +40,7 @@ public class Message {
         this.snOut = snOut;
         this.msg = msg;
         this.type = type;
+        this.time = System.currentTimeMillis();
     }
 
     /**

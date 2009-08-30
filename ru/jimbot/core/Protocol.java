@@ -30,7 +30,7 @@ public interface Protocol {
      * Добавить слушатель
      * @param p
      */
-    public void addListener(ru.jimbot.protocol.ProtocolListener p);
+//    public void addListener(ru.jimbot.protocol.ProtocolListener p);
 
     /**
      * Установить соединение
@@ -73,7 +73,7 @@ public interface Protocol {
      * @param msg
      * @param isOffline
      */
-    public void getMsg(String sendSN, String recivSN, String msg, boolean isOffline);
+//    public void getMsg(String sendSN, String recivSN, String msg, boolean isOffline);
 
     /**
      *

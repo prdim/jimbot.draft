@@ -27,6 +27,7 @@ import java.util.Vector;
 import ru.jimbot.db.DBAdaptor;
 import ru.jimbot.db.DBObject;
 import ru.jimbot.util.Log;
+import ru.jimbot.core.Service;
 
 /**
  *
@@ -36,12 +37,8 @@ public class DBChat extends DBAdaptor{
     private String serviceName = "";
     
     /** Creates a new instance of DBChat */
-    public DBChat(String name) throws Exception {
-    	serviceName = name;
-//        this.DRIVER = "org.hsqldb.jdbcDriver";
-//        this.URL = "jdbc:hsqldb:file:";
-//        this.dbName = "db/users";
-//        this.openConnection();
+    public DBChat(Service s) {
+    	super(s);
     }
     
     public void createDB(){
