@@ -27,13 +27,12 @@ import ru.jimbot.util.Log;
  *
  * @author Prolubnikov Dmitry
  */
-public class MsgOutQueue implements Runnable {
+public class MsgOutQueue implements Runnable, QueueListener {
     int counter=0;
     int maxCounter=144; //Период переподключения
     public Protocol proc;
     private Thread th;
     int sleepAmount = 5000;
-//    ConcurrentLinkedQueue <Msg> q;
     private long stopCon = 0; // Время разрыва связи
     private int PAUSE_OUT, PAUSE_RESTART, MSG_OUT_LIMIT;
     private int p_restart = 30000;
@@ -47,13 +46,22 @@ public class MsgOutQueue implements Runnable {
         srv = s;
         q = new HashMap<String, ConcurrentLinkedQueue<Message>>();
         // TODO Определить пораметры и константы
+        MSG_OUT_LIMIT = srv.getProps().getIntProperty("bot.msgOutLimit");
+        sleepAmount = srv.getProps().getIntProperty("bot.pauseOut");
         for(String i:srv.getAllProtocols()) {
+            System.out.println(i);
             q.put(i, new ConcurrentLinkedQueue<Message>());
         }
+        srv.addOutQueueListener(this);
     }
 
     public ConcurrentLinkedQueue<Message> getUinQueue(String sn) {
         return q.get(sn);
+    }
+
+    public void onMessage(Message m) {
+        System.out.println(m.getSnIn() + " -> " + m.getSnOut() + " -> " + m.getMsg());
+        add(m);
     }
 
     /**
@@ -61,7 +69,7 @@ public class MsgOutQueue implements Runnable {
      * @param m
      */
     private void notify(Message m) {
-        srv.getCommandProtocolListener(m.getSnOut()).sendMessage(m.getSnIn(), m.getSnOut(), m.getMsg());
+        srv.getCommandProtocolListener(m.getSnIn()).sendMessage(m.getSnIn(), m.getSnOut(), m.getMsg());
 //        for(CommandProtocolListener i:srv.getCommandProtocolListeners()){
 //            i.sendMessage(m.getSnIn(), m.getSnOut(), m.getMsg());
 //        }

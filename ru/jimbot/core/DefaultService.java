@@ -15,7 +15,7 @@ public abstract class DefaultService implements Service {
     private List<QueueListener> outQueueList = new Vector<QueueListener>();
     private List<QueueListener> parserList = new Vector<QueueListener>();
     private List<DbStatusListener> dbList = new Vector<DbStatusListener>();
-    private HashMap<String, Protocol> protocols = new HashMap<String, Protocol>();
+    protected HashMap<String, Protocol> protocols = new HashMap<String, Protocol>();
     private HashMap<String, Object> storage = new HashMap<String, Object>();
     protected MsgInQueue inq;
     protected MsgOutQueue outq;
@@ -154,14 +154,6 @@ public abstract class DefaultService implements Service {
     }
 
     /**
-     * 
-     * @param e
-     */
-    public void addInQueueListener(QueueListener e) {
-        inQueueList.add(e);
-    }
-
-    /**
      *
      * @param e
      */
@@ -174,25 +166,8 @@ public abstract class DefaultService implements Service {
      * @param e
      * @return
      */
-    public boolean removeInQueueListener(QueueListener e) {
-        return inQueueList.remove(e);
-    }
-
-    /**
-     *
-     * @param e
-     * @return
-     */
     public boolean removeOutQueueListener(QueueListener e) {
         return outQueueList.remove(e);
-    }
-
-    /**
-     *
-     * @return
-     */
-    public List<QueueListener> getInQueueListeners() {
-        return inQueueList;
     }
 
     /**

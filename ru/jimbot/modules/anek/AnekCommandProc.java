@@ -65,6 +65,7 @@ public class AnekCommandProc extends AbstractCommandProcessor implements QueueLi
     }
 
     private void parse(Message m) {
+        System.out.println(m.getSnIn() + " -> " + m.getSnOut() + " -> " + m.getMsg());
         m.setMsg("Ответ: " + m.getMsg());
         String s = m.getSnOut();
         m.setSnOut(m.getSnIn());

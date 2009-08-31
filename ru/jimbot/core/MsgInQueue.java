@@ -45,6 +45,7 @@ public class MsgInQueue implements Runnable, ProtocolListener {
         srv = s;
 //        receivers = new Vector<MsgReceiver>();
         q = new ConcurrentLinkedQueue<Message>();
+        srv.addProtocolListener(this);
     }
     
     /**
@@ -73,7 +74,6 @@ public class MsgInQueue implements Runnable, ProtocolListener {
      * Запуск процесса
      */
     public void start(){
-        srv.addProtocolListener(this);
         th = new Thread(this,"msg_in");
         th.setPriority(Thread.NORM_PRIORITY);
         th.start();
@@ -83,7 +83,6 @@ public class MsgInQueue implements Runnable, ProtocolListener {
      * Остановка процесса
      */
     public synchronized void stop() {
-        srv.removeProtocolListener(this);
         th = null;
 //        receivers = new Vector<MsgReceiver>();
         notify();

@@ -32,7 +32,7 @@ import java.util.HashMap;
  */
 public class AnekService extends DefaultService implements DbStatusListener {
     private String name = ""; // Имя сервиса
-    private HashMap<String, Protocol> prots = new HashMap<String, Protocol>(); // Ссылки на протоколы
+//    private HashMap<String, Protocol> prots = new HashMap<String, Protocol>(); // Ссылки на протоколы
     private AnekProps props;
     private DBAneks db;
     private AnekWork aw;
@@ -50,10 +50,10 @@ public class AnekService extends DefaultService implements DbStatusListener {
      */
     public void start() {
         inq = new MsgInQueue(this);
-        outq = new MsgOutQueue(this);
         for(int i=0;i<props.uinCount();i++) {
-            prots.put(props.getUin(i), new IcqProtocol(this, i));
+            protocols.put(props.getUin(i), new IcqProtocol(this, i));
         }
+        outq = new MsgOutQueue(this);
         inq.start();
         outq.start();
         cmd = new AnekCommandProc(this);
@@ -87,16 +87,6 @@ public class AnekService extends DefaultService implements DbStatusListener {
      */
     public boolean isRun() {
         return start;
-    }
-
-    /**
-     * Возвращает екземпляр протокола по УИНу
-     *
-     * @param screenName
-     * @return
-     */
-    public Protocol getProtocol(String screenName) {
-        return prots.get(screenName);
     }
 
     /**

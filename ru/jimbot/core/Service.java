@@ -125,4 +125,7 @@ public interface Service {
     public void removeCommandProtocolListener(CommandProtocolListener e);
     public Collection<CommandProtocolListener> getCommandProtocolListeners();
     public CommandProtocolListener getCommandProtocolListener(String screenName);
+    public void addOutQueueListener(QueueListener e);
+    public boolean removeOutQueueListener(QueueListener e);
+    public List<QueueListener> getOutQueueListeners();     
 }

@@ -52,13 +52,21 @@ public abstract class DBAdaptor {
      */
     public void notifyConnect() {
         for(DbStatusListener i:srv.getDbStatusListeners()){
-            i.onConnect(this);
+            try {
+                i.onConnect(this);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
     public void notifyError(String e) {
-        for(DbStatusListener i:srv.getDbStatusListeners()){
-            i.onError(e);
+        for (DbStatusListener i : srv.getDbStatusListeners()) {
+            try {
+                i.onError(e);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
     
