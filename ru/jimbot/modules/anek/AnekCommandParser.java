@@ -33,17 +33,20 @@ import ru.jimbot.modules.AbstractServer;
 import ru.jimbot.modules.Cmd;
 import ru.jimbot.modules.CommandParser;
 import ru.jimbot.modules.WorkScript;
+import ru.jimbot.modules.anek.commands.CmdAbout;
 import ru.jimbot.util.Log;
 import ru.jimbot.util.MainProps;
 import ru.jimbot.core.QueueListener;
 import ru.jimbot.core.Message;
+import ru.jimbot.core.DefaultCommandParser;
+import ru.jimbot.core.Command;
 
 /**
  *
  * @author Prolubnikov Dmitry
  */
-public class AnekCommandProc extends AbstractCommandProcessor implements QueueListener {
-    public AnekService srv;
+public class AnekCommandParser extends DefaultCommandParser implements QueueListener {
+//    public AnekService srv;
     public ConcurrentHashMap <String,StateUin> uq;
     public long state=0; //Статистика запросов
     public long state_add = 0;
@@ -54,23 +57,34 @@ public class AnekCommandProc extends AbstractCommandProcessor implements QueueLi
     /** Creates a new instance of AnekCommandProc
      * @param s
      */
-    public AnekCommandProc(AnekService s) {
-        srv = s;
+    public AnekCommandParser(AnekService s) {
+        super(s);
         uq = new ConcurrentHashMap<String,StateUin>();
         srv.addParserListener(this);
+        initCommands();
+    }
+
+    /**
+     * Создаем реестр всех команд
+     */
+    public void initCommands() {
+        addCommand(new CmdAbout(this));
     }
 
     public void onMessage(Message m) {
         parse(m);
     }
 
-    private void parse(Message m) {
+    public void parse(Message m) {
         System.out.println(m.getSnIn() + " -> " + m.getSnOut() + " -> " + m.getMsg());
-        m.setMsg("Ответ: " + m.getMsg());
-        String s = m.getSnOut();
-        m.setSnOut(m.getSnIn());
-        m.setSnIn(s);
-        notify(m);
+        String c = this.getCommand(m);
+        System.out.println(c);
+        Command cmd = this.getCommand(c);
+        if(cmd==null){
+            notify(new Message(m.getSnOut(), m.getSnIn(), "Неверная команда! Для справки отправте !help"));
+        } else {
+            notify(cmd.exec(m));
+        }
     }
 
     private void notify(Message m) {

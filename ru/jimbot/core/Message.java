@@ -43,6 +43,14 @@ public class Message {
         this.time = System.currentTimeMillis();
     }
 
+    public Message(String snIn, String snOut, String msg) {
+        this.snIn = snIn;
+        this.snOut = snOut;
+        this.msg = msg;
+        this.type = TYPE_TEXT;
+        this.time = System.currentTimeMillis();
+    }
+
     /**
      * Возвращает копию себя, но с другим текстом
      * (Использую для разбивки сообщения на части или создания серии сообщений одному адресату)

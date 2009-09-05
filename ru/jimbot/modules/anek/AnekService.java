@@ -23,8 +23,6 @@ import ru.jimbot.db.DBAdaptor;
 import ru.jimbot.util.Log;
 import ru.jimbot.protocol.IcqProtocol;
 
-import java.util.HashMap;
-
 /**
  * Реализация сервиса анекдотного бота
  * 
@@ -37,7 +35,7 @@ public class AnekService extends DefaultService implements DbStatusListener {
     private DBAneks db;
     private AnekWork aw;
     private boolean start = false;
-    private AnekCommandProc cmd;
+    private AnekCommandParser cmd;
 
     public AnekService(String name) {
         this.name = name;
@@ -56,7 +54,7 @@ public class AnekService extends DefaultService implements DbStatusListener {
         outq = new MsgOutQueue(this);
         inq.start();
         outq.start();
-        cmd = new AnekCommandProc(this);
+        cmd = new AnekCommandParser(this);
         // TODO ...
         addDbStatusListener(this);
         aw.initDB();

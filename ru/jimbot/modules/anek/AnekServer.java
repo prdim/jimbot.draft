@@ -35,7 +35,7 @@ public class AnekServer extends AbstractServer{
 //    	this.setName(name);
 //    	AnekProps.getInstance(name).load();
 //    	an = new AnekWork(this.getName());
-//        cmd = new AnekCommandProc(this);
+//        cmd = new AnekCommandParser(this);
 //        con = new AnekConnection(this);
 //        con.server = MainProps.getServer();
 //        con.port = MainProps.getPort();

@@ -19,6 +19,9 @@
 package ru.jimbot.core;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 
 /**
  * Интерфейс команды бота.
@@ -28,31 +31,53 @@ import java.util.List;
 public interface Command {
 
     /**
-     * Инициализация. Вызывается при создании экземпляра класса.
+     * Инициализация. Вызывается после создания экземпляра класса.
      */
     public void init();
 
     /**
      * Выполнение команды
-     * @return - результат выполнения для потока исходящих сообщений
+     * @param m - обрабатываемое сообщение с командой
+     * @return - результат (если нужен)
      */
-    public String execute();
+    public Message exec(Message m);
 
     /**
-     * Если результат выполнения - пуская строка, получить результат здесь. Сообщение для конкретного получателя.
-     * @return - сообщение
+     * Выполнение команды
+     * @param sn - от кого?
+     * @param param - вектор параметров (могут быть как строки, так и числа)
+     * @return - результат (если нужен)
      */
-    public Message getOutMessage();
-
-    /**
-     * Указание сообщения, над которым должна быть выполнена данная команда.
-     * @param m
-     */
-    public void setInMessage(Message m);
+    public String exec(String sn, Vector param);
 
     /**
      * Список ключевых слов, по которым можно вызвать эту команду
      * @return
      */
-    public List getCommandPatterns();
+    public List<String> getCommandPatterns();
+
+    /**
+     * Выводит короткую помощь по команде (1 строка)
+     * @return
+     */
+    public String getHelp();
+
+    /**
+     * Выводит подробную помощь по команде
+     * @return
+     */
+    public String getXHelp();
+
+    /**
+     * Список проверяемых командой объектов полномочий с их описанием
+     * @return
+     */
+    public Map<String, String> getAutorityList();
+
+    /**
+     * Проверка полномочий
+     * @param s - список полномочий юзера
+     * @return  - истина, если команда доступна
+     */
+    public boolean autorityCheck(Set s);
 }

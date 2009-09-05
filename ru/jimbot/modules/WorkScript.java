@@ -22,7 +22,7 @@ import java.io.File;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
-import ru.jimbot.modules.anek.AnekCommandProc;
+import ru.jimbot.modules.anek.AnekCommandParser;
 import ru.jimbot.modules.chat.ChatCommandProc;
 import ru.jimbot.modules.chat.RobAdmin;
 import ru.jimbot.modules.http.HttpConnection;
@@ -217,7 +217,7 @@ private String sn=""; // Имя сервиса
     	}
     }
     
-    public String startAnekScript(String name, IcqProtocol proc, AnekCommandProc cproc, String uin, String msg){
+    public String startAnekScript(String name, IcqProtocol proc, AnekCommandParser cproc, String uin, String msg){
 //    	String sn = cproc.srv.getName();
     	try {
     		Interpreter bsh = new Interpreter();
