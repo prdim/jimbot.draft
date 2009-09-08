@@ -18,6 +18,9 @@
 
 package ru.jimbot.core;
 
+import ru.jimbot.modules.MsgStatCounter;
+import ru.jimbot.util.Log;
+
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -168,7 +171,15 @@ public class MsgInQueue implements Runnable, ProtocolListener {
     }
 
     public void onTextMessage(Message m) {
-        q.add(m);
+        MsgStatCounter.getElement(m.getSnOut()).addMsgCount();
+        if(!testFlood(m.getSnIn()))
+            q.add(m);
+        else {
+            Log.flood("FLOOD from " + m.getSnIn() + ">> " + m.getMsg());
+            // TODO Подумать над флудом
+            m.setType(Message.TYPE_FLOOD_NOTICE);
+            q.add(m);
+        }
     }
 
     public void onStatusMessage(Message m) {

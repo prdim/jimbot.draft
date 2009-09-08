@@ -50,4 +50,5 @@ public interface AbstractProps {
 	public void setUin(int i, String uin, String pass);
 	public boolean isAutoStart();
 	public String[] getAdmins();
+    public boolean testAdmin(String screenName);
 }

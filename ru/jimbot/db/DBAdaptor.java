@@ -90,17 +90,19 @@ public abstract class DBAdaptor {
     public void shutdown(){
             try {
                 db.close();
-            } catch (SQLException ex) {
+            } catch (Exception ex) {
             	ex.printStackTrace();
             }
     }
     
     public boolean openConnection(String host, String name, String user, String pass) {
-        	while(!open(host, name, user, pass)){
+//        	while(!open(host, name, user, pass)){
 //        		Log.info("Подключение к БД...");
-        	}
-        	return true;
+//        	}
+//        	return true;
+        return open(host, name, user, pass);
     }
+
     
     //тут нада создать базу данных
     public abstract void createDB();

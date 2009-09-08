@@ -22,10 +22,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.text.DateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.TimeZone;
-import java.util.Vector;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import ru.jimbot.modules.AbstractCommandProcessor;
@@ -33,13 +30,10 @@ import ru.jimbot.modules.AbstractServer;
 import ru.jimbot.modules.Cmd;
 import ru.jimbot.modules.CommandParser;
 import ru.jimbot.modules.WorkScript;
-import ru.jimbot.modules.anek.commands.CmdAbout;
+import ru.jimbot.modules.anek.commands.*;
 import ru.jimbot.util.Log;
 import ru.jimbot.util.MainProps;
-import ru.jimbot.core.QueueListener;
-import ru.jimbot.core.Message;
-import ru.jimbot.core.DefaultCommandParser;
-import ru.jimbot.core.Command;
+import ru.jimbot.core.*;
 
 /**
  *
@@ -50,8 +44,8 @@ public class AnekCommandParser extends DefaultCommandParser implements QueueList
     public ConcurrentHashMap <String,StateUin> uq;
     public long state=0; //Статистика запросов
     public long state_add = 0;
-    public HashMap<String,Cmd> commands = new HashMap<String,Cmd>();
-    public CommandParser parser = null;
+//    public HashMap<String,Cmd> commands = new HashMap<String,Cmd>();
+//    public CommandParser parser = null;
     private boolean firstStartMsg = false;
     
     /** Creates a new instance of AnekCommandProc
@@ -69,6 +63,17 @@ public class AnekCommandParser extends DefaultCommandParser implements QueueList
      */
     public void initCommands() {
         addCommand(new CmdAbout(this));
+        addCommand(new CmdHelp(this));
+        addCommand(new Cmd1(this));
+        addCommand(new CmdAdsstat(this));
+        addCommand(new CmdStat(this));
+        addCommand(new CmdAnek(this));
+        addCommand(new CmdRefresh(this));
+        addCommand(new CmdAdd(this));
+        addCommand(new CmdFree(this));
+        for(Command i:commands.values()) {
+            i.init();
+        }
     }
 
     public void onMessage(Message m) {
@@ -76,7 +81,10 @@ public class AnekCommandParser extends DefaultCommandParser implements QueueList
     }
 
     public void parse(Message m) {
-        System.out.println(m.getSnIn() + " -> " + m.getSnOut() + " -> " + m.getMsg());
+        // Игнорируем все лишнее
+        if(m.getType()!=Message.TYPE_TEXT) return;
+        firstMsg(m);
+        addState(m.getSnIn());
         String c = this.getCommand(m);
         System.out.println(c);
         Command cmd = this.getCommand(c);
@@ -87,27 +95,41 @@ public class AnekCommandParser extends DefaultCommandParser implements QueueList
         }
     }
 
-    private void notify(Message m) {
+    public void notify(Message m) {
         for(QueueListener i:srv.getOutQueueListeners()) {
             i.onMessage(m);
         }
     }
 
-//    private void firstMsg(IcqProtocol proc){
-//    	if(!firstStartMsg){
-//    		String[] s = srv.getProps().getAdmins();
-//    		for(int i=0;i<s.length;i++){
-//    		    String ss = "Бот успешно запущен!\n";
-//                if(MainProps.checkNewVersion())
-//                    ss += "На сайте http://jimbot.ru Доступна новая версия!\n" + MainProps.getNewVerDesc();
-//                else
-//                    ss += "Вся информация о боте из первых рук только на сайте: http://jimbot.ru";
-//                proc.mq.add(s[i], ss);
-//    		}
-//    		firstStartMsg=true;
-//    	}
-//    }
-//
+    /**
+     * Возвращает список разрешенных полномочий для пользователя с заданным УИНом
+     *
+     * @param screenName
+     * @return
+     */
+    public Set<String> getAuthList(String screenName) {
+        HashSet<String> h = new HashSet<String>();
+        if(srv.getProps().testAdmin(screenName)){
+            h.add("admin");
+        }
+        return h;
+    }
+
+    private void firstMsg(Message m){
+    	if(!firstStartMsg){
+    		String[] s = srv.getProps().getAdmins();
+    		for(int i=0;i<s.length;i++){
+    		    String ss = "Бот успешно запущен!\n";
+                if(MainProps.checkNewVersion())
+                    ss += "На сайте http://jimbot.ru Доступна новая версия!\n" + MainProps.getNewVerDesc();
+                else
+                    ss += "Вся информация о боте из первых рук только на сайте: http://jimbot.ru";
+                notify(new Message(m.getSnOut(), s[i], ss));
+    		}
+    		firstStartMsg=true;
+    	}
+    }
+
 //    public AbstractServer getServer(){
 //    	return srv;
 //    }
@@ -152,78 +174,79 @@ public class AnekCommandParser extends DefaultCommandParser implements QueueList
 //        }
 //    }
 //
-//    /**
-//     * Определение времени запуска бота
-//     */
-//    private long getTimeStart(){
-//        long t = 0;
-//        try{
-//            File f = new File("./state");
-//            t = f.lastModified();
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//        return t;
-//    }
-//
-//    private long getUpTime(){
-//        return System.currentTimeMillis()-getTimeStart();
-//    }
-//
-//    private long getHourStat(){
-//        if(getUpTime()>1000*60*60){
-//            return state/(getUpTime()/3600000);
-//        }
-//        return 0;
-//    }
-//
-//    private long getDayStat(){
-//        if(getUpTime()>1000*60*60*24){
-//            return state/(getUpTime()/86400000);
-//        }
-//        return 0;
-//    }
-//
-//    private String getTime(long t){
-//        Date dt = new Date(t);
-//        DateFormat df = DateFormat.getTimeInstance(DateFormat.MEDIUM);
-//        df.setTimeZone(TimeZone.getTimeZone("GMT"));
-//        return (t/86400000) + " дней " + df.format(dt);
-//    }
-//
-//    /**
-//     * Возвращает наименее загруженный номер
-//     * @return
-//     */
-//    public IcqProtocol getFreeUin(){
-//    	IcqProtocol u = null;
-//    	int k = 99;
-//    	int c = 0;
-//    	for(int i=0;i<srv.getProps().uinCount();i++){
-//    		if(srv.getIcqProcess(i).isOnLine()){
-//    			c = srv.getIcqProcess(i).getOuteqSize();
-//    			if(c==0) return srv.getIcqProcess(i);
-//    			if(k>c){
-//    				k = c;
-//    				u = srv.getIcqProcess(i);
-//    			}
-//    		}
-//    	}
-//    	return u;
-//    }
-//
-//    public void addState(String uin){
-//        if(!uq.containsKey(uin)){
-//            StateUin u = new StateUin(uin,0);
-//            uq.put(uin,u);
-//        }
-//    }
-//
-//    public void stateInc(String uin){
-//        StateUin u = uq.get(uin);
-//        u.cnt++;
-//        uq.put(uin,u);
-//    }
+    /**
+     * Определение времени запуска бота
+     */
+    public long getTimeStart(){
+        long t = 0;
+        try{
+            File f = new File("./state");
+            t = f.lastModified();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return t;
+    }
+
+    public long getUpTime(){
+        return System.currentTimeMillis()-getTimeStart();
+    }
+
+    public long getHourStat(){
+        if(getUpTime()>1000*60*60){
+            return state/(getUpTime()/3600000);
+        }
+        return 0;
+    }
+
+    public long getDayStat(){
+        if(getUpTime()>1000*60*60*24){
+            return state/(getUpTime()/86400000);
+        }
+        return 0;
+    }
+
+    public String getTime(long t){
+        Date dt = new Date(t);
+        DateFormat df = DateFormat.getTimeInstance(DateFormat.MEDIUM);
+        df.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return (t/86400000) + " дней " + df.format(dt);
+    }
+
+    /**
+     * Возвращает наименее загруженный номер
+     * @return
+     */
+    public String getFreeUin(){
+    	String u = "";
+    	int k = 99;
+    	int c = 0;
+    	for(int i=0;i<srv.getProps().uinCount();i++){
+            String s = srv.getProps().getUin(i);
+    		if(srv.getProtocol(s).isOnLine()){
+    			c = srv.getOutQueue(s).size();
+    			if(c==0) return s;
+    			if(k>c){
+    				k = c;
+    				u = s;
+    			}
+    		}
+    	}
+    	return u;
+    }
+
+    public void addState(String uin){
+        if(!uq.containsKey(uin)){
+            StateUin u = new StateUin(uin,0);
+            uq.put(uin,u);
+        }
+    }
+
+    public void stateInc(String uin){
+        StateUin u = uq.get(uin);
+        u.cnt++;
+        uq.put(uin,u);
+    }
 
     public class StateUin {
         public String uin="";

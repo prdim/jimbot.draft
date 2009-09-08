@@ -18,21 +18,22 @@
 
 package ru.jimbot.modules.anek.commands;
 
-import ru.jimbot.core.Command;
-import ru.jimbot.core.Message;
 import ru.jimbot.core.DefaultCommand;
 import ru.jimbot.core.Parser;
+import ru.jimbot.core.Message;
 import ru.jimbot.util.MainProps;
+import ru.jimbot.modules.anek.AnekService;
 
-import java.util.*;
+import java.util.List;
+import java.util.Arrays;
+import java.util.Vector;
 
 /**
- * Команда !about
+ * Обновление кеша после изменения данных в БД
  * @author Prolubnikov Dmitry
  */
-public class CmdAbout extends DefaultCommand {
-
-    public CmdAbout(Parser p) {
+public class CmdRefresh extends DefaultCommand {
+    public CmdRefresh(Parser p) {
         super(p);
     }
 
@@ -42,7 +43,7 @@ public class CmdAbout extends DefaultCommand {
      * @return
      */
     public List<String> getCommandPatterns() {
-        return Arrays.asList(new String[] {"!about"});
+        return Arrays.asList(new String[] {"!refresh"});
     }
 
     /**
@@ -53,7 +54,8 @@ public class CmdAbout extends DefaultCommand {
      * @return - результат (если нужен)
      */
     public String exec(String sn, Vector param) {
-        return MainProps.getAbout();
+        ((AnekService)p.getService()).getAnekWork().refreshData();
+        return "Данные в памяти обновлены";
     }
 
     /**
@@ -72,7 +74,7 @@ public class CmdAbout extends DefaultCommand {
      * @return
      */
     public String getHelp() {
-        return "!about - информация об авторе программы";
+        return "!refresh - обновление кеша после изменения БД";
     }
 
     /**
@@ -82,5 +84,16 @@ public class CmdAbout extends DefaultCommand {
      */
     public String getXHelp() {
         return getHelp();
+    }
+
+    /**
+     * Проверка полномочий по уину
+     *
+     * @param screenName
+     * @return
+     */
+    @Override
+    public boolean authorityCheck(String screenName) {
+        return p.getService().getProps().testAdmin(screenName);
     }
 }

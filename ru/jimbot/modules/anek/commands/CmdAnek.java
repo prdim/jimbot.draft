@@ -18,31 +18,33 @@
 
 package ru.jimbot.modules.anek.commands;
 
-import ru.jimbot.core.Command;
-import ru.jimbot.core.Message;
 import ru.jimbot.core.DefaultCommand;
 import ru.jimbot.core.Parser;
-import ru.jimbot.util.MainProps;
+import ru.jimbot.core.Message;
+import ru.jimbot.modules.anek.AnekService;
+import ru.jimbot.modules.anek.AnekCommandParser;
 
-import java.util.*;
+import java.util.Vector;
+import java.util.List;
+import java.util.Arrays;
 
 /**
- * Команда !about
+ * Получение анекдота по номеру
  * @author Prolubnikov Dmitry
  */
-public class CmdAbout extends DefaultCommand {
-
-    public CmdAbout(Parser p) {
+public class CmdAnek extends DefaultCommand {
+    public CmdAnek(Parser p) {
         super(p);
     }
 
     /**
-     * Список ключевых слов, по которым можно вызвать эту команду
+     * Выполнение команды
      *
-     * @return
+     * @param m - обрабатываемое сообщение с командой
+     * @return - результат (если нужен)
      */
-    public List<String> getCommandPatterns() {
-        return Arrays.asList(new String[] {"!about"});
+    public Message exec(Message m) {
+        return new Message(m.getSnOut(), m.getSnIn(), exec(m.getSnIn(), p.getArgs(m, "$n")));
     }
 
     /**
@@ -53,26 +55,27 @@ public class CmdAbout extends DefaultCommand {
      * @return - результат (если нужен)
      */
     public String exec(String sn, Vector param) {
-        return MainProps.getAbout();
+        ((AnekCommandParser)p).state++;
+        ((AnekCommandParser)p).stateInc(sn);
+        return ((AnekService)p.getService()).getAnekWork().getAnek((Integer)param.get(0));
     }
 
     /**
-     * Выполнение команды
+     * Список ключевых слов, по которым можно вызвать эту команду
      *
-     * @param m - обрабатываемое сообщение с командой
-     * @return - результат (если нужен)
+     * @return
      */
-    public Message exec(Message m) {
-        return new Message(m.getSnOut(), m.getSnIn(), exec(m.getSnIn(),new Vector()));
+    public List<String> getCommandPatterns() {
+        return Arrays.asList(new String[] {"!anek"});
     }
 
     /**
-     * Выводит помощь по команде
+     * Выводит короткую помощь по команде (1 строка)
      *
      * @return
      */
     public String getHelp() {
-        return "!about - информация об авторе программы";
+        return "!anek <id> - Получить анекдот с заданным id";
     }
 
     /**

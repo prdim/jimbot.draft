@@ -19,6 +19,7 @@
 package ru.jimbot.core;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.HashMap;
 import ru.jimbot.util.Log;
 
@@ -36,21 +37,22 @@ public class MsgOutQueue implements Runnable, QueueListener {
     private long stopCon = 0; // Время разрыва связи
     private int PAUSE_OUT, PAUSE_RESTART, MSG_OUT_LIMIT;
     private int p_restart = 30000;
-    private int lostMsg = 0; // Счетчик пропущенных сообщений
+//    private int lostMsg = 0; // Счетчик пропущенных сообщений
     private long t = 0; // Время последнего отправленного сообщения
-
     private HashMap<String, ConcurrentLinkedQueue<Message>> q;
+    private ConcurrentHashMap<String, Integer> lostMsgs;
     private Service srv;
     
     public MsgOutQueue(Service s) {
         srv = s;
         q = new HashMap<String, ConcurrentLinkedQueue<Message>>();
+        lostMsgs = new ConcurrentHashMap<String, Integer>();
         // TODO Определить пораметры и константы
         MSG_OUT_LIMIT = srv.getProps().getIntProperty("bot.msgOutLimit");
         sleepAmount = srv.getProps().getIntProperty("bot.pauseOut");
         for(String i:srv.getAllProtocols()) {
-            System.out.println(i);
             q.put(i, new ConcurrentLinkedQueue<Message>());
+            lostMsgs.put(i,0);
         }
         srv.addOutQueueListener(this);
     }
@@ -60,7 +62,7 @@ public class MsgOutQueue implements Runnable, QueueListener {
     }
 
     public void onMessage(Message m) {
-        System.out.println(m.getSnIn() + " -> " + m.getSnOut() + " -> " + m.getMsg());
+//        System.out.println(m.getSnIn() + " -> " + m.getSnOut() + " -> " + m.getMsg());
         add(m);
     }
 
@@ -125,7 +127,7 @@ public class MsgOutQueue implements Runnable, QueueListener {
         try {
             if(q.get(m.getSnIn()).size()>MSG_OUT_LIMIT) {
                 Log.info("OUT MESSAGE IS LOST: " + m.getSnIn() + ">>" + m.getSnOut() + " : " + m.getMsg());
-                lostMsg++;
+                lostMsgs.put(m.getSnIn(),lostMsgs.get(m.getSnIn())+1);
                 return;
             }
             if(m.getType()!=Message.TYPE_TEXT){
@@ -179,8 +181,8 @@ public class MsgOutQueue implements Runnable, QueueListener {
 //        }
 //   }
 
-    public int getLostMsgCount(){
-    	return lostMsg;
+    public int getLostMsgCount(String sn){
+    	return lostMsgs.get(sn);
     }
 
 //    private void send() {

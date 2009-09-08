@@ -43,6 +43,10 @@ public class AnekService extends DefaultService implements DbStatusListener {
         aw = new AnekWork(name, this);
     }
 
+    public AnekWork getAnekWork() {
+        return aw;
+    }
+
     /**
      * Запуск сервиса
      */
@@ -57,9 +61,9 @@ public class AnekService extends DefaultService implements DbStatusListener {
         cmd = new AnekCommandParser(this);
         // TODO ...
         addDbStatusListener(this);
+        start = true;
         aw.initDB();
         db = aw.db;
-        start = true;
     }
 
     /**
@@ -72,7 +76,9 @@ public class AnekService extends DefaultService implements DbStatusListener {
         outq = null;
         aw.closeDB();
         for(CommandProtocolListener i:getCommandProtocolListeners()) {
-            i.logOff();
+            try{
+                i.logOff();
+            } catch (Exception e) {}
         }
         start = false;
         // TODO Подумать как лучше убрать ссылки и слушатели очередей, парсеров команд, протоколом и т.п.

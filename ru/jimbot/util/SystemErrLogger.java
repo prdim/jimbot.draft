@@ -67,7 +67,7 @@ public class SystemErrLogger extends OutputStream {
         Runnable update = new Runnable() {
             public void run() {
                 newLineMatcher.reset(s);
-                if (s.length() == 1 && newLineMatcher.find()) {
+                if (s.length() <= 2 && newLineMatcher.find()) {
                     return;
                 }
                 String text = newLineMatcher.replaceAll(" ");

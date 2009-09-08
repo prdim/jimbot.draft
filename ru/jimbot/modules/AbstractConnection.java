@@ -24,7 +24,7 @@ package ru.jimbot.modules;
  * @author Prolubnikov Dmitry
  */
 public class AbstractConnection {
-    public UINmanager uins;
+//    public UINmanager uins;
     public String[] proxy = new String[] {"","","",""};
     public String server="";
     public int port;

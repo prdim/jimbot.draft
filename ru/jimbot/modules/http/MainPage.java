@@ -246,6 +246,7 @@ public class MainPage extends HttpServlet {
     			con.getURI() + "?uid=" + uid + "&page=srvs_stats&ns="+ ns + "\" />" +
     			"<TITLE>JimBot "+MainProps.VERSION+" </TITLE></HEAD>" + SrvUtil.BODY +
                 "<H3>Статистика работы " + ns + "</H3>");
+        if(Manager.getInstance().getService(ns).isRun()){
     	con.print("Очередь входящих сообщений: " + Manager.getInstance().getService(ns).getInQueue().size() + "<br>");
     	con.print("Очередь исходящих сообщений: <br>");
     	for(int i=0;i<Manager.getInstance().getService(ns).getProps().uinCount();i++){
@@ -253,7 +254,7 @@ public class MainPage extends HttpServlet {
     		con.print(">> " + sn +
     				(Manager.getInstance().getService(ns).getProtocol(sn).isOnLine() ? "  [ ON]  " : "  [OFF]  ") +
     				Manager.getInstance().getService(ns).getOutQueue(sn).size() +
-    				", потери:" + Manager.getInstance().getService(ns).getOutQueue().getLostMsgCount() + "<br>");
+    				", потери:" + Manager.getInstance().getService(ns).getOutQueue().getLostMsgCount(sn) + "<br>");
     	}
     	con.print("<br>Статистика принятых сообщений по номерам:<br>");
     	String s = "<TABLE BORDER=\"1\"><TR><TD>UIN</TD><TD>1 минута</TD><TD>5 митут</TD><TD>60 минут</TD><TD>24 часа</TD><TD>Всего</TD></TR>";
@@ -269,7 +270,10 @@ public class MainPage extends HttpServlet {
     			"</TD></TR>";
     	}
     	s += "</TABLE>";
-    	con.print(s);
+            con.print(s);
+        } else {
+            con.print("Сервис не запущен.");
+        }
     	con.print("<P><A HREF=\"" + con.getURI() + "?uid=" + uid + "&page=main_page\">" +
 				"Назад</A><br>");
     	con.print("</FONT></BODY></HTML>");

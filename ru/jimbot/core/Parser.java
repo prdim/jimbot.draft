@@ -94,4 +94,11 @@ public interface Parser {
      * @return
      */
     public Command getCommand(String cmd);
+
+    /**
+     * Возвращает список разрешенных полномочий для пользователя с заданным УИНом
+     * @param screenName
+     * @return
+     */
+    public Set<String> getAuthList(String screenName);
 }

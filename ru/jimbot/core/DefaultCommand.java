@@ -57,7 +57,17 @@ public abstract class DefaultCommand implements Command {
      * @param s - список полномочий юзера
      * @return - истина, если команда доступна
      */
-    public boolean autorityCheck(Set s) {
+    public boolean authorityCheck(Set<String> s) {
         return true;
+    }
+
+    /**
+     * Проверка полномочий по уину
+     *
+     * @param screenName
+     * @return
+     */
+    public boolean authorityCheck(String screenName) {
+        return authorityCheck(p.getAuthList(screenName));
     }
 }

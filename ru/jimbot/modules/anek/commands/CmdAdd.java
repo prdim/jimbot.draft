@@ -18,31 +18,34 @@
 
 package ru.jimbot.modules.anek.commands;
 
-import ru.jimbot.core.Command;
+import ru.jimbot.core.Parser;
 import ru.jimbot.core.Message;
 import ru.jimbot.core.DefaultCommand;
-import ru.jimbot.core.Parser;
-import ru.jimbot.util.MainProps;
+import ru.jimbot.modules.anek.AnekService;
+import ru.jimbot.modules.anek.AnekCommandParser;
+import ru.jimbot.util.Log;
 
-import java.util.*;
+import java.util.Vector;
+import java.util.List;
+import java.util.Arrays;
 
 /**
- * Команда !about
+ * Добавление анекдота
  * @author Prolubnikov Dmitry
  */
-public class CmdAbout extends DefaultCommand {
-
-    public CmdAbout(Parser p) {
+public class CmdAdd extends DefaultCommand {
+    public CmdAdd(Parser p) {
         super(p);
     }
 
     /**
-     * Список ключевых слов, по которым можно вызвать эту команду
+     * Выполнение команды
      *
-     * @return
+     * @param m - обрабатываемое сообщение с командой
+     * @return - результат (если нужен)
      */
-    public List<String> getCommandPatterns() {
-        return Arrays.asList(new String[] {"!about"});
+    public Message exec(Message m) {
+        return new Message(m.getSnOut(), m.getSnIn(), exec(m.getSnIn(), p.getArgs(m, "$s")));
     }
 
     /**
@@ -53,26 +56,32 @@ public class CmdAbout extends DefaultCommand {
      * @return - результат (если нужен)
      */
     public String exec(String sn, Vector param) {
-        return MainProps.getAbout();
+        String s = (String) param.get(0);
+        if (s.equals("")) return "Пустой анекдот.";
+        if (s.length() < 20) return "";
+        if (s.length() > 500) return "";
+        ((AnekService) p.getService()).getAnekWork().addTempAnek(s, sn);
+        Log.talk("Add anek <" + sn + ">: " + s);
+        ((AnekCommandParser) p).state_add++;
+        return "Анекдот сохранен. После рассмотрения администрацией он будет добавлен в базу.";
     }
 
     /**
-     * Выполнение команды
+     * Список ключевых слов, по которым можно вызвать эту команду
      *
-     * @param m - обрабатываемое сообщение с командой
-     * @return - результат (если нужен)
+     * @return
      */
-    public Message exec(Message m) {
-        return new Message(m.getSnOut(), m.getSnIn(), exec(m.getSnIn(),new Vector()));
+    public List<String> getCommandPatterns() {
+        return Arrays.asList(new String[] {"!add"});
     }
 
     /**
-     * Выводит помощь по команде
+     * Выводит короткую помощь по команде (1 строка)
      *
      * @return
      */
     public String getHelp() {
-        return "!about - информация об авторе программы";
+        return "!add <анекдот> - Получить анекдот с заданным id";
     }
 
     /**
@@ -82,5 +91,4 @@ public class CmdAbout extends DefaultCommand {
      */
     public String getXHelp() {
         return getHelp();
-    }
-}
+    }}

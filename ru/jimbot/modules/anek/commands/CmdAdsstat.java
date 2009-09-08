@@ -18,22 +18,40 @@
 
 package ru.jimbot.modules.anek.commands;
 
-import ru.jimbot.core.Command;
-import ru.jimbot.core.Message;
 import ru.jimbot.core.DefaultCommand;
 import ru.jimbot.core.Parser;
-import ru.jimbot.util.MainProps;
+import ru.jimbot.core.Message;
+import ru.jimbot.modules.anek.AnekService;
 
-import java.util.*;
+import java.util.List;
+import java.util.Arrays;
+import java.util.Vector;
 
 /**
- * Команда !about
+ * Статистика показа рекламы
  * @author Prolubnikov Dmitry
  */
-public class CmdAbout extends DefaultCommand {
-
-    public CmdAbout(Parser p) {
+public class CmdAdsstat extends DefaultCommand {
+    public CmdAdsstat(Parser p) {
         super(p);
+    }
+
+    /**
+     * Выводит короткую помощь по команде (1 строка)
+     *
+     * @return
+     */
+    public String getHelp() {
+        return ""; // В обычном хелпе выводить не нужно
+    }
+
+    /**
+     * Выводит подробную помощь по команде
+     *
+     * @return
+     */
+    public String getXHelp() {
+        return "!adsstat - статистика показа рекламы";
     }
 
     /**
@@ -42,7 +60,7 @@ public class CmdAbout extends DefaultCommand {
      * @return
      */
     public List<String> getCommandPatterns() {
-        return Arrays.asList(new String[] {"!about"});
+        return Arrays.asList(new String[] {"!adsstat"});
     }
 
     /**
@@ -53,7 +71,7 @@ public class CmdAbout extends DefaultCommand {
      * @return - результат (если нужен)
      */
     public String exec(String sn, Vector param) {
-        return MainProps.getAbout();
+        return ((AnekService)p.getService()).getAnekWork().adsStat();
     }
 
     /**
@@ -63,24 +81,6 @@ public class CmdAbout extends DefaultCommand {
      * @return - результат (если нужен)
      */
     public Message exec(Message m) {
-        return new Message(m.getSnOut(), m.getSnIn(), exec(m.getSnIn(),new Vector()));
-    }
-
-    /**
-     * Выводит помощь по команде
-     *
-     * @return
-     */
-    public String getHelp() {
-        return "!about - информация об авторе программы";
-    }
-
-    /**
-     * Выводит подробную помощь по команде
-     *
-     * @return
-     */
-    public String getXHelp() {
-        return getHelp();
+        return new Message(m.getSnOut(), m.getSnIn(), exec(m.getSnIn(), null));
     }
 }

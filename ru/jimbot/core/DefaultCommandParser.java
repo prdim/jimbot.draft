@@ -127,6 +127,9 @@ public abstract class DefaultCommandParser implements Parser {
 
     /**
      * Массив аргументов по шаблону
+     * $n - число
+     * $c - слово без пробелов
+     * $s - произвольная строка до конца сообщения
      *
      * @param m
      * @return
