@@ -23,6 +23,7 @@ import ru.jimbot.util.Log;
 
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentHashMap;
 
 //import ru.jimbot.protocol.IcqProtocol;
 
@@ -41,6 +42,8 @@ public class MsgInQueue implements Runnable, ProtocolListener {
     // Пары уин - время последнего сообщения
     private HashMap<String,Long> flood = new HashMap<String,Long>();
     private Service srv; // Ссылка на сервис
+    private ConcurrentHashMap<String, LogoutInfo> lastLogout; // время последнего падения уина
+    private int checkCount = 0;
         
     /** Creates a new instance of MsgInQueue */
     public MsgInQueue(Service s) {
@@ -48,6 +51,7 @@ public class MsgInQueue implements Runnable, ProtocolListener {
         srv = s;
 //        receivers = new Vector<MsgReceiver>();
         q = new ConcurrentLinkedQueue<Message>();
+        lastLogout = new ConcurrentHashMap<String, LogoutInfo>();
         srv.addProtocolListener(this);
     }
     
@@ -126,11 +130,28 @@ public class MsgInQueue implements Runnable, ProtocolListener {
         Thread me = Thread.currentThread(); 
         while (th == me) {
             parseMsg();
+            checkLogout();
             try {
                 Thread.sleep(sleepAmount);
             } catch (InterruptedException e) { break; }             
         }
         th=null;
+    }
+
+    /**
+     * Проверка упадших уинов и их переподключение
+     */
+    private void checkLogout() {
+        checkCount++;
+        if(checkCount<100) return;
+        checkCount = 0;
+        for(LogoutInfo i:lastLogout.values()){
+            if(i.getTime()>0 &&
+                    (System.currentTimeMillis()-i.getTime())>
+                            ((i.getCount()*30000)>900000 ? 900000 : (i.getCount()*30000))){
+                srv.getCommandProtocolListener(i.getSn()).logOn();
+            }
+        }
     }
     
 //    public void addReceiver(AbstractProtocol ip){
@@ -190,15 +211,68 @@ public class MsgInQueue implements Runnable, ProtocolListener {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void logOn() {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void logOn(String sn) {
+        lastLogout.put(sn, new LogoutInfo(sn));
     }
 
-    public void logOff() {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void logOut(String sn) {
+        try {
+            LogoutInfo u = lastLogout.get(sn);
+            u.setTime(System.currentTimeMillis());
+            u.incCount();
+            lastLogout.put(sn, u);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void onOtherMessage(Message m) {
         //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    /**
+     * Класс содержит информацию о падениях уина. Используется для переподключения и определения паузы между
+     * переподключениями номера.
+     */
+    private class LogoutInfo {
+        private long time = 0;
+        private int count = 0;
+        private String sn;
+
+        private LogoutInfo(String sn) {
+            this.sn = sn;
+        }
+
+        public String getSn() {
+            return sn;
+        }
+
+        /**
+         * Время последнего падения
+         * @return
+         */
+        public long getTime() {
+            return time;
+        }
+
+        public void setTime(long time) {
+            this.time = time;
+        }
+
+        /**
+         * Общее число падений
+         * @return
+         */
+        public int getCount() {
+            return count;
+        }
+
+        public void setCount(int count) {
+            this.count = count;
+        }
+
+        public void incCount() {
+            count++;
+        }
     }
 }

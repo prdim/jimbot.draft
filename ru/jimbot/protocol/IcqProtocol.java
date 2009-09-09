@@ -111,13 +111,13 @@ public class IcqProtocol implements Protocol, MessagingListener, StatusListener,
 
     private void notifyLogon() {
         for(ProtocolListener i:srv.getProtocolListeners()) {
-            i.logOn();
+            i.logOn(screenName);
         }
     }
 
     private void notifyLogout() {
         for(ProtocolListener i:srv.getProtocolListeners()) {
-            i.logOff();
+            i.logOut(screenName);
         }
     }
 	

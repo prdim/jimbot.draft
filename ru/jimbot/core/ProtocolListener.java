@@ -27,7 +27,7 @@ public interface ProtocolListener {
     public void onTextMessage(Message m);
     public void onStatusMessage(Message m);
     public void onError(Message m);
-    public void logOn();
-    public void logOff();
+    public void logOn(String sn);
+    public void logOut(String sn);
     public void onOtherMessage(Message m);
 }
