@@ -64,6 +64,8 @@ import ru.caffeineim.protocols.icq.setting.enumerations.StatusModeEnum;
 import ru.caffeineim.protocols.icq.setting.enumerations.XStatusModeEnum;
 import ru.caffeineim.protocols.icq.tool.OscarInterface;
 import ru.jimbot.core.*;
+import ru.jimbot.core.events.ProtocolLogonEvent;
+import ru.jimbot.core.events.ProtocolLogoutEvent;
 import ru.jimbot.modules.chat.Users;
 import ru.jimbot.util.Log;
 import ru.jimbot.util.MainProps;
@@ -110,15 +112,17 @@ public class IcqProtocol implements Protocol, MessagingListener, StatusListener,
     }
 
     private void notifyLogon() {
-        for(ProtocolListener i:srv.getProtocolListeners()) {
-            i.logOn(screenName);
-        }
+        srv.createEvent(new ProtocolLogonEvent(srv, screenName));
+//        for(ProtocolListener i:srv.getProtocolListeners()) {
+//            i.logOn(screenName);
+//        }
     }
 
     private void notifyLogout() {
-        for(ProtocolListener i:srv.getProtocolListeners()) {
-            i.logOut(screenName);
-        }
+        srv.createEvent(new ProtocolLogoutEvent(srv, screenName));
+//        for(ProtocolListener i:srv.getProtocolListeners()) {
+//            i.logOut(screenName);
+//        }
     }
 	
 //	public AbstractProps getProps(){
@@ -591,7 +595,7 @@ public class IcqProtocol implements Protocol, MessagingListener, StatusListener,
      * @param id
      * @param text
      */
-    public void setChangeStatus(int id, String text) {
+    public void onChangeStatus(int id, String text) {
         srv.getProps().setIntProperty("icq.status", id);
         OscarInterface.changeStatus(con, new StatusModeEnum(srv.getProps().getIntProperty("icq.status")));
     }
@@ -600,10 +604,11 @@ public class IcqProtocol implements Protocol, MessagingListener, StatusListener,
      * Установить Х-статус
      *
      * @param id
-     * @param text
+     * @param text1
      */
-    public void setChangeXStatus(int id, String text) {
+    public void onChangeXStatus(int id, String text1, String test2) {
         srv.getProps().setIntProperty("icq.xstatus", id);
+
         OscarInterface.changeXStatus(con, new XStatusModeEnum(srv.getProps().getIntProperty("icq.xstatus")));
     }
 
@@ -628,7 +633,7 @@ public class IcqProtocol implements Protocol, MessagingListener, StatusListener,
     /**
      * Отключиться от сервера
      */
-    public void logOff() {
+    public void logOut() {
         disconnect();
     }
 }

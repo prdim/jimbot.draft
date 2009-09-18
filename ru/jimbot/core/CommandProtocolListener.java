@@ -29,14 +29,15 @@ public interface CommandProtocolListener {
      * @param id
      * @param text
      */
-    public void setChangeStatus(int id, String text);
+    public void onChangeStatus(int id, String text);
 
     /**
      * Установить Х-статус
      * @param id
-     * @param text
+     * @param text1
+     * @param text2
      */
-    public void setChangeXStatus(int id, String text);
+    public void onChangeXStatus(int id, String text1, String text2);
 
     /**
      * Отправить текстовое сообщение
@@ -54,7 +55,7 @@ public interface CommandProtocolListener {
     /**
      * Отключиться от сервера
      */
-    public void logOff();
+    public void logOut();
 
     /**
      * Возвращает УИН слушателя

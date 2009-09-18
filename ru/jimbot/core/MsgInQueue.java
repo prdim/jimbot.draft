@@ -20,6 +20,7 @@ package ru.jimbot.core;
 
 import ru.jimbot.modules.MsgStatCounter;
 import ru.jimbot.util.Log;
+import ru.jimbot.core.events.CommandProtocolLogonEvent;
 
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -149,7 +150,8 @@ public class MsgInQueue implements Runnable, ProtocolListener {
             if(i.getTime()>0 &&
                     (System.currentTimeMillis()-i.getTime())>
                             ((i.getCount()*30000)>900000 ? 900000 : (i.getCount()*30000))){
-                srv.getCommandProtocolListener(i.getSn()).logOn();
+//                srv.getCommandProtocolListener(i.getSn()).logOn();
+                srv.createEvent(new CommandProtocolLogonEvent(srv, i.getSn()));
             }
         }
     }

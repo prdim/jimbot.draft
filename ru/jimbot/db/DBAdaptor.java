@@ -30,6 +30,8 @@ import ru.jimbot.util.Log;
 import ru.jimbot.core.Service;
 import ru.jimbot.core.DbStatusListener;
 import ru.jimbot.core.DefaultService;
+import ru.jimbot.core.events.EventConnectDB;
+import ru.jimbot.core.events.EventErrorDB;
 
 /**
  * Базовый клас для работы с базой данных.
@@ -51,23 +53,25 @@ public abstract class DBAdaptor {
      * Сообщении об успешном подключении к БД
      */
     public void notifyConnect() {
-        for(DbStatusListener i:srv.getDbStatusListeners()){
-            try {
-                i.onConnect(this);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
+        srv.createEvent(new EventConnectDB(srv, this));
+//        for(DbStatusListener i:srv.getDbStatusListeners()){
+//            try {
+//                i.onConnect(this);
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
+//            }
+//        }
     }
 
     public void notifyError(String e) {
-        for (DbStatusListener i : srv.getDbStatusListeners()) {
-            try {
-                i.onError(e);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
+        srv.createEvent(new EventErrorDB(srv, e));
+//        for (DbStatusListener i : srv.getDbStatusListeners()) {
+//            try {
+//                i.onError(e);
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
+//            }
+//        }
     }
     
     public static Timestamp getTS(Timestamp t){

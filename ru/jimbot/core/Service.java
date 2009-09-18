@@ -21,6 +21,7 @@ package ru.jimbot.core;
 import ru.jimbot.core.Protocol;
 import ru.jimbot.db.DBAdaptor;
 import ru.jimbot.core.AbstractProps;
+import ru.jimbot.core.events.Event;
 
 import java.util.List;
 import java.util.Set;
@@ -33,6 +34,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * @author Prolubnikov Dmitry
  */
 public interface Service {
+    /**
+     * Добавлене в очередь нового события
+     * @param e
+     */
+    public void createEvent(Event e);
+    
     /**
      * Запуск сервиса
      */

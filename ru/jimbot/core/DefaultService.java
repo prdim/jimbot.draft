@@ -1,5 +1,8 @@
 package ru.jimbot.core;
 
+import ru.jimbot.core.events.QueueEvents;
+import ru.jimbot.core.events.Event;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -11,7 +14,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public abstract class DefaultService implements Service {
     private HashMap<String, CommandProtocolListener> comProtList = new HashMap<String, CommandProtocolListener>();
     private List<ProtocolListener> protList = new Vector<ProtocolListener>();
-    private List<QueueListener> inQueueList = new Vector<QueueListener>();
+//    private List<QueueListener> inQueueList = new Vector<QueueListener>();
     private List<QueueListener> outQueueList = new Vector<QueueListener>();
     private List<QueueListener> parserList = new Vector<QueueListener>();
     private List<DbStatusListener> dbList = new Vector<DbStatusListener>();
@@ -19,6 +22,27 @@ public abstract class DefaultService implements Service {
     private HashMap<String, Object> storage = new HashMap<String, Object>();
     protected MsgInQueue inq;
     protected MsgOutQueue outq;
+    protected QueueEvents qe = new QueueEvents();
+
+    /**
+     * Добавлене в очередь нового события
+     *
+     * @param e
+     */
+    public void createEvent(Event e) {
+        qe.addEvent(e);
+    }
+
+    /**
+     * Удалить ссылки на все слушатели (при завершении работы сервиса)
+     */
+    public void removeAllListeners() {
+        comProtList.clear();
+        protList.clear();
+        outQueueList.clear();
+        parserList.clear();
+        dbList.clear();
+    }
 
     /**
      * Засунуть объект в хранилище данных

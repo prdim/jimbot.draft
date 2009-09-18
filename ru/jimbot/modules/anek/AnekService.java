@@ -51,6 +51,7 @@ public class AnekService extends DefaultService implements DbStatusListener {
      * Запуск сервиса
      */
     public void start() {
+        qe.start();
         inq = new MsgInQueue(this);
         for(int i=0;i<props.uinCount();i++) {
             protocols.put(props.getUin(i), new IcqProtocol(this, i));
@@ -70,6 +71,7 @@ public class AnekService extends DefaultService implements DbStatusListener {
      * Остановка сервиса
      */
     public void stop() {
+        qe.stop();
         inq.stop();
         inq = null;
         outq.stop();
@@ -77,10 +79,11 @@ public class AnekService extends DefaultService implements DbStatusListener {
         aw.closeDB();
         for(CommandProtocolListener i:getCommandProtocolListeners()) {
             try{
-                i.logOff();
+                i.logOut();
             } catch (Exception e) {}
         }
         start = false;
+        removeAllListeners();
         // TODO Подумать как лучше убрать ссылки и слушатели очередей, парсеров команд, протоколом и т.п.
     }
 

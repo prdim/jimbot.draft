@@ -19,19 +19,12 @@
 package ru.jimbot.modules.anek;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.text.DateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import ru.jimbot.modules.AbstractCommandProcessor;
-import ru.jimbot.modules.AbstractServer;
-import ru.jimbot.modules.Cmd;
-import ru.jimbot.modules.CommandParser;
-import ru.jimbot.modules.WorkScript;
 import ru.jimbot.modules.anek.commands.*;
-import ru.jimbot.util.Log;
+import ru.jimbot.modules.MsgStatCounter;
 import ru.jimbot.util.MainProps;
 import ru.jimbot.core.*;
 
@@ -86,7 +79,7 @@ public class AnekCommandParser extends DefaultCommandParser implements QueueList
         firstMsg(m);
         addState(m.getSnIn());
         String c = this.getCommand(m);
-        System.out.println(c);
+//        System.out.println(c);
         Command cmd = this.getCommand(c);
         if(cmd==null){
             notify(new Message(m.getSnOut(), m.getSnIn(), "Неверная команда! Для справки отправте !help"));
@@ -224,8 +217,9 @@ public class AnekCommandParser extends DefaultCommandParser implements QueueList
     	for(int i=0;i<srv.getProps().uinCount();i++){
             String s = srv.getProps().getUin(i);
     		if(srv.getProtocol(s).isOnLine()){
-    			c = srv.getOutQueue(s).size();
-    			if(c==0) return s;
+//    			c = srv.getOutQueue(s).size();
+                c = MsgStatCounter.getElement(s).getMsgCount(MsgStatCounter.M1);
+//    			if(c==0) return s;
     			if(k>c){
     				k = c;
     				u = s;
