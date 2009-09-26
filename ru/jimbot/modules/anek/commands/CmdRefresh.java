@@ -74,7 +74,7 @@ public class CmdRefresh extends DefaultCommand {
      * @return
      */
     public String getHelp() {
-        return "!refresh - обновление кеша после изменения БД";
+        return " - обновление кеша после изменения БД";
     }
 
     /**

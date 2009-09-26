@@ -24,10 +24,40 @@ package ru.jimbot.core;
  * @author Prolubnikov Dmitry
  */
 public interface ProtocolListener {
+
+    /**
+     * Входящее текстовое сообщение
+     * @param m
+     */
     public void onTextMessage(Message m);
+
+    /**
+     * Изменение статуса одного из номеров в КЛ
+     * @param m
+     */
     public void onStatusMessage(Message m);
+
+    /**
+     * Произошла ошибка
+     * @param m
+     */
     public void onError(Message m);
+
+    /**
+     * Соединение с сервером
+     * @param sn
+     */
     public void logOn(String sn);
+
+    /**
+     * Разрыв соединения с сервером
+     * @param sn
+     */
     public void logOut(String sn);
+
+    /**
+     * Другой тип входящего сообщения
+     * @param m
+     */
     public void onOtherMessage(Message m);
 }

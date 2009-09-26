@@ -83,6 +83,9 @@ public class IcqProtocol implements Protocol, MessagingListener, StatusListener,
     private Service srv; // Ссылка на сервис
     private String screenName; // УИН
     private int screenNameID = 0; // ИД УИНа в настройках (чтобы вытащить параметры, пароль и т.п.
+    private int status = 0;
+    private String statustxt1 = "";
+    private String statustxt2 = "";
 	
 	public IcqProtocol(Service s, int id) {
 //		this.props = props;
@@ -174,6 +177,9 @@ public class IcqProtocol implements Protocol, MessagingListener, StatusListener,
 
 	public void connect() {
 //		mq.start();
+        status = srv.getProps().getIntProperty("icq.xstatus");
+        statustxt1 = srv.getProps().getStringProperty("icq.STATUS_MESSAGE1");
+        statustxt2 = srv.getProps().getStringProperty("icq.STATUS_MESSAGE2");
 		con = new OscarConnection(MainProps.getServer(), MainProps.getPort(), screenName, srv.getProps().getPass(screenNameID));
 		con.getPacketAnalyser().setDebug(false);
 		con.getPacketAnalyser().setDump(false);
@@ -410,9 +416,9 @@ public class IcqProtocol implements Protocol, MessagingListener, StatusListener,
 	public void onXStatusRequest(XStatusRequestEvent e) {
 		// Посылаем свой статус, если просят
     	try {
-    		OscarInterface.sendXStatus(con, new XStatusModeEnum(srv.getProps().getIntProperty("icq.xstatus")),
-    				srv.getProps().getStringProperty("icq.STATUS_MESSAGE1"),
-    				srv.getProps().getStringProperty("icq.STATUS_MESSAGE2"), e.getTime(), e.getMsgID(), e.getSenderID(), e.getSenderTcpVersion());
+    		OscarInterface.sendXStatus(con, new XStatusModeEnum(status),
+    				statustxt1,
+    				statustxt2, e.getTime(), e.getMsgID(), e.getSenderID(), e.getSenderTcpVersion());
     	}
     	catch(ConvertStringException ex) {
     		System.err.println(ex.getMessage());
@@ -427,7 +433,7 @@ public class IcqProtocol implements Protocol, MessagingListener, StatusListener,
      */
 	public void update(Observable arg0, Object arg1) {
 		OscarInterface.changeStatus(con, new StatusModeEnum(srv.getProps().getIntProperty("icq.status")));
-		OscarInterface.changeXStatus(con, new XStatusModeEnum(srv.getProps().getIntProperty("icq.xstatus")));
+		OscarInterface.changeXStatus(con, new XStatusModeEnum(status));
         notifyLogon();
 	}
 
@@ -606,10 +612,12 @@ public class IcqProtocol implements Protocol, MessagingListener, StatusListener,
      * @param id
      * @param text1
      */
-    public void onChangeXStatus(int id, String text1, String test2) {
-        srv.getProps().setIntProperty("icq.xstatus", id);
+    public void onChangeXStatus(int id, String text1, String text2) {
+        status = id;
+        statustxt1 = text1;
+        statustxt2 = text2;
 
-        OscarInterface.changeXStatus(con, new XStatusModeEnum(srv.getProps().getIntProperty("icq.xstatus")));
+        OscarInterface.changeXStatus(con, new XStatusModeEnum(status));
     }
 
     /**

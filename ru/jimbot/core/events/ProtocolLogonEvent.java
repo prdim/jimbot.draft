@@ -22,6 +22,7 @@ import ru.jimbot.core.ProtocolListener;
 import ru.jimbot.core.Service;
 
 /**
+ * Событие подключения к серверу IM
  * @author Prolubnikov Dmitry
  */
 public class ProtocolLogonEvent implements Event {

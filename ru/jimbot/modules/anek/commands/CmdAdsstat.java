@@ -51,7 +51,7 @@ public class CmdAdsstat extends DefaultCommand {
      * @return
      */
     public String getXHelp() {
-        return "!adsstat - статистика показа рекламы";
+        return " - статистика показа рекламы";
     }
 
     /**

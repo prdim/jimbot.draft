@@ -52,7 +52,7 @@ public class CmdFree extends DefaultCommand {
      * @return
      */
     public String getHelp() {
-        return "!free - переход на самый свободный уин";
+        return " - переход на самый свободный уин";
     }
 
     /**

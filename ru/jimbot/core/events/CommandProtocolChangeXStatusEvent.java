@@ -22,6 +22,7 @@ import ru.jimbot.core.Service;
 import ru.jimbot.core.CommandProtocolListener;
 
 /**
+ * Событие. Команда - сменить Х-статус
  * @author Prolubnikov Dmitry
  */
 public class CommandProtocolChangeXStatusEvent implements Event {

@@ -81,7 +81,7 @@ public class CmdAdd extends DefaultCommand {
      * @return
      */
     public String getHelp() {
-        return "!add <анекдот> - Получить анекдот с заданным id";
+        return " <анекдот> - Получить анекдот с заданным id";
     }
 
     /**

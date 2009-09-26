@@ -158,6 +158,12 @@ public abstract class DefaultCommandParser implements Parser {
 
     }
 
+    /**
+     * Обработка строкового параметра команды
+     * @param c
+     * @param s
+     * @return
+     */
     private String parseS(int c, String s){
         int k=0,i=0;
         for(i=0;i<s.length();i++){
@@ -167,6 +173,11 @@ public abstract class DefaultCommandParser implements Parser {
         return s.substring(i+1);
     }
 
+    /**
+     * Обработка числового параметра команды
+     * @param s
+     * @return
+     */
     private int parseN(String s){
         try{
             return Integer.parseInt(s);

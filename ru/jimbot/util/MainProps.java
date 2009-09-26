@@ -40,7 +40,7 @@ import ru.jimbot.table.UserPreference;
  * @author Prolubnikov Dmitry
  */
 public class MainProps {
-    public static final String VERSION = "v.0.5.0 alpha 1 (13/09/2009)";
+    public static final String VERSION = "v.0.5.0 alpha 1 (27/09/2009)";
     public static final int VER_INT = 18;
 //    public static final String VER_DESC ="test version";
     private static int ver_no = 0;

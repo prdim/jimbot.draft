@@ -22,7 +22,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * Очередь событий
+ * Обработчик очереди событий
  * @author Prolubnikov Dmitry
  */
 public class QueueEvents implements Runnable {
@@ -33,20 +33,33 @@ public class QueueEvents implements Runnable {
 
     }
 
+    /**
+     * Запуск обработчика очереди
+     */
     public synchronized void start() {
         thread = new Thread(this, "EVENTS");
         thread.start();
     }
 
+    /**
+     * Остановка обработчика очереди
+     */
     public synchronized void stop() {
         clear();
         thread = null;
     }
 
+    /**
+     * Добавить новое событие в очередь
+     * @param e - событие
+     */
     public synchronized void addEvent(Event e) {
         evq.add(e);
     }
 
+    /**
+     * Очистить всю очередь событий (например, перед остановкой)
+     */
     public synchronized void clear() {
         evq.clear();
     }

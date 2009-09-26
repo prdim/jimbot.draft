@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ru.jimbot.modules.anek.AnekServer;
 import ru.jimbot.modules.chat.ChatServer;
 import ru.jimbot.util.Log;
 
@@ -35,13 +34,13 @@ import ru.jimbot.util.Log;
  */
 public class Stat extends HttpServlet {
     private static ChatServer chat = null;
-    private static AnekServer anek = null;
+//    private static AnekServer anek = null;
     private static long start = 0;
 
-    public static void setAnek(AnekServer anek) {
-        Stat.anek = anek;
-        start = System.currentTimeMillis();
-    }
+//    public static void setAnek(AnekServer anek) {
+//        Stat.anek = anek;
+//        start = System.currentTimeMillis();
+//    }
 
     public static void setChat(ChatServer chat) {
         Stat.chat = chat;

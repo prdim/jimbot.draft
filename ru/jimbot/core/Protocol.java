@@ -18,19 +18,12 @@
 
 package ru.jimbot.core;
 
-import ru.jimbot.protocol.*;
-
 /**
  * Интерфейс для работы с протоколами в боте
  * 
  * @author Prolubnikov Dmitry
  */
 public interface Protocol {
-    /**
-     * Добавить слушатель
-     * @param p
-     */
-//    public void addListener(ru.jimbot.protocol.ProtocolListener p);
 
     /**
      * Установить соединение
@@ -65,15 +58,6 @@ public interface Protocol {
      * @param msg - текст
      */
     public void sendMsg(String sn, String msg);
-
-    /**
-     *
-     * @param sendSN
-     * @param recivSN
-     * @param msg
-     * @param isOffline
-     */
-//    public void getMsg(String sendSN, String recivSN, String msg, boolean isOffline);
 
     /**
      *

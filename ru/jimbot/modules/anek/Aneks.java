@@ -22,7 +22,7 @@ import java.sql.Types;
 
 import ru.jimbot.db.DBObject;
 /**
- *
+ * Анекдот
  * @author Prolubnikov Dmitry
  */
 public class Aneks extends DBObject {

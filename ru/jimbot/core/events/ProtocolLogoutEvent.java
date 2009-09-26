@@ -22,6 +22,7 @@ import ru.jimbot.core.Service;
 import ru.jimbot.core.ProtocolListener;
 
 /**
+ * Событие разрыва соединения с сервером IM
  * @author Prolubnikov Dmitry
  */
 public class ProtocolLogoutEvent implements Event {

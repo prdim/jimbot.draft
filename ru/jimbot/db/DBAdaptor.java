@@ -54,24 +54,10 @@ public abstract class DBAdaptor {
      */
     public void notifyConnect() {
         srv.createEvent(new EventConnectDB(srv, this));
-//        for(DbStatusListener i:srv.getDbStatusListeners()){
-//            try {
-//                i.onConnect(this);
-//            } catch (Exception ex) {
-//                ex.printStackTrace();
-//            }
-//        }
     }
 
     public void notifyError(String e) {
         srv.createEvent(new EventErrorDB(srv, e));
-//        for (DbStatusListener i : srv.getDbStatusListeners()) {
-//            try {
-//                i.onError(e);
-//            } catch (Exception ex) {
-//                ex.printStackTrace();
-//            }
-//        }
     }
     
     public static Timestamp getTS(Timestamp t){

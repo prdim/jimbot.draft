@@ -29,7 +29,7 @@ import ru.jimbot.table.UserPreference;
 import ru.jimbot.util.Log;
 
 /**
- *
+ * Свойства для анек-бота
  * @author Prolubnikov Dmitry
  */
 public class AnekProps implements AbstractProps {

@@ -29,16 +29,13 @@ import ru.jimbot.util.MainProps;
 import ru.jimbot.core.*;
 
 /**
- *
+ * Парсер команд
  * @author Prolubnikov Dmitry
  */
 public class AnekCommandParser extends DefaultCommandParser implements QueueListener {
-//    public AnekService srv;
     public ConcurrentHashMap <String,StateUin> uq;
     public long state=0; //Статистика запросов
     public long state_add = 0;
-//    public HashMap<String,Cmd> commands = new HashMap<String,Cmd>();
-//    public CommandParser parser = null;
     private boolean firstStartMsg = false;
     
     /** Creates a new instance of AnekCommandProc
@@ -123,50 +120,6 @@ public class AnekCommandParser extends DefaultCommandParser implements QueueList
     	}
     }
 
-//    public AbstractServer getServer(){
-//    	return srv;
-//    }
-//
-//    public void parse(IcqProtocol proc, String uin, String msg) {
-//    	firstMsg(proc);
-//    	String s = WorkScript.getInstance(srv.getName()).startAnekScript("main", proc, this, uin, msg);
-//    }
-//
-//    public void commandExec(IcqProtocol proc, String uin, Vector v){
-//        if(!AnekProps.getInstance(srv.getName()).testAdmin(uin)){
-//            proc.mq.add(uin,"Вы не имеете доступа к данной команде.");
-//            return;
-//        }
-//        try{
-//            String s = (String)v.get(0);
-//            String s1 = WorkScript.getInstance(srv.getName()).startCommandScript(s, proc, srv, uin, (String)v.get(1));
-//            if(!s1.equals(""))
-//                proc.mq.add(uin,"Ошибка при выполнении: " + s1);
-//        }catch(Exception ex){
-//            ex.printStackTrace();
-//            proc.mq.add(uin,ex.getMessage());
-//        }
-//    }
-//
-//    /**
-//     * Добавление анекдота
-//     */
-//    public void commandAdd(IcqProtocol proc, String uin, Vector v){
-//        try {
-//            OutputStreamWriter ow = new OutputStreamWriter(new FileOutputStream("./temp_aneks.txt",true),"windows-1251");
-//            String s = (String)v.get(0) + "\n\n";
-//            ow.write(s);
-//            ow.close();
-//            Log.info("Add anek <" + uin + ">: " + (String)v.get(0));
-//            proc.mq.add(uin,"Анекдот сохранен. После рассмотрения администрацией он будет добавлен в базу.");
-//            state_add++;
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//            Log.info("Error save anek: " + ex.getMessage());
-//            proc.mq.add(uin,"Ошибка добавления");
-//        }
-//    }
-//
     /**
      * Определение времени запуска бота
      */
@@ -217,9 +170,7 @@ public class AnekCommandParser extends DefaultCommandParser implements QueueList
     	for(int i=0;i<srv.getProps().uinCount();i++){
             String s = srv.getProps().getUin(i);
     		if(srv.getProtocol(s).isOnLine()){
-//    			c = srv.getOutQueue(s).size();
                 c = MsgStatCounter.getElement(s).getMsgCount(MsgStatCounter.M1);
-//    			if(c==0) return s;
     			if(k>c){
     				k = c;
     				u = s;

@@ -52,7 +52,7 @@ public class Cmd1 extends DefaultCommand {
      * @return
      */
     public String getHelp() {
-        return "1 - случайный анекдот";
+        return " - случайный анекдот";
     }
 
     /**

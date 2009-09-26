@@ -22,6 +22,7 @@ import ru.jimbot.core.*;
 import ru.jimbot.db.DBAdaptor;
 import ru.jimbot.util.Log;
 import ru.jimbot.protocol.IcqProtocol;
+import ru.jimbot.modules.anek.commands.ChangeStatusTask;
 
 /**
  * Реализация сервиса анекдотного бота
@@ -36,6 +37,7 @@ public class AnekService extends DefaultService implements DbStatusListener {
     private AnekWork aw;
     private boolean start = false;
     private AnekCommandParser cmd;
+    private ChronoMaster cron = new ChronoMaster();
 
     public AnekService(String name) {
         this.name = name;
@@ -71,6 +73,7 @@ public class AnekService extends DefaultService implements DbStatusListener {
      * Остановка сервиса
      */
     public void stop() {
+        cron.stop();
         qe.stop();
         inq.stop();
         inq = null;
@@ -131,6 +134,13 @@ public class AnekService extends DefaultService implements DbStatusListener {
         for(CommandProtocolListener i:getCommandProtocolListeners()) {
             i.logOn();
         }
+        cron.clear();
+        ChangeStatusTask t = new ChangeStatusTask(this, 120000, aw);
+//        t.addStatus(1, "Статус1", "Текст статуса 1");
+//        t.addStatus(2, "Статус2", "Текст статуса 2");
+//        t.addStatus(3, "Статус3", "Текст статуса 3");
+        cron.addTask(t);
+        cron.start();
     }
 
     /**

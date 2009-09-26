@@ -22,6 +22,7 @@ import ru.jimbot.core.Service;
 import ru.jimbot.core.CommandProtocolListener;
 
 /**
+ * Событие. Соманда - подключиться к серверу IM
  * @author Prolubnikov Dmitry
  */
 public class CommandProtocolLogonEvent implements Event {

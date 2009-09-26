@@ -28,7 +28,7 @@ import java.util.Vector;
 
 
 /**
- *
+ * Работа с анекдотами
  * @author Prolubnikov Dmitry
  */
 public class AnekWork {
@@ -69,14 +69,6 @@ public class AnekWork {
         }
     }
     
-//    public void commitdb(){
-//        try{
-//            db.commit();
-//        }catch(Exception ex){
-//            ex.printStackTrace();
-//        }
-//    }
-    
     /**
      * Обновление данных при изменении БД
      */
@@ -108,7 +100,7 @@ public class AnekWork {
     
     public String getAds(int id){
     	String s = "";
-    	if(testRnd(AnekProps.getInstance(serviceName).getIntProperty("bot.adsRate"))){
+//    	if(testRnd(AnekProps.getInstance(serviceName).getIntProperty("bot.adsRate"))){
     		Statement stm = null;
     		ResultSet rs = null;
     		try {
@@ -123,7 +115,7 @@ public class AnekWork {
             	if(rs!=null) try{rs.close();}catch(Exception e){};
             	if(stm!=null) try{stm.close();}catch(Exception e){};
             }
-    	}
+//    	}
     	return s;
     }
     
@@ -173,19 +165,30 @@ public class AnekWork {
     public String getAds(){
     	if(!AnekProps.getInstance(serviceName).getBooleanProperty("bot.useAds"))
     		return "";
+        if(!testRnd(AnekProps.getInstance(serviceName).getIntProperty("bot.adsRate")))
+            return "";
     	String s = getAds(adsKey.get(r.nextInt(adsKey.size())));
     	if(s.equals(""))
     		return "";
     	else
     		return "\n***\n" + s;
     }
+
+    public String getAdsForStatus() {
+        if(!AnekProps.getInstance(serviceName).getBooleanProperty("bot.useAds"))
+    		return "";
+    	String s = getAds(adsKey.get(r.nextInt(adsKey.size())));
+        return s;
+    }
     
     /**
      * Событие с вероятностью 1/i
      */
     public boolean testRnd(int i){
-        if(i<=1)
+        if(i<1)
             return false;
+        else if(i==1)
+            return true;
         else
             return r.nextInt(i)==1;
     }

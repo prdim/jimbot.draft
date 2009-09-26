@@ -26,19 +26,14 @@ import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
-//import ru.jimbot.protocol.IcqProtocol;
-
-
 /**
  * Очередь входящих сообщений
  * @author Prolubnikov Dmitry
  */
 public class MsgInQueue implements Runnable, ProtocolListener {
-//    Vector<MsgReceiver> receivers; // список объектов, помещающих сообщения в эту очередь
-//    AbstractCommandProcessor cmd;
     ConcurrentLinkedQueue <Message> q;
     private Thread th;
-    int sleepAmount = 100;
+    int sleepAmount = 10;
     public boolean ignoreOffline = true;
     // Пары уин - время последнего сообщения
     private HashMap<String,Long> flood = new HashMap<String,Long>();
@@ -48,9 +43,7 @@ public class MsgInQueue implements Runnable, ProtocolListener {
         
     /** Creates a new instance of MsgInQueue */
     public MsgInQueue(Service s) {
-//        cmd = c;
         srv = s;
-//        receivers = new Vector<MsgReceiver>();
         q = new ConcurrentLinkedQueue<Message>();
         lastLogout = new ConcurrentHashMap<String, LogoutInfo>();
         srv.addProtocolListener(this);
@@ -92,7 +85,6 @@ public class MsgInQueue implements Runnable, ProtocolListener {
      */
     public synchronized void stop() {
         th = null;
-//        receivers = new Vector<MsgReceiver>();
         notify();
     }
 
@@ -102,19 +94,7 @@ public class MsgInQueue implements Runnable, ProtocolListener {
     private void parseMsg(){
         try{
             if(q.size()==0) return;
-//            MsgQueueElement m = q.poll();
             notifyCommandParser(q.poll());
-//            if(m.getType()==Message.TYPE_TEXT){
-//                cmd.parse(m.proc,m.sn,m.msg);
-//            } else if(m.type==MsgQueueElement.TYPE_STATUS){
-//                cmd.parseStatus(m.proc, m.sn, Integer.parseInt(m.msg));
-//            }else if(m.type==MsgQueueElement.TYPE_FLOOD_NOTICE){
-//            	cmd.parseFloodNotice(m.sn, m.msg, m.proc);
-//            } else {
-////                Log.info(m.u.nick);
-//                cmd.parseInfo(m.u, m.info_type);
-//            }
-            
         } catch(Exception ex) {
             ex.printStackTrace();
         }
@@ -150,45 +130,15 @@ public class MsgInQueue implements Runnable, ProtocolListener {
             if(i.getTime()>0 &&
                     (System.currentTimeMillis()-i.getTime())>
                             ((i.getCount()*30000)>900000 ? 900000 : (i.getCount()*30000))){
-//                srv.getCommandProtocolListener(i.getSn()).logOn();
                 srv.createEvent(new CommandProtocolLogonEvent(srv, i.getSn()));
             }
         }
     }
-    
-//    public void addReceiver(AbstractProtocol ip){
-//        receivers.add(new MsgReceiver(this,ip));
-//    }
-    
-//    public void addMsg(Protocol proc, String sn, String msg, boolean isOffline){
-//        if(isOffline && ignoreOffline) {
-//            Log.info("OFFLINE: " + sn + " - " + msg);
-//            return;
-//        }
-//        MsgStatCounter.getElement(proc.getScreenName()).addMsgCount();
-//        if(!testFlood(sn))
-//        	q.add(new MsgQueueElement(sn, msg, proc));
-//        else {
-//        	Log.flood("FLOOD from " + sn + ">> " + msg);
-//        	MsgQueueElement e = new MsgQueueElement(sn,msg,proc);
-//        	e.type = MsgQueueElement.TYPE_FLOOD_NOTICE;
-//        	q.add(e);
-//        }
-//
-//    }
-    
-//    public void addStatus(Protocol proc, String sn, String st){
-////        Log.info("ADD status in queue");
-//        MsgQueueElement m = new MsgQueueElement(sn, st, proc);
-//        m.type = MsgQueueElement.TYPE_STATUS;
-//        q.add(m);
-//    }
-    
-//    public void addInfo(Users u, int type){
-//        MsgQueueElement m = new MsgQueueElement(u, type);
-//        q.add(m);
-//    }
-    
+
+    /**
+     * Размер очереди
+     * @return
+     */
     public int size(){
     	return q.size();
     }

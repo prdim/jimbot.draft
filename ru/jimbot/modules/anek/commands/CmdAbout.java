@@ -72,7 +72,7 @@ public class CmdAbout extends DefaultCommand {
      * @return
      */
     public String getHelp() {
-        return "!about - информация об авторе программы";
+        return " - информация об авторе программы";
     }
 
     /**

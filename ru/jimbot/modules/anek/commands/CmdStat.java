@@ -44,7 +44,7 @@ public class CmdStat extends DefaultCommand {
      * @return
      */
     public String getHelp() {
-        return "!stat - статистика работы бота";
+        return " - статистика работы бота";
     }
 
     /**

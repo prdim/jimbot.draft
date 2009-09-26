@@ -75,7 +75,7 @@ public class CmdAnek extends DefaultCommand {
      * @return
      */
     public String getHelp() {
-        return "!anek <id> - Получить анекдот с заданным id";
+        return " <id> - Получить анекдот с заданным id";
     }
 
     /**

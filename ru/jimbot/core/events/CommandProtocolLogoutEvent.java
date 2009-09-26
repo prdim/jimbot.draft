@@ -22,6 +22,7 @@ import ru.jimbot.core.Service;
 import ru.jimbot.core.CommandProtocolListener;
 
 /**
+ * Событие. Команда - отключиться от сервера IM.
  * @author Prolubnikov Dmitry
  */
 public class CommandProtocolLogoutEvent implements Event {

@@ -22,6 +22,7 @@ import ru.jimbot.core.DbStatusListener;
 import ru.jimbot.core.Service;
 
 /**
+ * Событие ошибки базы данных.
  * @author Prolubnikov Dmitry
  */
 public class EventErrorDB implements Event{

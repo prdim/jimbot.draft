@@ -23,5 +23,9 @@ package ru.jimbot.core.events;
  * @author Prolubnikov Dmitry
  */
 public interface Event {
+
+    /**
+     * Обработать событие
+     */
     public void handle();
 }

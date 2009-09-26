@@ -23,6 +23,7 @@ import ru.jimbot.core.DbStatusListener;
 import ru.jimbot.db.DBAdaptor;
 
 /**
+ * Событие подключения к базе данных
  * @author Prolubnikov Dmitry
  */
 public class EventConnectDB implements Event {

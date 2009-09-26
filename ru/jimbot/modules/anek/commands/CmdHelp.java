@@ -49,7 +49,7 @@ public class CmdHelp extends DefaultCommand {
      * @return
      */
     public String getHelp() {
-        return "!help - помощь по командам\n!help <команда> - подробности использования команды";
+        return " - помощь по командам\n!help <команда> - подробности использования команды";
     }
 
     /**
@@ -58,7 +58,7 @@ public class CmdHelp extends DefaultCommand {
      * @return
      */
     public String getXHelp() {
-        return "!help <команда> - подробная информация по использованию команды.";
+        return " <команда> - подробная информация по использованию команды.";
     }
 
     /**
@@ -80,12 +80,12 @@ public class CmdHelp extends DefaultCommand {
                 for(String i:p.getCommands()) {
                     if(p.getCommand(i).authorityCheck(sn)) {
                         String s1 = p.getCommand(i).getHelp();
-                        s += s1.equals("") ? "" : (s1 + '\n');
+                        s += s1.equals("") ? "" : (i + s1 + '\n');
                     }
                 }
             } else {
                 if(p.getCommands().contains(c)) {
-                    s += p.getCommand(c).getXHelp();
+                    s += c + p.getCommand(c).getXHelp();
                 } else {
                     s += "Команда " + c + " не найдена.";
                 }

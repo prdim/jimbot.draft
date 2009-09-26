@@ -7,6 +7,15 @@ import ru.jimbot.db.DBAdaptor;
  * @author Prolubnikov Dmitry
  */
 public interface DbStatusListener {
+    /**
+     * Произошло соединение с БД
+     * @param db
+     */
     public void onConnect(DBAdaptor db);
+
+    /**
+     * Произошла ошибка БД и разрыв соединения
+     * @param e
+     */
     public void onError(String e);
 }

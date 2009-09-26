@@ -28,7 +28,7 @@ import ru.jimbot.db.DBObject;
 import ru.jimbot.core.Service;
 
 /**
- *
+ * База данных с анекдотами
  * @author Prolubnikov Dmitry
  */
 public class DBAneks extends DBAdaptor{
