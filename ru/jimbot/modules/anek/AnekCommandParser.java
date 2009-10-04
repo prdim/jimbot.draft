@@ -52,7 +52,6 @@ public class AnekCommandParser extends DefaultCommandParser implements QueueList
      * Создаем реестр всех команд
      */
     public void initCommands() {
-        addCommand(new CmdAbout(this));
         addCommand(new CmdHelp(this));
         addCommand(new Cmd1(this));
         addCommand(new CmdAdsstat(this));
@@ -61,9 +60,13 @@ public class AnekCommandParser extends DefaultCommandParser implements QueueList
         addCommand(new CmdRefresh(this));
         addCommand(new CmdAdd(this));
         addCommand(new CmdFree(this));
+        ScriptServer ss = new ScriptServer(this);
+        ss.readAllCommandScripts();
+        addCommand(new CmdAbout(this));
         for(Command i:commands.values()) {
             i.init();
         }
+        srv.getCron().addTask(new CheckScriptTask(this, 1000));
     }
 
     public void onMessage(Message m) {

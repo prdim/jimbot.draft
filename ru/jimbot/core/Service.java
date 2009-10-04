@@ -134,5 +134,11 @@ public interface Service {
     public CommandProtocolListener getCommandProtocolListener(String screenName);
     public void addOutQueueListener(QueueListener e);
     public boolean removeOutQueueListener(QueueListener e);
-    public List<QueueListener> getOutQueueListeners(); 
+    public List<QueueListener> getOutQueueListeners();
+
+    /**
+     * Возвращает экземпляр планировщика задач
+     * @return
+     */
+    public ChronoMaster getCron();
 }

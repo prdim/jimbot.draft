@@ -23,6 +23,15 @@ public abstract class DefaultService implements Service {
     protected MsgInQueue inq;
     protected MsgOutQueue outq;
     protected QueueEvents qe = new QueueEvents();
+    private ChronoMaster cron = new ChronoMaster();
+
+    /**
+     * Возвращает экземпляр планировщика задач
+     * @return
+     */
+    public ChronoMaster getCron() {
+        return cron;
+    }
 
     /**
      * Добавлене в очередь нового события

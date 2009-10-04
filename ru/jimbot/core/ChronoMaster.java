@@ -37,6 +37,7 @@ public class ChronoMaster implements Runnable{
      * Выполнить следующее событие
      */
     private void execNext() {
+        if(vec.size()==0) return;
         try {
             if (count >= vec.size()) count = 0;
             Task c = vec.get(count);
