@@ -115,10 +115,11 @@ public abstract class DBAdaptor {
                 db = DriverManager.getConnection("jdbc:mysql://" + host + "/" + name, user, pass);
                 notifyConnect();
             } catch (Exception ex) {
-                ex.printStackTrace();
+//                ex.printStackTrace();
+                Log.getLogger(srv.getName()).error(ex.getMessage(),ex);
                 f=false;
                 lastConnect = System.currentTimeMillis();
-                Log.talk("Ошибка подключения к базе данных!!!");
+                Log.getLogger(srv.getName()).talk("Ошибка подключения к базе данных!!!");
                 notifyError(ex.getMessage());
             }
         return f;
@@ -128,7 +129,7 @@ public abstract class DBAdaptor {
     	Statement stmt = null;
         try {
             stmt = getDb().createStatement();
-            Log.debug("EXEC: " + qry);
+            Log.getLogger(srv.getName()).debug("EXEC: " + qry);
             stmt.execute(qry);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -144,7 +145,7 @@ public abstract class DBAdaptor {
         Statement stmt=null;
         try {
         	stmt = getDb().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        	Log.debug("EXEC: " + query);
+        	Log.getLogger(srv.getName()).debug("EXEC: " + query);
         	rst = stmt.executeQuery(query);
             while (!rst.isLast()) {
                 ss = readNext(rst);
@@ -186,7 +187,7 @@ public abstract class DBAdaptor {
         Statement stmt=null;
         try {
         	stmt = getDb().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        	Log.debug("EXEC: " + q);
+        	Log.getLogger(srv.getName()).debug("EXEC: " + q);
         	rst = stmt.executeQuery(q);
             s = readNext(rst)[0];
         } catch (Exception ex) {

@@ -49,12 +49,12 @@ public class Stat extends HttpServlet {
     
     @Override
     public void init() throws ServletException {
-        Log.http("init Stat");
+        Log.getDefault().http("init Stat");
     }
     
     @Override
     public void destroy() {
-        Log.http("destroy Stat");
+        Log.getDefault().http("destroy Stat");
     }
     
     @Override

@@ -131,7 +131,7 @@ private String sn=""; // Имя сервиса
 //            s = bsh.get("outText").toString();
         } catch (Exception ex) {
             ex.printStackTrace();
-            Log.info("Ошибка скрипта: " + ex.getMessage());
+            Log.getLogger(sn).info("Ошибка скрипта: " + ex.getMessage());
         }
         return s;
     }
@@ -194,7 +194,7 @@ private String sn=""; // Имя сервиса
      */
     public void installAllChatCommandScripts(ChatCommandProc proc){
 //    	String sn = proc.srv.getName();
-    	Log.info("Начинаю установку скриптов для " + sn);
+    	Log.getLogger(sn).info("Начинаю установку скриптов для " + sn);
     	// Формируем список файлов
     	Vector<String> v = new Vector<String>();
         File f = new File("./services/" + sn + SCRIPT_FOLDER + "command/");
@@ -209,8 +209,8 @@ private String sn=""; // Имя сервиса
         	}
     	try {
     		for(int i=0; i<v.size(); i++){
-    			Log.info("Устанавливаю скрипт: " + v.get(i));
-    			Log.info("Завершено: " + installChatCommandScript(v.get(i),proc));
+    			Log.getLogger(sn).info("Устанавливаю скрипт: " + v.get(i));
+    			Log.getLogger(sn).info("Завершено: " + installChatCommandScript(v.get(i),proc));
     		}
     	} catch (Exception ex){
     		ex.printStackTrace();
@@ -302,7 +302,7 @@ private String sn=""; // Имя сервиса
             c = (HttpConnection)bsh.get("con");
         } catch (Exception ex) {
             ex.printStackTrace();
-            Log.http("Ошибка запуска скрипта " + name);
+            Log.getDefault().http("Ошибка запуска скрипта " + name);
         }  
         return c;
     }

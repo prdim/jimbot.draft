@@ -281,11 +281,11 @@ public class MainProps {
 //            appProps.load(fi);
             appProps.loadFromXML(fi);
             fi.close();
-            Log.info("Load preferences ok");
+            Log.getDefault().info("Load preferences ok");
             loadServerList();
         } catch (Exception ex) {
             ex.printStackTrace();
-            Log.error("Error opening preferences: ");
+            Log.getDefault().error("Error opening preferences: ");
         }
     }
     
@@ -297,16 +297,16 @@ public class MainProps {
 //            appProps.store(fo,"jImBot properties");
             appProps.storeToXML(fo, "jImBot properties");
             fo.close();
-            Log.info("Save preferences ok");
+            Log.getDefault().info("Save preferences ok");
         } catch (Exception ex) {
             ex.printStackTrace();
-            Log.error("Error saving preferences: ");
+            Log.getDefault().error("Error saving preferences: ");
         }
     }
     
     /**
      * Читает текстовый файл по URL
-     * @param url
+     * @param u
      * @return
      */
     public static String getStringFromHTTP(String u){
@@ -329,7 +329,7 @@ public class MainProps {
             conn.disconnect();
             s = bout.toString("windows-1251");
         } catch (Exception ex) {
-            Log.error("Ошибка HTTP при чтении новой версии", ex);
+            Log.getDefault().error("Ошибка HTTP при чтении новой версии", ex);
         }
         return s;
     }
@@ -381,7 +381,7 @@ public class MainProps {
                 }
             r.close();
         } catch (Exception ex){
-            Log.error("Ошибка обработки описания новой версии",ex);
+            Log.getDefault().error("Ошибка обработки описания новой версии",ex);
         }
     }
 

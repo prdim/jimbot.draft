@@ -182,7 +182,7 @@ public class Manager {
     	if(MainProps.getBooleanProperty("main.StartHTTP"))
             Server.stopServer();
     	mon.stop();
-    	Log.info("Exit bot " + new Date(System.currentTimeMillis()).toString());
+    	Log.getDefault().info("Exit bot " + new Date(System.currentTimeMillis()).toString());
 //    	for(String s : services.keySet()){
 //    		services.get(s).getProps().save();
 //    	}
@@ -202,7 +202,7 @@ public class Manager {
 //			services.put(name, new AnekServer(name));
             services.put(name, new AnekService(name));
 		} else {
-			Log.error("Неизвестный тип сервиса: "+type);
+			Log.getDefault().error("Неизвестный тип сервиса: "+type);
 		}		
 //		services.get(name).getProps().load();
 	}
@@ -219,7 +219,7 @@ public class Manager {
 			services.remove(name);
 //			MainProps.delService(name);
 		} else {
-			Log.error("Отсутствет сервис с именем "+name);
+			Log.getDefault().error("Отсутствет сервис с именем "+name);
 		}
 	}
 	
@@ -229,10 +229,10 @@ public class Manager {
 	 */
 	public void start(String name){
 		if(services.containsKey(name)){
-			Log.info("Запускаю сервис: " + name);
+			Log.getLogger(name).info("Запускаю сервис: " + name);
 			services.get(name).start();
 		} else {
-			Log.error("Отсутствет сервис с именем "+name);
+			Log.getDefault().error("Отсутствет сервис с именем "+name);
 		}
 	}
 	
@@ -242,10 +242,10 @@ public class Manager {
 	 */
 	public void stop(String name){
 		if(services.containsKey(name)){
-			Log.info("Останавливаю сервис: " + name);
+			Log.getLogger(name).info("Останавливаю сервис: " + name);
 			services.get(name).stop();
 		}else{ 
-			Log.error("Отсутствет сервис с именем "+name);
+			Log.getDefault().error("Отсутствет сервис с именем "+name);
 		}
 	}
 	

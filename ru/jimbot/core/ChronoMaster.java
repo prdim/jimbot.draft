@@ -74,8 +74,14 @@ public class ChronoMaster implements Runnable{
      * Добавляет новое задание в список
      * @param c
      */
-    public void addTask(Task c) {
+    public int addTask(Task c) {
         vec.add(c);
+        return vec.size()-1;
+    }
+
+    public void disableTask(int i) {
+        if(i>=vec.size()) return;
+        vec.get(i).disable();
     }
 
     /**

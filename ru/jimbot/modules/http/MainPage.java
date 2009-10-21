@@ -62,12 +62,12 @@ public class MainPage extends HttpServlet {
 			e.printStackTrace();
             throw new ServletException(e.getMessage());
 		}
-        Log.http("init MainPage");
+        Log.getDefault().http("init MainPage");
     }
     
     @Override
     public void destroy() {
-        Log.http("destroy MainPage");
+        Log.getDefault().http("destroy MainPage");
     }
     
     private boolean checkSession(String id){
@@ -925,7 +925,7 @@ public class MainPage extends HttpServlet {
     void doGetOrPost(HttpServletRequest request, HttpServletResponse response) throws
     IOException, ServletException {
     	response.setContentType("text/html; charset=\"utf-8\"");
-    	Log.http("HTTP LOG: " + request.getRemoteAddr()+"("+request.getRemoteHost()+") "+ 
+    	Log.getDefault().http("HTTP LOG: " + request.getRemoteAddr()+"("+request.getRemoteHost()+") "+ 
     			request.getQueryString());
     	HttpConnection con = new HttpConnection(request, response);
     	String page = request.getParameter("page");

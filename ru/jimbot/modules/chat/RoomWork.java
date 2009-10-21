@@ -58,7 +58,7 @@ public class RoomWork {
         String q = "select id, name, topic, user_id, pass from rooms";
         try{
         	stmt = db.getDb().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        	Log.debug("EXEC: " + q);
+        	Log.getDefault().debug("EXEC: " + q);
         	rst = stmt.executeQuery(q);
         	while(rst.next()){
         		Rooms r = new Rooms();
@@ -94,7 +94,7 @@ public class RoomWork {
 	 */
 	public boolean createRoom(Rooms r){
         String q = "insert into rooms values(?,?,?,?,?)";
-        Log.debug("INSERT room id=" + r.getId());
+        Log.getDefault().debug("INSERT room id=" + r.getId());
         boolean f = false;
         try {
         	PreparedStatement pst = db.getDb().prepareStatement(q);
@@ -120,7 +120,7 @@ public class RoomWork {
 	 */
 	public boolean updateRoom(Rooms r, String pass) {
 		String q = "update rooms set name=?, topic=?, user_id=?, pass=? where id=?";
-		Log.debug("UPDATE rooms id=" + r.getId());
+		Log.getDefault().debug("UPDATE rooms id=" + r.getId());
 		boolean f = false;
 		try {
 			PreparedStatement pst = db.getDb().prepareStatement(q);

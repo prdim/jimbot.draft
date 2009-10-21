@@ -1,4 +1,4 @@
-/**
+/*
  * JimBot - Java IM Bot
  * Copyright (C) 2006-2009 JimBot project
  * This program is free software; you can redistribute it and/or
@@ -18,23 +18,20 @@
 
 package ru.jimbot.modules.anek.commands;
 
+import ru.jimbot.core.DefaultCommand;
 import ru.jimbot.core.Parser;
 import ru.jimbot.core.Message;
-import ru.jimbot.core.DefaultCommand;
-import ru.jimbot.modules.anek.AnekService;
-import ru.jimbot.modules.anek.AnekCommandParser;
-import ru.jimbot.util.Log;
 
 import java.util.Vector;
 import java.util.List;
-import java.util.Arrays;
 
 /**
- * Добавление анекдота
+ * Для тестирования и последующего переноса команды в скрипт
  * @author Prolubnikov Dmitry
  */
-public class CmdAdd extends DefaultCommand {
-    public CmdAdd(Parser p) {
+public class TestCommand extends DefaultCommand {
+
+    public TestCommand(Parser p) {
         super(p);
     }
 
@@ -45,7 +42,7 @@ public class CmdAdd extends DefaultCommand {
      * @return - результат (если нужен)
      */
     public Message exec(Message m) {
-        return new Message(m.getSnOut(), m.getSnIn(), exec(m.getSnIn(), p.getArgs(m, "$s")));
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     /**
@@ -56,14 +53,7 @@ public class CmdAdd extends DefaultCommand {
      * @return - результат (если нужен)
      */
     public String exec(String sn, Vector param) {
-        String s = (String) param.get(0);
-        if (s.equals("")) return "Пустой анекдот.";
-        if (s.length() < 20) return "";
-        if (s.length() > 500) return "";
-        ((AnekService) p.getService()).getAnekWork().addTempAnek(s, sn);
-        Log.getLogger(p.getService().getName()).talk("Add anek <" + sn + ">: " + s);
-        ((AnekCommandParser) p).state_add++;
-        return "Анекдот сохранен. После рассмотрения администрацией он будет добавлен в базу.";
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     /**
@@ -72,7 +62,7 @@ public class CmdAdd extends DefaultCommand {
      * @return
      */
     public List<String> getCommandPatterns() {
-        return Arrays.asList(new String[] {"!add"});
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     /**
@@ -81,7 +71,7 @@ public class CmdAdd extends DefaultCommand {
      * @return
      */
     public String getHelp() {
-        return " <анекдот> - Получить анекдот с заданным id";
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     /**
@@ -90,5 +80,6 @@ public class CmdAdd extends DefaultCommand {
      * @return
      */
     public String getXHelp() {
-        return getHelp();
-    }}
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+}

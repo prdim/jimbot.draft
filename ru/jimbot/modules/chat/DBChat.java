@@ -164,7 +164,7 @@ public class DBChat extends DBAdaptor{
         Statement stmt=null;
         try{
         	stmt = getDb().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        	Log.debug("EXEC: " + q);
+        	Log.getLogger(serviceName).debug("EXEC: " + q);
         	rst = stmt.executeQuery(q);
             rst.next();
             in.id = rst.getInt(1);
@@ -183,7 +183,7 @@ public class DBChat extends DBAdaptor{
     }
     
     public void insertInvite(Invites in){
-        Log.debug("INSERT invite id=" + in.id);
+        Log.getLogger(serviceName).debug("INSERT invite id=" + in.id);
         try{
             PreparedStatement pst = getDb().prepareStatement("insert into invites values (?,?,?,?,?,?,?)");
             pst.setInt(1,in.id);
@@ -202,7 +202,7 @@ public class DBChat extends DBAdaptor{
     }
     
     public void updateInvite(Invites in){
-        Log.debug("UPDATE invite id=" + in.id);
+        Log.getLogger(serviceName).debug("UPDATE invite id=" + in.id);
         try{
             PreparedStatement pst = getDb().prepareStatement("update invites set user_id=?, time=?, invite=?, new_user=?, create_time=? where id=?");
             pst.setInt(6,in.id);
@@ -249,7 +249,7 @@ public class DBChat extends DBAdaptor{
         Statement stmt=null;
         try{
         	stmt = getDb().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        	Log.debug("EXEC: " + q);
+        	Log.getLogger(serviceName).debug("EXEC: " + q);
         	rSet = stmt.executeQuery(q);
 //            openQuery(q);
 //            Statement stm = getDb().createStatement();
@@ -295,7 +295,7 @@ public class DBChat extends DBAdaptor{
         Statement stmt=null;
         try{
         	stmt = getDb().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        	Log.debug("EXEC: " + q);
+        	Log.getLogger(serviceName).debug("EXEC: " + q);
         	rSet = stmt.executeQuery(q);
 //            openQuery(q);
 //            Statement stm = getDb().createStatement();
@@ -341,7 +341,7 @@ public class DBChat extends DBAdaptor{
     
     public void insertObject(DBObject o){
         Users us = (Users)o;
-        Log.debug("INSERT user id=" + us.id);
+        Log.getLogger(serviceName).debug("INSERT user id=" + us.id);
         try{
             PreparedStatement pst = getDb().prepareStatement("insert into users values (?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             pst.setInt(1,us.id);
@@ -375,7 +375,7 @@ public class DBChat extends DBAdaptor{
 
     public void updateObject(DBObject o){
         Users us = (Users)o;
-        Log.debug("UPDATE user id=" + us.id);
+        Log.getLogger(serviceName).debug("UPDATE user id=" + us.id);
         try{
             PreparedStatement pst = getDb().prepareStatement("update users set sn=?,nick=?," + 
                     "localnick=?,fname=?,lname=?,email=?,city=?,homepage=?,gender=?," +

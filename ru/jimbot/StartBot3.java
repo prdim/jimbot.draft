@@ -41,7 +41,7 @@ public class StartBot3 {
 	public static void main(String[] args) {
 //		java.awt.EventQueue.invokeLater(new Runnable() {
 //            public void run() {
-            	Log.init("");
+//            	Log.init("");
             	System.setErr(new PrintStream(new SystemErrLogger(), true));
                 MainProps.load();
                 Manager.getInstance();
@@ -57,12 +57,14 @@ public class StartBot3 {
                         }
                         Server.startServer(s);
                     } catch (Exception ex) {
-                        ex.printStackTrace();
+//                        ex.printStackTrace();
+                        Log.getDefault().error(ex.getMessage(),ex);
                     }
                  try {
                 	 Manager.getInstance().startAll();
                  } catch (Exception ex) {
-                	 ex.printStackTrace();
+//                	 ex.printStackTrace();
+                     Log.getDefault().error(ex.getMessage(),ex);
                  }
 //            }
 //        });

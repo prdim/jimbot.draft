@@ -266,7 +266,7 @@ public class IcqProtocol implements Protocol, MessagingListener, StatusListener,
 			OscarInterface.sendBasicMessage(con, sn, msg);
 //			OscarInterface.sendExtendedMessage(con, sn, msg);
 		} catch (ConvertStringException e) {
-			Log.info("ERROR send message: " + msg);
+			Log.getLogger(srv.getName()).info("ERROR send message: " + msg);
 			e.printStackTrace();
 		}
 
@@ -307,12 +307,12 @@ public class IcqProtocol implements Protocol, MessagingListener, StatusListener,
 	public void onIncomingMessage(IncomingMessageEvent e) {
 //		System.out.println(e.getSenderID() + " MSG : " + e.getMessage());
 		if(MainProps.isIgnor(e.getSenderID())){
-			Log.flood2("IGNORE LIST: " + e.getMessageId() + "->" + screenName + ": " + e.getMessage());
+			Log.getLogger(srv.getName()).flood2("IGNORE LIST: " + e.getMessageId() + "->" + screenName + ": " + e.getMessage());
 			return;
 		}
 		// Сервисное сообщение от УИНа 1
 		if(e.getSenderID().equals("1")){
-		    Log.error("Ошибка совместимости клиента ICQ. Будет произведена попытка переподключения...");
+		    Log.getLogger(srv.getName()).error("Ошибка совместимости клиента ICQ. Будет произведена попытка переподключения...");
 		    try{
                 con.close();
                 notifyLogout();
@@ -336,13 +336,13 @@ public class IcqProtocol implements Protocol, MessagingListener, StatusListener,
 	}
 
 	public void onMessageError(MessageErrorEvent e) {
-		Log.error("Message error code " + e.getErrorCode() + " occurred");
+		Log.getLogger(srv.getName()).error("Message error code " + e.getErrorCode() + " occurred");
 //		System.out.println("Message error code " + e.getErrorCode() + " occurred");
 		
 	}
 
 	public void onMessageMissed(MessageMissedEvent e) {
-		Log.debug("Message from " + e.getUin() + " can't be recieved because " + e.getReason()  +
+		Log.getLogger(srv.getName()).debug("Message from " + e.getUin() + " can't be recieved because " + e.getReason()  +
 				" count="+e.getMissedMsgCount());
 //		System.out.println("Message from " + e.getUin() + " can't be recieved because " + e.getReason());
 		
@@ -364,7 +364,7 @@ public class IcqProtocol implements Protocol, MessagingListener, StatusListener,
 	 * ошибка авторизации
 	 */
 	public void onAuthorizationFailed(LoginErrorEvent arg0) {
-        Log.error("Authorization for " + screenName + " failed, reason " + arg0.getErrorMessage());
+        Log.getLogger(srv.getName()).error("Authorization for " + screenName + " failed, reason " + arg0.getErrorMessage());
 //		System.out.println("Authorization Failed! You UIN or Password is not valid");
 		
 	}
@@ -373,7 +373,7 @@ public class IcqProtocol implements Protocol, MessagingListener, StatusListener,
 	 * юзер пришел
 	 */
 	public void onIncomingUser(IncomingUserEvent e) {
-		Log.debug(e.getIncomingUserId() + " has just signed on.");
+		Log.getLogger(srv.getName()).debug(e.getIncomingUserId() + " has just signed on.");
         notifyStatus(new Message(e.getIncomingUserId(),screenName,e.getStatusMode().toString(), e.getStatusFlag().getFlag()));
 //		protList.getStatus(e.getIncomingUserId(), 0);
 //		System.out.println(e.getIncomingUserId() + " has just signed on.");
@@ -381,7 +381,7 @@ public class IcqProtocol implements Protocol, MessagingListener, StatusListener,
 	}
 
 	public void onLogout() {
-		Log.error("Разрыв соединения: " + screenName /*+ " - " + server + ":" + port*/);
+		Log.getLogger(srv.getName()).error("Разрыв соединения: " + screenName /*+ " - " + server + ":" + port*/);
         notifyLogout();
 //		try {
 //			con.close();
@@ -402,7 +402,7 @@ public class IcqProtocol implements Protocol, MessagingListener, StatusListener,
 	}
 
 	public void onStatusChange(StatusEvent e) {
-		Log.debug("StatusEvent: " + e.getStatusMode());
+		Log.getLogger(srv.getName()).debug("StatusEvent: " + e.getStatusMode());
 //		protList.getStatus(e.getStatusMode(), status)
 //		System.out.println("StatusEvent: " + e.getStatusMode());
 		

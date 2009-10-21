@@ -49,10 +49,10 @@ public class ScriptServer {
         Vector<String> v = getListScriptFiles("./services/" + p.getService().getName() + "/scripts/command");
     	try {
     		for(int i=0; i<v.size(); i++){
-    			Log.info("Устанавливаю скрипт: " + v.get(i));
+    			Log.getLogger(p.getService().getName()).info("Устанавливаю скрипт: " + v.get(i));
                 Command c = getCommandScript(v.get(i));
                 if(c==null){
-                    Log.info("Ошибка установки, команда игнорируется.");
+                    Log.getLogger(p.getService().getName()).info("Ошибка установки, команда игнорируется.");
                 } else {
                     p.addCommand(c);
                 }
@@ -70,10 +70,10 @@ public class ScriptServer {
     	try {
             for (int i = 0; i < v.size(); i++) {
                 if (!scrm.containsKey(v.get(i)) || (scrm.get(v.get(i)) != (new File(v.get(i)).lastModified()))) {
-                    Log.info("Устанавливаю скрипт: " + v.get(i));
+                    Log.getLogger(p.getService().getName()).info("Устанавливаю скрипт: " + v.get(i));
                     Command c = getCommandScript(v.get(i));
                     if (c == null) {
-                        Log.info("Ошибка установки, команда игнорируется.");
+                        Log.getLogger(p.getService().getName()).info("Ошибка установки, команда игнорируется.");
                     } else {
                         c.init();
                         p.addCommand(c);
@@ -131,7 +131,7 @@ public class ScriptServer {
     private String readScript(String fileName){
     	String s="";
     	try {
-    		Log.info("Reading script: "+fileName);
+    		Log.getLogger(p.getService().getName()).info("Reading script: "+fileName);
             scrm.put(fileName, new File(fileName).lastModified());
     		BufferedReader in
     		   = new BufferedReader(new InputStreamReader(

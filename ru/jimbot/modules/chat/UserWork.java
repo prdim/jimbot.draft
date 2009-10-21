@@ -637,7 +637,7 @@ public class UserWork {
         Users u = new Users();
         u.sn = uin;
         addUser(u);
-        Log.info("Add user " + u.sn + ", " + u.nick + ", id=" + u.id);
+        Log.getLogger(serviceName).info("Add user " + u.sn + ", " + u.nick + ", id=" + u.id);
     }
     
     public boolean testInvite(int id){

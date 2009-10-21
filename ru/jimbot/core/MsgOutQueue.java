@@ -126,7 +126,7 @@ public class MsgOutQueue implements Runnable, QueueListener {
         // TODO Синхронизация
         try {
             if(q.get(m.getSnIn()).size()>MSG_OUT_LIMIT) {
-                Log.info("OUT MESSAGE IS LOST: " + m.getSnIn() + ">>" + m.getSnOut() + " : " + m.getMsg());
+                Log.getLogger(srv.getName()).info("OUT MESSAGE IS LOST: " + m.getSnIn() + ">>" + m.getSnOut() + " : " + m.getMsg());
                 lostMsgs.put(m.getSnIn(),lostMsgs.get(m.getSnIn())+1);
                 return;
             }

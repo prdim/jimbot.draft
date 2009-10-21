@@ -150,7 +150,7 @@ public class AnekService extends DefaultService implements DbStatusListener {
      * @param e
      */
     public void onError(String e) {
-        Log.error("Ошибка соединения с базой данных. Отключаю сервис " + name);
+        Log.getLogger(getName()).error("Ошибка соединения с базой данных. Отключаю сервис " + name);
         stop();
     }
 }

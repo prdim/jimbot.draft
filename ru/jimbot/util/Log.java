@@ -19,9 +19,9 @@
 package ru.jimbot.util;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.*;
 
 /**
  *  <p>Logger wrapper class.<br>
@@ -34,8 +34,9 @@ import org.apache.log4j.PropertyConfigurator;
  */
 public class Log implements Serializable {
     /** The Log4J Logger object */
-	private static Logger system, con, err, http, talk, flood;
-    
+	protected Logger system, con, err, http, talk, flood;
+    private static Log defaultLogger;
+    private static HashMap<String, Log> loggers = new HashMap<String, Log>();
     /** the log pattern string */
     public static final String PATTERN = "[%d{dd.MM.yy HH:mm:ss}] %m%n";
     
@@ -45,20 +46,71 @@ public class Log implements Serializable {
     /** <p><code>private<code> constructor to prevent instantiation. */
     private Log() {}
 
+    public static Log getLogger(String serviceName) {
+        if(loggers.containsKey(serviceName)) return loggers.get(serviceName);
+        Log l = new Log();
+//        l.init("services/"+serviceName + "/");
+        l.init(serviceName);
+        loggers.put(serviceName, l);
+        return l;
+    }
+
+    public static Log getDefault() {
+        if(defaultLogger==null) {
+            defaultLogger = new Log();
+            defaultLogger.init("");
+        }
+        return defaultLogger;
+    }
+
     /**
      * Initialises the logger instance with the specified level.
      *
-     * @param level - the log level
      */
-    public static void init(String level) {
-    	PropertyConfigurator.configure("lib/log4j.properties");
-    	system = Logger.getRootLogger();
-//    	con = Logger.getLogger("con");
-    	err = Logger.getLogger("error");
-    	http = Logger.getLogger("http");
-    	talk = Logger.getLogger("talk");
-    	flood = Logger.getLogger("flood");
-//    	((RollingFileAppender)talk.getAppender("talk")).setFile("");
+    public void init(String folder) {
+        if(folder.equals("")){
+            PropertyConfigurator.configure("lib/log4j.properties");
+            system = Logger.getRootLogger();
+            err = Logger.getLogger("error");
+            http = Logger.getLogger("http");
+            talk = Logger.getLogger("talk");
+            flood = Logger.getLogger("flood");
+            http.setAdditivity(false);
+        } else {
+            PropertyConfigurator.configure("services/" + folder + "/log4j.properties");
+            system = Logger.getLogger(folder + ".system");
+            err = Logger.getLogger(folder + ".error");
+            http = Logger.getLogger(folder + ".http");
+            talk = Logger.getLogger(folder + ".talk");
+            flood = Logger.getLogger(folder + ".flood");
+            http.setAdditivity(false);
+        }
+
+//    	system = folder.equals("") ? Logger.getRootLogger() : Logger.getLogger("system"+folder);
+////    	con = Logger.getLogger("con");
+//    	err = Logger.getLogger("error"+folder);
+//    	http = Logger.getLogger("http"+folder);
+//    	talk = Logger.getLogger("talk"+folder);
+//    	flood = Logger.getLogger("flood"+folder);
+//        http.setAdditivity(false);
+//        if(!folder.equals("")){
+//            FileAppender t = (FileAppender)Logger.getRootLogger().getAppender("system");
+//            t.setName("system" + folder);
+//            t.setFile(folder + "log/system.log");
+//            system.removeAllAppenders();
+//            system.addAppender(t);
+//            DailyRollingFileAppender t1 = (DailyRollingFileAppender)Logger.getLogger("talk").getAppender("talk");
+//            t1.setName("talk" + folder);
+//            t1.setFile(folder + "log/talk.log");
+//            talk.removeAllAppenders();
+//            talk.addAppender(t1);
+//        }
+//        ((FileAppender)system.getAppender("system")).setFile(folder + "log/system.log");
+//        ((DailyRollingFileAppender)talk.getAppender("talk")).setFile(folder + "log/talk.log");
+//        ((FileAppender)err.getAppender("error")).setFile(folder + "log/error.log");
+//        ((FileAppender)http.getAppender("http")).setFile(folder + "log/http.log");
+//        ((FileAppender)flood.getAppender("flood")).setFile(folder + "log/flood.log");
+
     }
 
     /**
@@ -79,7 +131,7 @@ public class Log implements Serializable {
      * @param message  the log message.
      * @param throwable the throwable.
      */
-    public static synchronized void info(Object message, Throwable throwable) {
+    public synchronized void info(Object message, Throwable throwable) {
         system.info(message, throwable);
 //        con.info(message, throwable);
     }
@@ -89,7 +141,7 @@ public class Log implements Serializable {
      *
      * @param message  the log message.
      */
-    public static synchronized void debug(Object message) {
+    public synchronized void debug(Object message) {
     	system.debug(message);
 //    	con.debug(message);
     }
@@ -100,7 +152,7 @@ public class Log implements Serializable {
      * @param message  the log message.
      * @param throwable the throwable.
      */
-    public static synchronized void debug(Object message, Throwable throwable) {
+    public synchronized void debug(Object message, Throwable throwable) {
     	system.debug(message, throwable);
 //        con.debug(message, throwable);
     }
@@ -111,7 +163,7 @@ public class Log implements Serializable {
      * @param message  the log message.
      * @param throwable the throwable.
      */
-    public static synchronized void error(Object message, Throwable throwable) {
+    public synchronized void error(Object message, Throwable throwable) {
         err.error(message, throwable);
     }
 
@@ -120,23 +172,23 @@ public class Log implements Serializable {
      *
      * @param message  the log message.
      */
-    public static synchronized void info(Object message) {
+    public synchronized void info(Object message) {
     	system.info(message);
     }
     
-    public static synchronized void http(Object message) {
+    public synchronized void http(Object message) {
     	http.debug(message);
     }
     
-    public static synchronized void talk(Object message) {
+    public synchronized void talk(Object message) {
     	talk.info(message);
     }
     
-    public static synchronized void flood(Object message) {
+    public synchronized void flood(Object message) {
     	flood.info(message);
     }
     
-    public static synchronized void flood2(Object message) {
+    public synchronized void flood2(Object message) {
     	flood.debug(message);
     }
 
@@ -145,7 +197,7 @@ public class Log implements Serializable {
      *
      * @param message  the log message.
      */
-    public static synchronized void error(Object message) {
+    public synchronized void error(Object message) {
     	err.error(message);
     }
 
@@ -156,7 +208,7 @@ public class Log implements Serializable {
      * @return <code>true</code> if initialised |
      *         <code>false</code> otherwise
      */
-    public static boolean isLogEnabled() {
+    public boolean isLogEnabled() {
         return system != null;
     }
 

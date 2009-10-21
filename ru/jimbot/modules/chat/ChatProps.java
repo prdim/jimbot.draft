@@ -285,10 +285,10 @@ public class ChatProps implements AbstractProps {
 //            appProps.load(fi);
             appProps.loadFromXML(fi);
             fi.close();
-            Log.info("Load preferences ok");
+            Log.getDefault().info("Load preferences ok");
         } catch (Exception ex) {
             ex.printStackTrace();
-            Log.error("Error opening preferences: ");
+            Log.getDefault().error("Error opening preferences: ");
         }
     }
     
@@ -302,10 +302,10 @@ public class ChatProps implements AbstractProps {
 //            appProps.store(fo,"jImBot properties");
             appProps.storeToXML(fo, "jImBot properties");
             fo.close();
-            Log.info("Save preferences ok");
+            Log.getDefault().info("Save preferences ok");
         } catch (Exception ex) {
             ex.printStackTrace();
-            Log.error("Error saving preferences: ");
+            Log.getDefault().error("Error saving preferences: ");
         }
     }
     

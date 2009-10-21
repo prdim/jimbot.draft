@@ -148,7 +148,7 @@ public class MsgInQueue implements Runnable, ProtocolListener {
         if(!testFlood(m.getSnIn()))
             q.add(m);
         else {
-            Log.flood("FLOOD from " + m.getSnIn() + ">> " + m.getMsg());
+            Log.getLogger(srv.getName()).flood("FLOOD from " + m.getSnIn() + ">> " + m.getMsg());
             // TODO Подумать над флудом
             m.setType(Message.TYPE_FLOOD_NOTICE);
             q.add(m);
