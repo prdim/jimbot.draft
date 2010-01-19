@@ -88,7 +88,7 @@ public class ChronoMaster implements Runnable{
      * Запуск процесса обработки событий
      */
     public void start() {
-        th = new Thread(this, "CronoMaster");
+        th = new Thread(this, "ChronoMaster");
         th.start();
     }
 

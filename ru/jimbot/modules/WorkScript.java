@@ -25,7 +25,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import ru.jimbot.modules.anek.AnekCommandParser;
 import ru.jimbot.modules.chat.ChatCommandProc;
 import ru.jimbot.modules.chat.RobAdmin;
-import ru.jimbot.modules.http.HttpConnection;
 import ru.jimbot.protocol.IcqProtocol;
 import ru.jimbot.util.Log;
 import bsh.Interpreter;
@@ -293,19 +292,19 @@ private String sn=""; // Имя сервиса
      * @param con
      * @return
      */
-    public HttpConnection startHTTPScript(String name, HttpConnection con){
-        HttpConnection c = con;
-        try{
-            Interpreter bsh = new Interpreter();
-            bsh.set("con", con);
-            bsh.eval(scripts.getScript("./scripts/http/" + name + ".bsh"));
-            c = (HttpConnection)bsh.get("con");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            Log.getDefault().http("Ошибка запуска скрипта " + name);
-        }  
-        return c;
-    }
+//    public HttpConnection startHTTPScript(String name, HttpConnection con){
+//        HttpConnection c = con;
+//        try{
+//            Interpreter bsh = new Interpreter();
+//            bsh.set("con", con);
+//            bsh.eval(scripts.getScript("./scripts/http/" + name + ".bsh"));
+//            c = (HttpConnection)bsh.get("con");
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//            Log.getDefault().http("Ошибка запуска скрипта " + name);
+//        }
+//        return c;
+//    }
     
     private String getName(String s){
         if(s.indexOf(".")<0) 

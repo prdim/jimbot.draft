@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Vector;
 
+import ru.caffeineim.protocols.icq.integration.OscarInterface;
 import ru.jimbot.table.UserPreference;
 
 /**
@@ -40,7 +41,7 @@ import ru.jimbot.table.UserPreference;
  * @author Prolubnikov Dmitry
  */
 public class MainProps {
-    public static final String VERSION = "v.0.5.0 alpha 1 (27/09/2009)";
+    public static final String VERSION = "v.0.5.0 alpha 2 (17/01/2010)";
     public static final int VER_INT = 18;
 //    public static final String VER_DESC ="test version";
     private static int ver_no = 0;
@@ -91,6 +92,7 @@ public class MainProps {
         setIntProperty("http.maxErrLogin",3);
         setIntProperty("http.timeErrLogin",10);
         setIntProperty("http.timeBlockLogin",20);
+        setIntProperty("http.port",8888);
         setIntProperty("srv.servicesCount",1);
         setStringProperty("srv.serviceName0","AnekBot");
         setStringProperty("srv.serviceType0","anek");
@@ -111,11 +113,12 @@ public class MainProps {
             new UserPreference(UserPreference.INTEGER_TYPE,"http.maxErrLogin","Число ошибочных входов для блокировки",getIntProperty("http.maxErrLogin")),
             new UserPreference(UserPreference.INTEGER_TYPE,"http.timeErrLogin","Допустимый период между ошибками",getIntProperty("http.timeErrLogin")),
             new UserPreference(UserPreference.INTEGER_TYPE,"http.timeBlockLogin","Время блокировки входа",getIntProperty("http.timeBlockLogin")),
-            new UserPreference(UserPreference.CATEGORY_TYPE,"main", "Настройки прокси",""),
-            new UserPreference(UserPreference.STRING_TYPE,"main.Socks5ProxyHost","Прокси хост",getStringProperty("main.Socks5ProxyHost")),
-            new UserPreference(UserPreference.STRING_TYPE,"main.Socks5ProxyPort","Прокси порт",getStringProperty("main.Socks5ProxyPort")),
-            new UserPreference(UserPreference.STRING_TYPE,"main.Socks5ProxyUser","Прокси пользователь",getStringProperty("main.Socks5ProxyUser")),
-            new UserPreference(UserPreference.STRING_TYPE,"main.Socks5ProxyPass","Прокси пароль",getStringProperty("main.Socks5ProxyPass")),
+            new UserPreference(UserPreference.INTEGER_TYPE,"http.port","HTTP порт",getIntProperty("http.port")),
+//            new UserPreference(UserPreference.CATEGORY_TYPE,"main", "Настройки прокси",""),
+//            new UserPreference(UserPreference.STRING_TYPE,"main.Socks5ProxyHost","Прокси хост",getStringProperty("main.Socks5ProxyHost")),
+//            new UserPreference(UserPreference.STRING_TYPE,"main.Socks5ProxyPort","Прокси порт",getStringProperty("main.Socks5ProxyPort")),
+//            new UserPreference(UserPreference.STRING_TYPE,"main.Socks5ProxyUser","Прокси пользователь",getStringProperty("main.Socks5ProxyUser")),
+//            new UserPreference(UserPreference.STRING_TYPE,"main.Socks5ProxyPass","Прокси пароль",getStringProperty("main.Socks5ProxyPass")),
             new UserPreference(UserPreference.CATEGORY_TYPE,"bot", "Настройки бота",""),
             new UserPreference(UserPreference.STRING_TYPE,"icq.serverDefault","ICQ Сервер 1",getStringProperty("icq.serverDefault")),
             new UserPreference(UserPreference.INTEGER_TYPE,"icq.portDefault","ICQ Порт 1",getIntProperty("icq.portDefault")),
@@ -210,6 +213,14 @@ public class MainProps {
             currentPort = getIntProperty("icq.portDefault");
         return currentPort;
     }
+
+    /**
+     * Порт http для админки
+     * @return
+     */
+    public static int getHTTPPort() {
+        return getIntProperty("http.port");
+    }
     
     public static void nextServer(){
         if(servers.size()==0) return;
@@ -262,8 +273,9 @@ public class MainProps {
     }
     
     public static String getAbout(){
-        return PROG_TITLE + " " + VERSION + "\n(c) Spec, 2006-2009\n" +
-                "Поддержка проекта: http://jimbot.ru";
+        return PROG_TITLE + " " + VERSION + "\n(c) Spec, 2006-2010\n" +
+                "Поддержка проекта: http://jimbot.ru\n" +
+                "IcqLib version: " + OscarInterface.getVersion();
     }
     
     public static boolean isHide(){

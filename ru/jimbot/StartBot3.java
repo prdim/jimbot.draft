@@ -18,14 +18,21 @@
 
 package ru.jimbot;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Vector;
 
+import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.AbstractHandler;
 import ru.jimbot.modules.WorkScript;
-import ru.jimbot.modules.http.Server;
 import ru.jimbot.util.Log;
 import ru.jimbot.util.MainProps;
 import ru.jimbot.util.SystemErrLogger;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Запуск бота
@@ -39,34 +46,48 @@ public class StartBot3 {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-//		java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//            	Log.init("");
             	System.setErr(new PrintStream(new SystemErrLogger(), true));
                 MainProps.load();
                 Manager.getInstance();
-                if(MainProps.getBooleanProperty("main.StartHTTP"))
-                    try {
-                        Vector<String> v = WorkScript.getInstance("").listHTTPScripts();
-                        String[] s = new String[2+v.size()*2];
-                        s[0] = "/";
-                        s[1] = "ru.jimbot.modules.http.MainPage";
-                        for(int i=0;i<v.size();i++){
-                            s[i*2+2] = v.get(i);
-                            s[i*2+3] = "ru.jimbot.modules.http.HTTPScriptRequest";
-                        }
-                        Server.startServer(s);
-                    } catch (Exception ex) {
-//                        ex.printStackTrace();
-                        Log.getDefault().error(ex.getMessage(),ex);
-                    }
-                 try {
-                	 Manager.getInstance().startAll();
-                 } catch (Exception ex) {
-//                	 ex.printStackTrace();
-                     Log.getDefault().error(ex.getMessage(),ex);
-                 }
+        if (MainProps.getBooleanProperty("main.StartHTTP")) {
+            Manager.getInstance().startHTTPServer();
+//            Handler handler = new AbstractHandler() {
+//                public void handle(String s, Request request, HttpServletRequest httpServletRequest, HttpServletResponse response) throws IOException, ServletException {
+//                    response.setContentType("text/html");
+//                    response.setStatus(HttpServletResponse.SC_OK);
+//                    response.getWriter().println("<h1>Hello</h1>");
+//                    ((Request) request).setHandled(true);
+//                    System.out.println(request.getRemoteAddr() + ":" + request.getRemotePort());
+//                }
+//            };
+//
+//            org.eclipse.jetty.server.Server server = new org.eclipse.jetty.server.Server(8080);
+//            server.setHandler(handler);
+//            try {
+//                server.start();
+//                server.join();
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
 //            }
-//        });
+
+//            try {
+//                Vector<String> v = WorkScript.getInstance("").listHTTPScripts();
+//                String[] s = new String[2 + v.size() * 2];
+//                s[0] = "/";
+//                s[1] = "ru.jimbot.modules.http.MainPage";
+//                for (int i = 0; i < v.size(); i++) {
+//                    s[i * 2 + 2] = v.get(i);
+//                    s[i * 2 + 3] = "ru.jimbot.modules.http.HTTPScriptRequest";
+//                }
+//                Server.startServer(s);
+//            } catch (Exception ex) {
+//                Log.getDefault().error(ex.getMessage(), ex);
+//            }
+//            try {
+//                Manager.getInstance().startAll();
+//            } catch (Exception ex) {
+//                Log.getDefault().error(ex.getMessage(), ex);
+//            }
+        }
     }
 }

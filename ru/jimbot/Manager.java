@@ -31,9 +31,11 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.eclipse.jetty.server.nio.SelectChannelConnector;
+import ru.jimbot.http.HandlerFactory;
 import ru.jimbot.modules.anek.AnekService;
-import ru.jimbot.modules.http.Server;
-import ru.jimbot.util.Log;
+//import ru.jimbot.modules.http.Server;
+import ru.jimbot.util.Log;             
 import ru.jimbot.util.MainProps;
 import ru.jimbot.core.Service;
 
@@ -48,6 +50,7 @@ public class Manager {
 	private Monitor2 mon = new Monitor2();
 	private static Manager mn = null;
 	private ConcurrentHashMap<String, Object> data = null;
+    private org.eclipse.jetty.server.Server server = null;
 	
 	/**
 	 * Инициализация. Создание сервисов, определенных в файле конфигурации.
@@ -179,8 +182,8 @@ public class Manager {
      */
     public void exit() {
     	stopAll();
-    	if(MainProps.getBooleanProperty("main.StartHTTP"))
-            Server.stopServer();
+//    	if(MainProps.getBooleanProperty("main.StartHTTP"))
+//            stopHTTPServer();
     	mon.stop();
     	Log.getDefault().info("Exit bot " + new Date(System.currentTimeMillis()).toString());
 //    	for(String s : services.keySet()){
@@ -287,4 +290,37 @@ public class Manager {
 		else
 			return false;
 	}
+
+    public synchronized org.eclipse.jetty.server.Server getHTTPServer() {
+        if(server == null) {
+            startHTTPServer();
+        }
+        return server;
+    }
+
+    public synchronized void startHTTPServer() {
+        server = new org.eclipse.jetty.server.Server();
+        try {
+            SelectChannelConnector connector = new SelectChannelConnector();
+            connector.setPort(MainProps.getHTTPPort());
+            server.addConnector(connector);
+            server.setHandler(HandlerFactory.getAvailableHandlers());
+
+//            HandlerFactory.setAvailableHandlers(server);
+            server.start();
+            server.join();
+            
+//            new HandlerFactory().setAvailableHandlers2(server);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public synchronized void stopHTTPServer() {
+        try {
+            if(server != null) server.stop();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 }
