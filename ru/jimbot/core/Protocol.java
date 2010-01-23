@@ -31,11 +31,6 @@ public interface Protocol {
     public void connect();
 
     /**
-     * Переподключение
-     */
-    public void reConnect();
-
-    /**
      * Разорвать соединение
      */
     public void disconnect();
@@ -92,4 +87,10 @@ public interface Protocol {
      * @return
      */
     public String getScreenName();
+
+    /**
+     * Возвращает последнюю ошибку соединения
+     * @return
+     */
+    public String getLastError();
 }

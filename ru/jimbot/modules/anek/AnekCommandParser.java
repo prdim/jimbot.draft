@@ -60,8 +60,8 @@ public class AnekCommandParser extends DefaultCommandParser implements QueueList
         addCommand(new CmdRefresh(this));
         addCommand(new CmdAdd(this));
         addCommand(new CmdFree(this));
-        ScriptServer ss = new ScriptServer(this);
-        ss.readAllCommandScripts();
+//        ScriptServer ss = new ScriptServer(this);
+//        ss.readAllCommandScripts();
         addCommand(new CmdAbout(this));
         for(Command i:commands.values()) {
             i.init();

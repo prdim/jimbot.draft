@@ -49,7 +49,10 @@ public class ServiceStatAction extends MainPageServletActions {
     		print(response, ">> " + sn +
     				(Manager.getInstance().getService(ns).getProtocol(sn).isOnLine() ? "  [ ON]  " : "  [OFF]  ") +
     				Manager.getInstance().getService(ns).getOutQueue(sn).size() +
-    				", потери:" + Manager.getInstance().getService(ns).getOutQueue().getLostMsgCount(sn) + "<br>");
+    				", потери:" + Manager.getInstance().getService(ns).getOutQueue().getLostMsgCount(sn) +
+                    (Manager.getInstance().getService(ns).getProtocol(sn).isOnLine() ?
+                            "" : " [" + Manager.getInstance().getService(ns).getProtocol(sn).getLastError() + "] ") +
+                    "<br>");
     	}
     	print(response, "<br>Статистика принятых сообщений по номерам:<br>");
     	String s = "<TABLE BORDER=\"1\"><TR><TD>UIN</TD><TD>1 минута</TD><TD>5 митут</TD><TD>60 минут</TD><TD>24 часа</TD><TD>Всего</TD></TR>";

@@ -49,26 +49,8 @@ public class StartBot3 {
             	System.setErr(new PrintStream(new SystemErrLogger(), true));
                 MainProps.load();
                 Manager.getInstance();
-        if (MainProps.getBooleanProperty("main.StartHTTP")) {
+        if (MainProps.getBooleanProperty("main.StartHTTP"))
             Manager.getInstance().startHTTPServer();
-//            Handler handler = new AbstractHandler() {
-//                public void handle(String s, Request request, HttpServletRequest httpServletRequest, HttpServletResponse response) throws IOException, ServletException {
-//                    response.setContentType("text/html");
-//                    response.setStatus(HttpServletResponse.SC_OK);
-//                    response.getWriter().println("<h1>Hello</h1>");
-//                    ((Request) request).setHandled(true);
-//                    System.out.println(request.getRemoteAddr() + ":" + request.getRemotePort());
-//                }
-//            };
-//
-//            org.eclipse.jetty.server.Server server = new org.eclipse.jetty.server.Server(8080);
-//            server.setHandler(handler);
-//            try {
-//                server.start();
-//                server.join();
-//            } catch (Exception ex) {
-//                ex.printStackTrace();
-//            }
 
 //            try {
 //                Vector<String> v = WorkScript.getInstance("").listHTTPScripts();
@@ -83,11 +65,11 @@ public class StartBot3 {
 //            } catch (Exception ex) {
 //                Log.getDefault().error(ex.getMessage(), ex);
 //            }
-//            try {
-//                Manager.getInstance().startAll();
-//            } catch (Exception ex) {
-//                Log.getDefault().error(ex.getMessage(), ex);
-//            }
-        }
+            try {
+                Manager.getInstance().startAll();
+            } catch (Exception ex) {
+                Log.getDefault().error(ex.getMessage(), ex);
+            }
+
     }
 }

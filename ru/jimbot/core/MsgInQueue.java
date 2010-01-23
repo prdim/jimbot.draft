@@ -131,6 +131,7 @@ public class MsgInQueue implements Runnable, ProtocolListener {
                     (System.currentTimeMillis()-i.getTime())>
                             ((i.getCount()*30000)>900000 ? 900000 : (i.getCount()*30000))){
                 srv.createEvent(new CommandProtocolLogonEvent(srv, i.getSn()));
+                i.incCount();
             }
         }
     }
@@ -164,12 +165,15 @@ public class MsgInQueue implements Runnable, ProtocolListener {
     }
 
     public void logOn(String sn) {
+        System.out.println("OnLogon " + sn);
         lastLogout.put(sn, new LogoutInfo(sn));
     }
 
     public void logOut(String sn) {
         try {
+            System.out.println("OnLogout " + sn);
             LogoutInfo u = lastLogout.get(sn);
+            if(u==null) u = new LogoutInfo(sn);
             u.setTime(System.currentTimeMillis());
             u.incCount();
             lastLogout.put(sn, u);

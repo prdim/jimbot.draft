@@ -308,7 +308,7 @@ public class Manager {
 
 //            HandlerFactory.setAvailableHandlers(server);
             server.start();
-            server.join();
+//            server.join();
             
 //            new HandlerFactory().setAvailableHandlers2(server);
         } catch (Exception ex) {

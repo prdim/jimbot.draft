@@ -20,13 +20,13 @@ package ru.jimbot.protocol;
 
 import ru.caffeineim.protocols.icq.core.OscarConnection;
 import ru.caffeineim.protocols.icq.exceptions.ConvertStringException;
+import ru.caffeineim.protocols.icq.integration.OscarInterface;
 import ru.caffeineim.protocols.icq.integration.events.*;
 import ru.caffeineim.protocols.icq.integration.listeners.MessagingListener;
 import ru.caffeineim.protocols.icq.integration.listeners.OurStatusListener;
 import ru.caffeineim.protocols.icq.integration.listeners.XStatusListener;
 import ru.caffeineim.protocols.icq.setting.enumerations.StatusModeEnum;
 import ru.caffeineim.protocols.icq.setting.enumerations.XStatusModeEnum;
-import ru.caffeineim.protocols.icq.tool.OscarInterface;
 import ru.jimbot.core.*;
 import ru.jimbot.core.events.ProtocolLogonEvent;
 import ru.jimbot.core.events.ProtocolLogoutEvent;
@@ -49,6 +49,7 @@ public class IcqProtocol implements Protocol, CommandProtocolListener,
     private String statustxt1 = "";
     private String statustxt2 = "";
     private boolean connected = false;
+    private String lastError = "";
 
     public IcqProtocol(Service s, int id) {
         srv = s;
@@ -75,7 +76,10 @@ public class IcqProtocol implements Protocol, CommandProtocolListener,
     }
 
     private void notifyLogout() {
-        srv.createEvent(new ProtocolLogoutEvent(srv, screenName));
+//        srv.createEvent(new ProtocolLogoutEvent(srv, screenName));
+        for(ProtocolListener i:srv.getProtocolListeners()) {
+            i.logOut(screenName);
+        }
     }
 
 
@@ -84,37 +88,25 @@ public class IcqProtocol implements Protocol, CommandProtocolListener,
         statustxt1 = srv.getProps().getStringProperty("icq.STATUS_MESSAGE1");
         statustxt2 = srv.getProps().getStringProperty("icq.STATUS_MESSAGE2");
 		con = new OscarConnection(MainProps.getServer(), MainProps.getPort(), screenName, srv.getProps().getPass(screenNameID));
-        con.getPacketAnalyser().setDebug(false);
         con.addOurStatusListener(this);
         con.addMessagingListener(this);
         con.addXStatusListener(this);
-        con.connect();
-        connected = true;
-    }
-
-    public void reConnect() {
-        try {
-            con.close();
-            notifyLogout();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            connected = false;
-        }
         con.connect();
 //        connected = true;
     }
 
     public void disconnect() {
         try {
+            System.out.println("Disconnect...");
             con.close();
             con.removeOurStatusListener(this);
             con.removeMessagingListener(this);
             con.removeXStatusListener(this);
-            notifyLogout();
+//            notifyLogout();
         } catch (Exception ex) {
             ex.printStackTrace();
-            connected = false;
         }
+        connected = false;
     }
 
     public void setStatus(int status) {
@@ -124,6 +116,10 @@ public class IcqProtocol implements Protocol, CommandProtocolListener,
     public boolean isOnLine() {
         if(con==null) return false;
         return connected;
+    }
+
+    public String getLastError() {
+        return lastError;
     }
 
     public void sendMsg(String sn, String msg) {
@@ -187,6 +183,7 @@ public class IcqProtocol implements Protocol, CommandProtocolListener,
 
     public void logOut() {
         disconnect();
+        notifyLogout();
     }
 
     /**
@@ -198,9 +195,12 @@ public class IcqProtocol implements Protocol, CommandProtocolListener,
      * @param exception
      */
     public void onLogout(Exception exception) {
+        System.err.println("Разрыв соединения: " + screenName + " - " + exception.getMessage());
 		Log.getLogger(srv.getName()).error("Разрыв соединения: " + screenName);
+        lastError = exception.getMessage();
+        disconnect();
         notifyLogout();
-        connected = false;
+//        connected = false;
     }
 
     public void onLogin() {
@@ -208,12 +208,16 @@ public class IcqProtocol implements Protocol, CommandProtocolListener,
 		OscarInterface.changeXStatus(con, new XStatusModeEnum(status));
         notifyLogon();
         connected = true;
+        System.err.println("Connected " + con.getUserId());
     }
 
     public void onAuthorizationFailed(LoginErrorEvent e) {
         Log.getLogger(srv.getName()).error("Authorization for " + screenName + " failed, reason " + e.getErrorMessage());
-        con.close();
-        connected = false;
+        lastError = e.getErrorMessage();
+        disconnect();
+        notifyLogout();
+//        con.close();
+//        connected = false;
     }
 
     public void onStatusResponse(StatusEvent e) {
