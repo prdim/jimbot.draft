@@ -42,6 +42,15 @@ public abstract class DefaultCommandParser implements Parser {
     }
 
     /**
+     * Освобождение всех ресурсов, связанных с командами
+     */
+    public void destroyCommands() {
+        for(Command c : commands.values()) {
+            c.destroy();
+        }
+    }
+
+    /**
      * Возвращает сервис, в котором зарегистрирован этот парсер
      *
      * @return
@@ -57,6 +66,7 @@ public abstract class DefaultCommandParser implements Parser {
      * @param cmd
      */
     public void addCommand(String pattern, Command cmd) {
+        if(commands.containsKey(pattern)) try {commands.get(pattern).destroy(); } catch (Exception e) {}
         commands.put(pattern, cmd);
         autority.putAll(cmd.getAutorityList());
     }

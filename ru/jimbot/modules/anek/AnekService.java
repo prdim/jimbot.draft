@@ -76,6 +76,7 @@ public class AnekService extends DefaultService implements DbStatusListener {
      */
     public void stop() {
         getCron().stop();
+        cmd.destroyCommands();
         qe.stop();
         inq.stop();
         inq = null;

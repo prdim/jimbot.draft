@@ -18,14 +18,18 @@
 
 package ru.jimbot;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.channels.FileLock;
 import java.util.Vector;
 
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import ru.jimbot.modules.WorkScript;
+import ru.jimbot.util.AddOnsLoader;
 import ru.jimbot.util.Log;
 import ru.jimbot.util.MainProps;
 import ru.jimbot.util.SystemErrLogger;
@@ -37,21 +41,33 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Запуск бота
  * @author Prolubnikov Dmitriy
- *
+ * Использована информация статьи http://itfreak.ru/development/java-single-application-instance/
  */
 public class StartBot3 {
-	
+    private static final String LOCK_FILE_NAME = ".lock"; // имя lock-файла
+    private static File rootDir; // директория, в которой находится lock-файл        	
 
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
-            	System.setErr(new PrintStream(new SystemErrLogger(), true));
-                MainProps.load();
-                Manager.getInstance();
+	public static void main(String[] args) throws Throwable {
+        rootDir = new File("./"); // инициализация директории, в которой находится lock-файл
+        // проверка на присутсвие единственного выполняемого экземпляра приложения;
+        // естественно должна выполняться перед основной инициализацией приложения
+        // и реализацией его бизнесс-логики
+        singleAppInstanceCheck();
+
+        // Добавление jar-файлов из lib в classpath
+        try {
+            AddOnsLoader.loadAddOns();
+        } catch (Throwable th) {
+            th.printStackTrace();
+        }
+        System.setErr(new PrintStream(new SystemErrLogger(), true));
+        MainProps.load();
+        Manager.getInstance();
         if (MainProps.getBooleanProperty("main.StartHTTP"))
             Manager.getInstance().startHTTPServer();
-
 //            try {
 //                Vector<String> v = WorkScript.getInstance("").listHTTPScripts();
 //                String[] s = new String[2 + v.size() * 2];
@@ -65,11 +81,54 @@ public class StartBot3 {
 //            } catch (Exception ex) {
 //                Log.getDefault().error(ex.getMessage(), ex);
 //            }
-            try {
-                Manager.getInstance().startAll();
-            } catch (Exception ex) {
-                Log.getDefault().error(ex.getMessage(), ex);
-            }
+        try {
+            Manager.getInstance().startAll();
+        } catch (Exception ex) {
+            Log.getDefault().error(ex.getMessage(), ex);
+        }
+    }
 
+    private static void singleAppInstanceCheck() throws Throwable {
+        // проверка: запущен ли другой экземпляр приложения?
+        if (!lock()) { // если да, то...
+            // ... информируем об этом пользователя...
+            System.err.println("JimBot is already running!");
+            // ... и прекращаем работу
+            System.exit(1);
+        }
+    }
+
+    private static boolean lock() {
+        try {
+            // создаем блокировку
+            final FileLock lock = new FileOutputStream(
+                                           new File(rootDir, LOCK_FILE_NAME))
+                                              .getChannel().tryLock();
+            if (lock != null) {
+                // а вот и сам "фокус":
+                // создаем поток...
+                new Thread(new Runnable(){
+                    public void run() {
+                        while (true) {
+                            try {
+                                // ... и проверяем валидность блокировки
+                                //     внутри него...
+                                if (lock.isValid()) {};
+                                // ... а затем засыпаем "навечно"
+                                Thread.sleep(Long.MAX_VALUE);
+                            } catch (InterruptedException e) {
+                                // игнорируем
+                            }
+                        }
+                    }
+                }).start();
+            }
+            return lock != null;
+        } catch (Exception ex) {
+            // игнорируем, если мы ничего не в силах поделать -
+            // пользователь должен сам позаботиться о том,
+            // чтобы не запускать на выполнение более одного экземпляра приложения
+        }
+        return true;
     }
 }

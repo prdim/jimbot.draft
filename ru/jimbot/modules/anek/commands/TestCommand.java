@@ -21,6 +21,7 @@ package ru.jimbot.modules.anek.commands;
 import ru.jimbot.core.DefaultCommand;
 import ru.jimbot.core.Parser;
 import ru.jimbot.core.Message;
+import ru.jimbot.util.Log;
 
 import java.util.Vector;
 import java.util.List;
@@ -33,6 +34,16 @@ public class TestCommand extends DefaultCommand {
 
     public TestCommand(Parser p) {
         super(p);
+    }
+
+    @Override
+    public void init() {
+        Log.getDefault().info("Инициализация тестовой команды");
+    }
+
+    @Override
+    public void destroy() {
+        Log.getDefault().info("Уничтожение тестовой команды");
     }
 
     /**

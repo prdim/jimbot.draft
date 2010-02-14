@@ -76,8 +76,8 @@ public class ScriptServer {
                     if (c == null) {
                         Log.getLogger(p.getService().getName()).info("Ошибка установки, команда игнорируется.");
                     } else {
-                        c.init();
                         p.addCommand(c);
+                        c.init();
                     }
                 }
             }

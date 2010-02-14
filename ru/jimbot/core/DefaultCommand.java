@@ -41,6 +41,10 @@ public abstract class DefaultCommand implements Command {
         // ничего не делаем
     }
 
+    public void destroy() {
+        // ничего не делаем
+    }
+
     /**
      * Список проверяемых командой объектов полномочий с их описанием
      *

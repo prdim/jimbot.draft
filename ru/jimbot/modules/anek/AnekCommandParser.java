@@ -84,7 +84,7 @@ public class AnekCommandParser extends DefaultCommandParser implements QueueList
         if(cmd==null){
             notify(new Message(m.getSnOut(), m.getSnIn(), "Неверная команда! Для справки отправте !help"));
         } else {
-            notify(cmd.exec(m));
+            if(cmd.authorityCheck(m.getSnIn())) notify(cmd.exec(m));
         }
     }
 
