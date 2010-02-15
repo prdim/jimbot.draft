@@ -34,11 +34,13 @@ public abstract class DefaultCommandParser implements Parser {
     protected HashMap<String, Command> commands;
     protected HashMap<String, String> autority;
     protected Service srv;
+    protected ContextManager cm;
     
     public DefaultCommandParser(Service srv) {
         this.srv = srv;
         commands = new HashMap<String, Command>();
         autority = new HashMap<String, String>();
+        cm = new ContextManager();
     }
 
     /**
@@ -48,6 +50,10 @@ public abstract class DefaultCommandParser implements Parser {
         for(Command c : commands.values()) {
             c.destroy();
         }
+    }
+
+    public ContextManager getContextManager() {
+        return cm;
     }
 
     /**

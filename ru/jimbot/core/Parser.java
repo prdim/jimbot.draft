@@ -101,4 +101,10 @@ public interface Parser {
      * @return
      */
     public Set<String> getAuthList(String screenName);
+
+    /**
+     * Возвращает экземпляр менеджера сессий пользователей
+     * @return
+     */
+    public ContextManager getContextManager();
 }

@@ -24,6 +24,7 @@ import ru.jimbot.core.Message;
 import ru.jimbot.modules.anek.AnekService;
 import ru.jimbot.modules.anek.AnekCommandParser;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Vector;
 import java.util.Date;
@@ -77,7 +78,8 @@ public class CmdStat extends DefaultCommand {
         s += "\nОтправлено анекдотов: " + ((AnekCommandParser)p).state;
         s += "\nДобавлено анекдотов: " + ((AnekCommandParser)p).state_add;
         s += "\nУникальных UIN: " + ((AnekCommandParser)p).uq.size();
-        s += "\nБот запущен: " + new Date(((AnekCommandParser)p).getTimeStart());
+        s += "\nАктивных в данный момент: " + p.getContextManager().getAllContexts().size();
+        s += "\nБот запущен: " + new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(((AnekCommandParser)p).getTimeStart()));
         s += "\nВремя работы: " + ((AnekCommandParser)p).getTime(((AnekCommandParser)p).getUpTime());
         s += "\nВ среднем анекдотов в час: " + ((AnekCommandParser)p).getHourStat();
         s += "\nВ среднем анекдотов в сутки: " + ((AnekCommandParser)p).getDayStat();

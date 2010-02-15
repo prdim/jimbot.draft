@@ -20,6 +20,7 @@ package ru.jimbot.modules.anek;
 
 import java.io.File;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -45,6 +46,7 @@ public class AnekCommandParser extends DefaultCommandParser implements QueueList
         super(s);
         uq = new ConcurrentHashMap<String,StateUin>();
         srv.addParserListener(this);
+        cm.setDefaultAge(60000); // Время жизни одной сессии по умолчанию
         initCommands();
     }
 
@@ -78,9 +80,12 @@ public class AnekCommandParser extends DefaultCommandParser implements QueueList
         if(m.getType()!=Message.TYPE_TEXT) return;
         firstMsg(m);
         addState(m.getSnIn());
-        String c = this.getCommand(m);
-//        System.out.println(c);
-        Command cmd = this.getCommand(c);
+        Command cmd;
+        if("".equals(cm.getContext(m.getSnIn()).getLastCommand())) {
+            cmd = this.getCommand(this.getCommand(m));
+        } else {
+            cmd = this.getCommand(cm.getContext(m.getSnIn()).getLastCommand());
+        }
         if(cmd==null){
             notify(new Message(m.getSnOut(), m.getSnIn(), "Неверная команда! Для справки отправте !help"));
         } else {
@@ -157,9 +162,12 @@ public class AnekCommandParser extends DefaultCommandParser implements QueueList
 
     public String getTime(long t){
         Date dt = new Date(t);
-        DateFormat df = DateFormat.getTimeInstance(DateFormat.MEDIUM);
+        SimpleDateFormat df = new SimpleDateFormat("HH часов mm минут");
         df.setTimeZone(TimeZone.getTimeZone("GMT"));
         return (t/86400000) + " дней " + df.format(dt);
+//        DateFormat df = DateFormat.getTimeInstance(DateFormat.MEDIUM);
+//        df.setTimeZone(TimeZone.getTimeZone("GMT"));
+//        return (t/86400000) + " дней " + df.format(dt);
     }
 
     /**

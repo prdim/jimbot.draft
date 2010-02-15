@@ -20,6 +20,7 @@ package ru.jimbot.modules.anek;
 
 import ru.jimbot.core.*;
 import ru.jimbot.db.DBAdaptor;
+import ru.jimbot.modules.anek.commands.CheckSessionTask;
 import ru.jimbot.util.Log;
 import ru.jimbot.protocol.IcqProtocol;
 import ru.jimbot.modules.anek.commands.ChangeStatusTask;
@@ -64,6 +65,7 @@ public class AnekService extends DefaultService implements DbStatusListener {
         inq.start();
         outq.start();
         cmd = new AnekCommandParser(this);
+        getCron().addTask(new CheckSessionTask(cmd, 60000));
         // TODO ...
         addDbStatusListener(this);
         start = true;
