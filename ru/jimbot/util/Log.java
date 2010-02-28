@@ -32,7 +32,7 @@ import org.apache.log4j.*;
  * @version  $Revision: 1.1 $
  * @date     $Date: 2006/12/15 17:34:39 $
  */
-public class Log implements Serializable {
+public class Log {
     /** The Log4J Logger object */
 	protected Logger system, con, err, http, talk, flood;
     private static Log defaultLogger;

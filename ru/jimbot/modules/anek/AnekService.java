@@ -18,6 +18,7 @@
 
 package ru.jimbot.modules.anek;
 
+import com.google.inject.Inject;
 import ru.jimbot.core.*;
 import ru.jimbot.db.DBAdaptor;
 import ru.jimbot.modules.anek.commands.CheckSessionTask;
@@ -40,6 +41,7 @@ public class AnekService extends DefaultService implements DbStatusListener {
     private AnekCommandParser cmd;
 //    private ChronoMaster cron = new ChronoMaster();
 
+    @Inject
     public AnekService(String name) {
         this.name = name;
         props = AnekProps.getInstance(name);
@@ -56,11 +58,11 @@ public class AnekService extends DefaultService implements DbStatusListener {
     public void start() {
         getCron().clear();
         getCron().start();
-        qe.start();
-        inq = new MsgInQueue(this);
         for(int i=0;i<props.uinCount();i++) {
             protocols.put(props.getUin(i), new IcqProtocol(this, i));
-        }
+        }        
+        qe.start();
+        inq = new MsgInQueue(this);
         outq = new MsgOutQueue(this);
         inq.start();
         outq.start();
@@ -78,6 +80,11 @@ public class AnekService extends DefaultService implements DbStatusListener {
      */
     public void stop() {
         getCron().stop();
+        for(CommandProtocolListener i:getCommandProtocolListeners()) {
+            try{
+                i.logOut();
+            } catch (Exception e) {}
+        }
         cmd.destroyCommands();
         qe.stop();
         inq.stop();
@@ -85,11 +92,6 @@ public class AnekService extends DefaultService implements DbStatusListener {
         outq.stop();
         outq = null;
         aw.closeDB();
-        for(CommandProtocolListener i:getCommandProtocolListeners()) {
-            try{
-                i.logOut();
-            } catch (Exception e) {}
-        }
         start = false;
         removeAllListeners();
         // TODO Подумать как лучше убрать ссылки и слушатели очередей, парсеров команд, протоколом и т.п.

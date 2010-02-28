@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public abstract class DefaultService implements Service {
     private HashMap<String, CommandProtocolListener> comProtList = new HashMap<String, CommandProtocolListener>();
-    private List<ProtocolListener> protList = new Vector<ProtocolListener>();
+//    private List<ProtocolListener> protList = new Vector<ProtocolListener>();
 //    private List<QueueListener> inQueueList = new Vector<QueueListener>();
     private List<QueueListener> outQueueList = new Vector<QueueListener>();
     private List<QueueListener> parserList = new Vector<QueueListener>();
@@ -47,10 +47,13 @@ public abstract class DefaultService implements Service {
      */
     public void removeAllListeners() {
         comProtList.clear();
-        protList.clear();
+//        protList.clear();
         outQueueList.clear();
         parserList.clear();
         dbList.clear();
+        for(Protocol i:protocols.values()) {
+            i.getProtocolListeners().clear();
+        }
     }
 
     /**
@@ -127,30 +130,30 @@ public abstract class DefaultService implements Service {
         return protocols.keySet();
     }
 
-    /**
-     * Добавляем новый слушатель протокола IM
-     * @param e
-     */
-    public void addProtocolListener(ProtocolListener e){
-        protList.add(e);
-    }
-
-    /**
-     * Удаляем ненужный слушатель
-     * @param e
-     * @return
-     */
-    public boolean removeProtocolListener(ProtocolListener e){
-        return protList.remove(e);
-    }
-
-    /**
-     * Возвращает список слушателей событий протокола IM
-     * @return
-     */
-    public List<ProtocolListener> getProtocolListeners() {
-        return protList;
-    }
+//    /**
+//     * Добавляем новый слушатель протокола IM
+//     * @param e
+//     */
+//    public void addProtocolListener(ProtocolListener e){
+//        protList.add(e);
+//    }
+//
+//    /**
+//     * Удаляем ненужный слушатель
+//     * @param e
+//     * @return
+//     */
+//    public boolean removeProtocolListener(ProtocolListener e){
+//        return protList.remove(e);
+//    }
+//
+//    /**
+//     * Возвращает список слушателей событий протокола IM
+//     * @return
+//     */
+//    public List<ProtocolListener> getProtocolListeners() {
+//        return protList;
+//    }
 
     /**
      * Добавить слушатель команд для управления протоколом IM

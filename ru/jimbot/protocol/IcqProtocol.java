@@ -18,6 +18,7 @@
 
 package ru.jimbot.protocol;
 
+import com.google.inject.Inject;
 import ru.caffeineim.protocols.icq.core.OscarConnection;
 import ru.caffeineim.protocols.icq.exceptions.ConvertStringException;
 import ru.caffeineim.protocols.icq.integration.OscarInterface;
@@ -28,10 +29,11 @@ import ru.caffeineim.protocols.icq.integration.listeners.XStatusListener;
 import ru.caffeineim.protocols.icq.setting.enumerations.StatusModeEnum;
 import ru.caffeineim.protocols.icq.setting.enumerations.XStatusModeEnum;
 import ru.jimbot.core.*;
-import ru.jimbot.core.events.ProtocolLogonEvent;
-import ru.jimbot.core.events.ProtocolLogoutEvent;
 import ru.jimbot.util.Log;
 import ru.jimbot.util.MainProps;
+
+import java.util.List;
+import java.util.Vector;
 
 /**
  * Работа с протоколом ICQ
@@ -50,7 +52,9 @@ public class IcqProtocol implements Protocol, CommandProtocolListener,
     private String statustxt2 = "";
     private boolean connected = false;
     private String lastError = "";
+    private List<ProtocolListener> protList = new Vector<ProtocolListener>();
 
+    @Inject
     public IcqProtocol(Service s, int id) {
         srv = s;
         screenNameID = id;
@@ -60,28 +64,42 @@ public class IcqProtocol implements Protocol, CommandProtocolListener,
     }
 
     private void notifyMsg(Message m) {
-        for(ProtocolListener i:srv.getProtocolListeners()) {
+        for(ProtocolListener i:protList) {
             i.onTextMessage(m);
         }
     }
 
     private void notifyStatus(Message m) {
-        for(ProtocolListener i:srv.getProtocolListeners()) {
+        for(ProtocolListener i:protList) {
             i.onStatusMessage(m);
         }
     }
 
     private void notifyLogon() {
-        srv.createEvent(new ProtocolLogonEvent(srv, screenName));
+//        srv.createEvent(new ProtocolLogonEvent(srv, screenName));
+        for(ProtocolListener i:protList) {
+            i.logOn(screenName);
+        }
     }
 
     private void notifyLogout() {
 //        srv.createEvent(new ProtocolLogoutEvent(srv, screenName));
-        for(ProtocolListener i:srv.getProtocolListeners()) {
+        for(ProtocolListener i:protList) {
             i.logOut(screenName);
         }
     }
 
+    public void addProtocolListener(ProtocolListener e) {
+        protList.add(e);
+    }
+
+    public boolean removeProtocolListener(ProtocolListener e) {
+        return protList.remove(e);
+    }
+
+    public List<ProtocolListener> getProtocolListeners() {
+        return protList;
+    }
 
     public void connect() {
         status = srv.getProps().getIntProperty("icq.xstatus");

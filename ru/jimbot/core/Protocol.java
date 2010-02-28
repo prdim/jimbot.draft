@@ -18,6 +18,8 @@
 
 package ru.jimbot.core;
 
+import java.util.List;
+
 /**
  * Интерфейс для работы с протоколами в боте
  * 
@@ -93,4 +95,23 @@ public interface Protocol {
      * @return
      */
     public String getLastError();
+
+    /**
+     * Добавляем новый слушатель протокола IM
+     * @param e
+     */
+    public void addProtocolListener(ProtocolListener e);
+
+    /**
+     * Удаляем ненужный слушатель
+     * @param e
+     * @return
+     */
+    public boolean removeProtocolListener(ProtocolListener e);
+
+    /**
+     * Возвращает список слушателей событий протокола IM
+     * @return
+     */
+    public List<ProtocolListener> getProtocolListeners();
 }

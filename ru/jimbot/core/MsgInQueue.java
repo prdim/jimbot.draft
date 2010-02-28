@@ -46,7 +46,10 @@ public class MsgInQueue implements Runnable, ProtocolListener {
         srv = s;
         q = new ConcurrentLinkedQueue<Message>();
         lastLogout = new ConcurrentHashMap<String, LogoutInfo>();
-        srv.addProtocolListener(this);
+//        srv.addProtocolListener(this);
+        for(String sn : srv.getAllProtocols()) {
+            srv.getProtocol(sn).addProtocolListener(this);
+        }
     }
     
     /**

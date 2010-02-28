@@ -122,9 +122,9 @@ public interface Service {
     public List<DbStatusListener> getDbStatusListeners();
     void addDbStatusListener(DbStatusListener e);
     boolean removeDbStatusListener(DbStatusListener e);
-    public void addProtocolListener(ProtocolListener e);
-    public boolean removeProtocolListener(ProtocolListener e);
-    public List<ProtocolListener> getProtocolListeners();
+//    public void addProtocolListener(ProtocolListener e);
+//    public boolean removeProtocolListener(ProtocolListener e);
+//    public List<ProtocolListener> getProtocolListeners();
     public void addParserListener(QueueListener e);
     public boolean removeParserListener(QueueListener e);
     public List<QueueListener> getParserListeners();
