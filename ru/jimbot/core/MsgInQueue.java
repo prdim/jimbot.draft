@@ -58,7 +58,7 @@ public class MsgInQueue implements Runnable, ProtocolListener {
      * @return
      */
     private boolean testFlood(String uin){
-    	long i = srv.getProps().getIntProperty("bot.pauseIn");
+    	long i = srv.getConfig().getPauseIn();
     	long c = System.currentTimeMillis();
     	if(flood.containsKey(uin)){
     		if((c-flood.get(uin))<i){

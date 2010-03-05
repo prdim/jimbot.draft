@@ -18,9 +18,9 @@
 
 package ru.jimbot.http;
 
+import ru.jimbot.MainConfig;
 import ru.jimbot.Manager;
 import ru.jimbot.table.UserPreference;
-import ru.jimbot.util.MainProps;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,43 +39,43 @@ public class ServicePropertiesAction extends MainPageServletActions {
     	}
         String save = request.getParameter("save");
         if(save == null) {
-            print(response, HTML_HEAD + "<TITLE>JimBot " + MainProps.VERSION + " </TITLE></HEAD>" + BODY +
+            print(response, HTML_HEAD + "<TITLE>JimBot " + MainConfig.VERSION + " </TITLE></HEAD>" + BODY +
                     "<H2>Панель управления ботом</H2>" +
                     "<H3>Настройки сервиса " + ns + "</H3>");
             print(response, "<FORM METHOD=POST ACTION=\"main\">" +
                     "<INPUT TYPE=hidden NAME=\"page\" VALUE=\"srvs_props\">" +
                     "<INPUT TYPE=hidden NAME=\"ns\" VALUE=\"" + ns + "\">" +
                     "<INPUT TYPE=hidden NAME=\"save\" VALUE=\"1\">" +
-                    prefToHtml(Manager.getInstance().getService(ns).getProps().getUserPreference()) +
+                    prefToHtml(Manager.getInstance().getService(ns).getConfig()) +
                     "<P><INPUT TYPE=submit VALUE=\"Сохранить\"></FORM>");
             print(response, "<P><A HREF=\"?page=index\">" +
                     "Назад</A><br>");
             print(response, "</FONT></BODY></HTML>");
 
         } else {
-            UserPreference[] p = Manager.getInstance().getService(ns).getProps().getUserPreference();
-            for (int i = 0; i < p.length; i++) {
-                if (p[i].getType() == UserPreference.BOOLEAN_TYPE) {
-                    boolean b = getBoolVal(request, p[i].getKey());
-                    if (b != (Boolean) p[i].getValue()) {
-                        p[i].setValue(b);
-                        Manager.getInstance().getService(ns).getProps().setBooleanProperty(p[i].getKey(), b);
-                    }
-                } else if (p[i].getType() == UserPreference.INTEGER_TYPE) {
-                    int c = Integer.parseInt(getStringVal(request, p[i].getKey()));
-                    if (c != (Integer) p[i].getValue()) {
-                        p[i].setValue(c);
-                        Manager.getInstance().getService(ns).getProps().setIntProperty(p[i].getKey(), c);
-                    }
-                } else if (p[i].getType() != UserPreference.CATEGORY_TYPE) {
-                    String s = getStringVal(request, p[i].getKey());
-                    if (!s.equals((String) p[i].getValue())) {
-                        p[i].setValue(s);
-                        Manager.getInstance().getService(ns).getProps().setStringProperty(p[i].getKey(), s);
-                    }
-                }
-            }
-            Manager.getInstance().getService(ns).getProps().save();
+//            UserPreference[] p = Manager.getInstance().getService(ns).getProps().getUserPreference();
+//            for (int i = 0; i < p.length; i++) {
+//                if (p[i].getType() == UserPreference.BOOLEAN_TYPE) {
+//                    boolean b = getBoolVal(request, p[i].getKey());
+//                    if (b != (Boolean) p[i].getValue()) {
+//                        p[i].setValue(b);
+//                        Manager.getInstance().getService(ns).getProps().setBooleanProperty(p[i].getKey(), b);
+//                    }
+//                } else if (p[i].getType() == UserPreference.INTEGER_TYPE) {
+//                    int c = Integer.parseInt(getStringVal(request, p[i].getKey()));
+//                    if (c != (Integer) p[i].getValue()) {
+//                        p[i].setValue(c);
+//                        Manager.getInstance().getService(ns).getProps().setIntProperty(p[i].getKey(), c);
+//                    }
+//                } else if (p[i].getType() != UserPreference.CATEGORY_TYPE) {
+//                    String s = getStringVal(request, p[i].getKey());
+//                    if (!s.equals((String) p[i].getValue())) {
+//                        p[i].setValue(s);
+//                        Manager.getInstance().getService(ns).getProps().setStringProperty(p[i].getKey(), s);
+//                    }
+//                }
+//            }
+//            Manager.getInstance().getService(ns).getProps().save();
             return "/main?page=message&id=0&ret=index";
         }
         return null;

@@ -34,7 +34,7 @@ import ru.jimbot.modules.anek.commands.ChangeStatusTask;
 public class AnekService extends DefaultService implements DbStatusListener {
     private String name = ""; // Имя сервиса
 //    private HashMap<String, Protocol> prots = new HashMap<String, Protocol>(); // Ссылки на протоколы
-    private AnekProps props;
+    private AnekConfig config;
     private DBAneks db;
     private AnekWork aw;
     private boolean start = false;
@@ -44,7 +44,7 @@ public class AnekService extends DefaultService implements DbStatusListener {
     @Inject
     public AnekService(String name) {
         this.name = name;
-        props = AnekProps.getInstance(name);
+        config = AnekConfig.load(name);
         aw = new AnekWork(name, this);
     }
 
@@ -58,8 +58,14 @@ public class AnekService extends DefaultService implements DbStatusListener {
     public void start() {
         getCron().clear();
         getCron().start();
-        for(int i=0;i<props.uinCount();i++) {
-            protocols.put(props.getUin(i), new IcqProtocol(this, i));
+        for(int i=0;i<config.getUins().length;i++) {
+            Protocol p = new IcqProtocol();
+            p.setConnectionData("login.icq.com", 5980, config.getUins()[i].getScreenName(),
+                    config.getUins()[i].getPass().getPass());
+            p.setLogger(Log.getLogger(name));
+            p.setStatusData(config.getStatus(), config.getStatustxt());
+            p.setXStatusData(config.getXstatus(), config.getXstatustxt1(), config.getXstatustxt2());
+            protocols.put(config.getUins()[i].getScreenName(), p);
         }        
         qe.start();
         inq = new MsgInQueue(this);
@@ -120,8 +126,8 @@ public class AnekService extends DefaultService implements DbStatusListener {
      *
      * @return
      */
-    public AbstractProps getProps() {
-        return props;
+    public AnekConfig getConfig() {
+        return config;
     }
 
     /**

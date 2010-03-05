@@ -31,7 +31,6 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 import ru.jimbot.modules.WorkScript;
 import ru.jimbot.util.AddOnsLoader;
 import ru.jimbot.util.Log;
-import ru.jimbot.util.MainProps;
 import ru.jimbot.util.SystemErrLogger;
 
 import javax.servlet.ServletException;
@@ -64,9 +63,9 @@ public class StartBot3 {
             th.printStackTrace();
         }
         System.setErr(new PrintStream(new SystemErrLogger(), true));
-        MainProps.load();
+//        MainProps.load();
         Manager.getInstance();
-        if (MainProps.getBooleanProperty("main.StartHTTP"))
+        if (MainConfig.getInstance().isStartHTTP())
             Manager.getInstance().startHTTPServer();
 //            try {
 //                Vector<String> v = WorkScript.getInstance("").listHTTPScripts();

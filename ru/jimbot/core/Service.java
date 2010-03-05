@@ -79,7 +79,7 @@ public interface Service {
      * Набор настроек сервиса
      * @return
      */
-    public AbstractProps getProps();
+    public ServiceConfig getConfig();
 
     /**
      * Экземпляр класса для работы с БД

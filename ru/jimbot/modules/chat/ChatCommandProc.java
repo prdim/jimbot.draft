@@ -39,7 +39,6 @@ import ru.jimbot.modules.FloodElement;
 import ru.jimbot.modules.WorkScript;
 import ru.jimbot.protocol.IcqProtocol;
 import ru.jimbot.util.Log;
-import ru.jimbot.util.MainProps;
 
 /**
  * Обработка команд чата

@@ -18,9 +18,9 @@
 
 package ru.jimbot.http;
 
+import ru.jimbot.MainConfig;
 import ru.jimbot.Manager;
 import ru.jimbot.modules.MsgStatCounter;
-import ru.jimbot.util.MainProps;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,13 +39,13 @@ public class ServiceStatAction extends MainPageServletActions {
     	}
     	print(response, HTML_HEAD + "<meta http-equiv=\"Refresh\" content=\"3; url=" +
     			"?page=srvs_stats&ns="+ ns + "\" />" +
-    			"<TITLE>JimBot "+ MainProps.VERSION+" </TITLE></HEAD>" + BODY +
+    			"<TITLE>JimBot "+ MainConfig.VERSION+" </TITLE></HEAD>" + BODY +
                 "<H3>Статистика работы " + ns + "</H3>");
         if(Manager.getInstance().getService(ns).isRun()){
     	print(response, "Очередь входящих сообщений: " + Manager.getInstance().getService(ns).getInQueue().size() + "<br>");
     	print(response, "Очередь исходящих сообщений: <br>");
-    	for(int i=0;i<Manager.getInstance().getService(ns).getProps().uinCount();i++){
-            String sn = Manager.getInstance().getService(ns).getProps().getUin(i);
+    	for(int i=0;i<Manager.getInstance().getService(ns).getConfig().getUins().length;i++){
+            String sn = Manager.getInstance().getService(ns).getConfig().getUins()[i].getScreenName();
     		print(response, ">> " + sn +
     				(Manager.getInstance().getService(ns).getProtocol(sn).isOnLine() ? "  [ ON]  " : "  [OFF]  ") +
     				Manager.getInstance().getService(ns).getOutQueue(sn).size() +
@@ -56,9 +56,9 @@ public class ServiceStatAction extends MainPageServletActions {
     	}
     	print(response, "<br>Статистика принятых сообщений по номерам:<br>");
     	String s = "<TABLE BORDER=\"1\"><TR><TD>UIN</TD><TD>1 минута</TD><TD>5 митут</TD><TD>60 минут</TD><TD>24 часа</TD><TD>Всего</TD></TR>";
-    	int c = Manager.getInstance().getService(ns).getProps().uinCount();
+    	int c = Manager.getInstance().getService(ns).getConfig().getUins().length;
     	for(int i=0;i<c;i++){
-    		String u = Manager.getInstance().getService(ns).getProps().getUin(i);
+    		String u = Manager.getInstance().getService(ns).getConfig().getUins()[i].getScreenName();
     		s += "<TR><TD>" + u +
     			"</TD><TD>" + MsgStatCounter.getElement(u).getMsgCount(MsgStatCounter.M1) +
     			"</TD><TD>" + MsgStatCounter.getElement(u).getMsgCount(MsgStatCounter.M5) +

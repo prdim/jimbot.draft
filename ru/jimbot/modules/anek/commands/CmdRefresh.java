@@ -21,7 +21,6 @@ package ru.jimbot.modules.anek.commands;
 import ru.jimbot.core.DefaultCommand;
 import ru.jimbot.core.Parser;
 import ru.jimbot.core.Message;
-import ru.jimbot.util.MainProps;
 import ru.jimbot.modules.anek.AnekService;
 
 import java.util.List;
@@ -94,6 +93,6 @@ public class CmdRefresh extends DefaultCommand {
      */
     @Override
     public boolean authorityCheck(String screenName) {
-        return p.getService().getProps().testAdmin(screenName);
+        return p.getService().getConfig().testAdmin(screenName);
     }
 }

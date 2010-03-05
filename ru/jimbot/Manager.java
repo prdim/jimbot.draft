@@ -36,7 +36,6 @@ import ru.jimbot.http.HandlerFactory;
 import ru.jimbot.modules.anek.AnekService;
 //import ru.jimbot.modules.http.Server;
 import ru.jimbot.util.Log;             
-import ru.jimbot.util.MainProps;
 import ru.jimbot.core.Service;
 
 /**
@@ -58,8 +57,9 @@ public class Manager {
 	public Manager() {
 		createState();
 		mon.start();
-		for(int i=0;i<MainProps.getServicesCount();i++){
-			addService(MainProps.getServiceName(i),MainProps.getServiceType(i));
+		for(int i=0;i<MainConfig.getInstance().getServiceNames().length;i++){
+			addService(MainConfig.getInstance().getServiceNames()[i],
+                    MainConfig.getInstance().getServiceTypes()[i]);
 		}
 	}
 	
@@ -257,7 +257,7 @@ public class Manager {
 	 */
 	public void startAll() {
 		for(Service s : services.values()){
-			if(s.getProps().isAutoStart()) s.start();
+			if(s.getConfig().isAutoStart()) s.start();
 		}
 	}
 	
@@ -302,7 +302,7 @@ public class Manager {
         server = new org.eclipse.jetty.server.Server();
         try {
             SelectChannelConnector connector = new SelectChannelConnector();
-            connector.setPort(MainProps.getHTTPPort());
+            connector.setPort(MainConfig.getInstance().getHttpPort());
             server.addConnector(connector);
             server.setHandler(HandlerFactory.getAvailableHandlers());
 

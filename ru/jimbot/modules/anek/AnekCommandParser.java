@@ -26,8 +26,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import ru.jimbot.modules.anek.commands.*;
 import ru.jimbot.modules.MsgStatCounter;
-import ru.jimbot.util.MainProps;
 import ru.jimbot.core.*;
+import ru.jimbot.util.HttpUtils;
 
 /**
  * Парсер команд
@@ -107,7 +107,7 @@ public class AnekCommandParser extends DefaultCommandParser implements QueueList
      */
     public Set<String> getAuthList(String screenName) {
         HashSet<String> h = new HashSet<String>();
-        if(srv.getProps().testAdmin(screenName)){
+        if(srv.getConfig().testAdmin(screenName)){
             h.add("admin");
         }
         return h;
@@ -115,11 +115,11 @@ public class AnekCommandParser extends DefaultCommandParser implements QueueList
 
     private void firstMsg(Message m){
     	if(!firstStartMsg){
-    		String[] s = srv.getProps().getAdmins();
+    		String[] s = srv.getConfig().getAdminUin();
     		for(int i=0;i<s.length;i++){
     		    String ss = "Бот успешно запущен!\n";
-                if(MainProps.checkNewVersion())
-                    ss += "На сайте http://jimbot.ru Доступна новая версия!\n" + MainProps.getNewVerDesc();
+                if(HttpUtils.checkNewVersion())
+                    ss += "На сайте http://jimbot.ru Доступна новая версия!\n" + HttpUtils.getNewVerDesc();
                 else
                     ss += "Вся информация о боте из первых рук только на сайте: http://jimbot.ru";
                 notify(new Message(m.getSnOut(), s[i], ss));
@@ -178,8 +178,8 @@ public class AnekCommandParser extends DefaultCommandParser implements QueueList
     	String u = "";
     	int k = 99;
     	int c = 0;
-    	for(int i=0;i<srv.getProps().uinCount();i++){
-            String s = srv.getProps().getUin(i);
+    	for(int i=0;i<srv.getConfig().getUins().length;i++){
+            String s = srv.getConfig().getUins()[i].getScreenName();
     		if(srv.getProtocol(s).isOnLine()){
                 c = MsgStatCounter.getElement(s).getMsgCount(MsgStatCounter.M1);
     			if(k>c){

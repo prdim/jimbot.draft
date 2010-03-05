@@ -18,8 +18,8 @@
 
 package ru.jimbot.http;
 
+import ru.jimbot.MainConfig;
 import ru.jimbot.Manager;
-import ru.jimbot.util.MainProps;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,8 +37,8 @@ public class ServiceDeleteAction extends MainPageServletActions {
     		return "/main?page=error&id=0&ret=index";
     	}
         Manager.getInstance().delService(ns);
-    	MainProps.delService(ns);
-    	MainProps.save();
+    	MainConfig.getInstance().delService(ns);
+    	MainConfig.getInstance().save();
         return "/main?page=message&id=2&ret=srvs_manager";
     }
 }

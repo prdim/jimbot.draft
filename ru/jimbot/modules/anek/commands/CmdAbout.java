@@ -18,11 +18,11 @@
 
 package ru.jimbot.modules.anek.commands;
 
+import ru.jimbot.MainConfig;
 import ru.jimbot.core.Command;
 import ru.jimbot.core.Message;
 import ru.jimbot.core.DefaultCommand;
 import ru.jimbot.core.Parser;
-import ru.jimbot.util.MainProps;
 
 import java.util.*;
 
@@ -53,7 +53,7 @@ public class CmdAbout extends DefaultCommand {
      * @return - результат (если нужен)
      */
     public String exec(String sn, Vector param) {
-        return MainProps.getAbout();
+        return MainConfig.getAbout();
     }
 
     /**

@@ -18,8 +18,8 @@
 
 package ru.jimbot.http;
 
+import ru.jimbot.MainConfig;
 import ru.jimbot.Manager;
-import ru.jimbot.util.MainProps;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,7 +40,7 @@ public class UinPropertiesAction extends MainPageServletActions {
         String cmd = request.getParameter("cmd");
         String cnt = request.getParameter("cnt");
         if (save == null) {
-            print(response, HTML_HEAD + "<TITLE>JimBot " + MainProps.VERSION + " </TITLE></HEAD>" + BODY +
+            print(response, HTML_HEAD + "<TITLE>JimBot " + MainConfig.VERSION + " </TITLE></HEAD>" + BODY +
                     "<H2>Панель управления ботом</H2>" +
                     "<H3>Настройки UIN для сервиса " + ns + "</H3>");
             print(response, "<P><A HREF=\"?page=srvs_props_uin&cmd=add&save=1&ns=" + ns + "\">" +
@@ -50,10 +50,10 @@ public class UinPropertiesAction extends MainPageServletActions {
                     "<INPUT TYPE=hidden NAME=\"ns\" VALUE=\"" + ns + "\">" +
                     "<INPUT TYPE=hidden NAME=\"save\" VALUE=\"1\">" +
                     "<INPUT TYPE=hidden NAME=\"cmd\" VALUE=\"save\">";
-            for (int i = 0; i < Manager.getInstance().getService(ns).getProps().uinCount(); i++) {
+            for (int i = 0; i < Manager.getInstance().getService(ns).getConfig().getUins().length; i++) {
                 s += "UIN" + i + ": " +
                         "<INPUT TYPE=text NAME=\"uin_" + i + "\" VALUE=\"" +
-                        Manager.getInstance().getService(ns).getProps().getUin(i) + "\"> : " +
+                        Manager.getInstance().getService(ns).getConfig().getUins()[i].getScreenName() + "\"> : " +
                         "<INPUT TYPE=text NAME=\"pass_" + i + "\" VALUE=\"" +
                         "\"> " +
                         "<A HREF=\"?page=srvs_props_uin&cmd=del&save=1&ns=" + ns + "&cnt=" + i + "\">" +
@@ -66,20 +66,20 @@ public class UinPropertiesAction extends MainPageServletActions {
             print(response, "</FONT></BODY></HTML>");
         } else if("1".equals(save)) {
             if ("save".equals(cmd)) {
-                for (int i = 0; i < Manager.getInstance().getService(ns).getProps().uinCount(); i++) {
+                for (int i = 0; i < Manager.getInstance().getService(ns).getConfig().getUins().length; i++) {
                     if (!"".equals(request.getParameter("pass_" + i)))
-                        Manager.getInstance().getService(ns).getProps().setUin(i,
+                        Manager.getInstance().getService(ns).getConfig().setUin(i,
                                 request.getParameter("uin_" + i), request.getParameter("pass_" + i));
                 }
-                Manager.getInstance().getService(ns).getProps().save();
+                Manager.getInstance().getService(ns).getConfig().save();
                 return "/main?page=message&id=0&ret=index";
             } else if ("add".equals(cmd)) {
-                Manager.getInstance().getService(ns).getProps().addUin("111", "pass");
+                Manager.getInstance().getService(ns).getConfig().addUin("111", "pass");
                 //TODO Разобраться
                 return "/main?page=message&id=2&ret=srvs_props_uin&ns="+ns;
             } else if ("del".equals(cmd)) {
                 int i = Integer.parseInt(cnt);
-                Manager.getInstance().getService(ns).getProps().delUin(i);
+                Manager.getInstance().getService(ns).getConfig().delUin(i);
                 //TODO Разобраться
                 return "/main?page=message&id=2&ret=srvs_props_uin&ns="+ns;
             }

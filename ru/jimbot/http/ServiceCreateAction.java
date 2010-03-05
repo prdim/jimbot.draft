@@ -18,8 +18,8 @@
 
 package ru.jimbot.http;
 
+import ru.jimbot.MainConfig;
 import ru.jimbot.Manager;
-import ru.jimbot.util.MainProps;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,7 +34,7 @@ public class ServiceCreateAction extends MainPageServletActions {
     public String perform(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String save = request.getParameter("save");
         if (save == null) {
-            print(response, HTML_HEAD + "<TITLE>JimBot " + MainProps.VERSION + " </TITLE></HEAD>" + BODY +
+            print(response, HTML_HEAD + "<TITLE>JimBot " + MainConfig.VERSION + " </TITLE></HEAD>" + BODY +
                     "<H2>Панель управления ботом</H2>" +
                     "<H3>Создание нового сервиса</H3>");
             print(response, "<FORM METHOD=POST ACTION=\"main\">" +
@@ -61,8 +61,8 @@ public class ServiceCreateAction extends MainPageServletActions {
                 return "/main?page=error&id=3&ret=srvs_create";
             }
             Manager.getInstance().addService(ns, type);
-            MainProps.addService(ns, type);
-            MainProps.save();
+            MainConfig.getInstance().addService(ns, type);
+            MainConfig.getInstance().save();
             return "/main?page=message&id=0&ret=srvs_manager";
         }
         return null;

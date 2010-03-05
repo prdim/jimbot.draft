@@ -18,6 +18,8 @@
 
 package ru.jimbot.core;
 
+import ru.jimbot.util.Log;
+
 import java.util.List;
 
 /**
@@ -26,6 +28,44 @@ import java.util.List;
  * @author Prolubnikov Dmitry
  */
 public interface Protocol {
+
+    /**
+     * Внешние данные для работы протокола
+     */
+
+    /**
+     * Основные данные о соединении
+     * @param server
+     * @param port
+     * @param sn
+     * @param pass
+     */
+    public void setConnectionData(String server, int port, String sn, String pass);
+
+    /**
+     * Куда протокол будет писать логи?
+     * @param logger
+     */
+    public void setLogger(Log logger);
+
+    /**
+     * Обычный статус
+     * @param status
+     * @param text
+     */
+    public void setStatusData(int status, String text);
+
+    /**
+     * Расширенный статус
+     * @param status
+     * @param text1
+     * @param text2
+     */
+    public void setXStatusData(int status, String text1, String text2);
+
+    /**
+     * Методы для работы с протоколом
+     */
 
     /**
      * Установить соединение
@@ -37,11 +77,11 @@ public interface Protocol {
      */
     public void disconnect();
 
-    /**
-     * Установить статус
-     * @param status
-     */
-    public void setStatus(int status);
+//    /**
+//     * Установить статус
+//     * @param status
+//     */
+//    public void setStatus(int status);
 
     /**
      * Соединение установлено?
@@ -56,12 +96,12 @@ public interface Protocol {
      */
     public void sendMsg(String sn, String msg);
 
-    /**
-     *
-     * @param sn
-     * @param status
-     */
-    public void getStatus(String sn, int status);
+//    /**
+//     *
+//     * @param sn
+//     * @param status
+//     */
+//    public void getStatus(String sn, int status);
 
     /**
      * Добавить в контакт-лист
@@ -75,14 +115,14 @@ public interface Protocol {
      */
     public void RemoveContactList(String sn);
 
-    /**
-     * Установить параметры соединения
-     * @param server
-     * @param port
-     * @param screenName
-     * @param pass
-     */
-    public void setConnectData(String server, int port, String screenName, String pass);
+//    /**
+//     * Установить параметры соединения
+//     * @param server
+//     * @param port
+//     * @param screenName
+//     * @param pass
+//     */
+//    public void setConnectData(String server, int port, String screenName, String pass);
 
     /**
      * Возвращает УИН

@@ -18,9 +18,10 @@
 
 package ru.jimbot.http;
 
+import ru.jimbot.MainConfig;
 import ru.jimbot.Manager;
 import ru.jimbot.modules.chat.ChatServer;
-import ru.jimbot.util.MainProps;
+import ru.jimbot.util.HttpUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,15 +39,15 @@ public class BootstrapAction extends MainPageServletActions {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html");
         response.setLocale(Locale.getDefault());
-        print(response, HTML_HEAD + "<TITLE>JimBot " + MainProps.VERSION + " </TITLE></HEAD>" + BODY +
+        print(response, HTML_HEAD + "<TITLE>JimBot " + MainConfig.VERSION + " </TITLE></HEAD>" + BODY +
                         "<H2>Панель управления ботом</H2>");
-        if(MainProps.getStringProperty("http.user").equals("admin") &&
-                        MainProps.getStringProperty("http.pass").equals("admin"))
+        if(MainConfig.getInstance().getHttpUser().equals("admin") &&
+                        MainConfig.getInstance().getHttpPass().getPass().equals("admin"))
                     print(response, "<H3><FONT COLOR=\"#FF0000\">В целях безопасности как можно скорее измените " +
                             "стандартный логин и пароль для доступа к этой странице! Рекомендуется также изменить порт.</FONT></H3>");
-                if(MainProps.checkNewVersion()){
+                if(HttpUtils.checkNewVersion()){
                     print(response, "<p>На сайте <A HREF=\"http://jimbot.ru\">jimbot.ru</A> Доступна новая версия!<br>");
-                    print(response, MainProps.getNewVerDesc().replaceAll("\n", "<BR>"));
+                    print(response, HttpUtils.getNewVerDesc().replaceAll("\n", "<BR>"));
                     print(response, "</p>");
                 }
                 print(response, "<H3>Главное меню</H3>");

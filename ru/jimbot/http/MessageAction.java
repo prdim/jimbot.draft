@@ -18,7 +18,7 @@
 
 package ru.jimbot.http;
 
-import ru.jimbot.util.MainProps;
+import ru.jimbot.MainConfig;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,7 +42,7 @@ public class MessageAction extends MainPageServletActions {
                 "Сервис остановлен."})[id];
         print(response, HTML_HEAD + "<meta http-equiv=\"Refresh\" content=\"3; url=" +
                         "?page="+ ret + "\" />" +
-                        "<TITLE>JimBot "+ MainProps.VERSION+" </TITLE></HEAD><BODY><H3><FONT COLOR=\"#004000\">" +
+                        "<TITLE>JimBot "+ MainConfig.VERSION+" </TITLE></HEAD><BODY><H3><FONT COLOR=\"#004000\">" +
                         msg + " </FONT></H3>");
         print(response, "<P><A HREF=\"?page=" +
                         ret + "\">" + "Назад</A><br>");

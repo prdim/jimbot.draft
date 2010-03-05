@@ -21,6 +21,7 @@ package ru.jimbot.modules.chat;
 import ru.jimbot.core.DefaultService;
 import ru.jimbot.core.DbStatusListener;
 import ru.jimbot.core.AbstractProps;
+import ru.jimbot.core.ServiceConfig;
 import ru.jimbot.db.DBAdaptor;
 
 /**
@@ -34,6 +35,10 @@ public class ChatService extends DefaultService implements DbStatusListener {
     public ChatService(String name) {
         this.name = name;
         props = ChatProps.getInstance(name);
+    }
+
+    public ServiceConfig getConfig() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     /**

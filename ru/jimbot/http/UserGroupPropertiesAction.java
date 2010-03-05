@@ -18,8 +18,8 @@
 
 package ru.jimbot.http;
 
+import ru.jimbot.MainConfig;
 import ru.jimbot.Manager;
-import ru.jimbot.util.MainProps;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,7 +39,7 @@ public class UserGroupPropertiesAction extends MainPageServletActions {
         String save = request.getParameter("save");
         String cmd = request.getParameter("cmd");
         if(save == null) {
-            print(response, HTML_HEAD + "<TITLE>JimBot "+ MainProps.VERSION+" </TITLE></HEAD>" + BODY +
+            print(response, HTML_HEAD + "<TITLE>JimBot "+ MainConfig.VERSION+" </TITLE></HEAD>" + BODY +
                             "<H2>Панель управления ботом</H2>" +
                             "<H3>Управление группами пользователей</H3>");
                     print(response, "<FORM METHOD=POST ACTION=\"main\">" +
@@ -50,12 +50,12 @@ public class UserGroupPropertiesAction extends MainPageServletActions {
                             "Имя группы: <INPUT TYPE=text NAME=\"gr\" size=\"20\"> " +
                             "<INPUT TYPE=submit VALUE=\"Создать новую группу\"></FORM>");
                     String s = "<TABLE>";
-                    String[] gr = Manager.getInstance().getService(ns).getProps().getStringProperty("auth.groups").split(";");
-                    for(int i=0; i<gr.length; i++){
-                        s += "<TR><TH ALIGN=LEFT>"+gr[i]+"</TD>";
-                        s += i==0 ? "" : "<TD><A HREF=\"?page=user_group_props&cmd=del&ns="+ns+"&gr=" + gr[i] + "\">(Удалить)</A></TD>";
-                        s += "</TR>";
-                    }
+//                    String[] gr = Manager.getInstance().getService(ns).getProps().getStringProperty("auth.groups").split(";");
+//                    for(int i=0; i<gr.length; i++){
+//                        s += "<TR><TH ALIGN=LEFT>"+gr[i]+"</TD>";
+//                        s += i==0 ? "" : "<TD><A HREF=\"?page=user_group_props&cmd=del&ns="+ns+"&gr=" + gr[i] + "\">(Удалить)</A></TD>";
+//                        s += "</TR>";
+//                    }
                     s += "</TABLE>";
                     print(response, s);
                     print(response, "<P><A HREF=\"?page=user_auth_props&ns="+ns+"\">" +

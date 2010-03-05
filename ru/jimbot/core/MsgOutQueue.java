@@ -48,8 +48,8 @@ public class MsgOutQueue implements Runnable, QueueListener {
         q = new HashMap<String, ConcurrentLinkedQueue<Message>>();
         lostMsgs = new ConcurrentHashMap<String, Integer>();
         // TODO Определить пораметры и константы
-        MSG_OUT_LIMIT = srv.getProps().getIntProperty("bot.msgOutLimit");
-        sleepAmount = srv.getProps().getIntProperty("bot.pauseOut");
+        MSG_OUT_LIMIT = srv.getConfig().getMsgOutLimit();
+        sleepAmount = srv.getConfig().getPauseOut();
         for(String i:srv.getAllProtocols()) {
             q.put(i, new ConcurrentLinkedQueue<Message>());
             lostMsgs.put(i,0);
@@ -134,8 +134,8 @@ public class MsgOutQueue implements Runnable, QueueListener {
                 q.get(m.getSnIn()).add(m);
                 return;
             }
-            int maxLenMsg = srv.getProps().getIntProperty("chat.MaxOutMsgSize");
-            int maxCountMsg = srv.getProps().getIntProperty("chat.MaxOutMsgCount");
+            int maxLenMsg = srv.getConfig().getMaxOutMsgSize();
+            int maxCountMsg = srv.getConfig().getMaxOutMsgCount();
             int k = (m.getMsg().length()/maxLenMsg+1) > maxCountMsg ? maxCountMsg : (m.getMsg().length()/maxLenMsg+1);
             for(int i=0; i<k; i++){
                 if(((i+1)*maxLenMsg-1)<m.getMsg().length()){

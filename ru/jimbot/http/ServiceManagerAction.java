@@ -18,8 +18,8 @@
 
 package ru.jimbot.http;
 
+import ru.jimbot.MainConfig;
 import ru.jimbot.Manager;
-import ru.jimbot.util.MainProps;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,7 +32,7 @@ import java.io.IOException;
  */
 public class ServiceManagerAction extends MainPageServletActions {
     public String perform(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        print(response, HTML_HEAD + "<TITLE>JimBot " + MainProps.VERSION + " </TITLE></HEAD>" + BODY +
+        print(response, HTML_HEAD + "<TITLE>JimBot " + MainConfig.VERSION + " </TITLE></HEAD>" + BODY +
                 "<H2>Панель управления ботом</H2>" +
                 "<H3>Управление сервисами</H3>");
         print(response, "<A HREF=\"?page=srvs_create\">" +

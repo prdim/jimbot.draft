@@ -18,13 +18,16 @@
 
 package ru.jimbot.http;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.eclipse.jetty.server.HttpConnection;
 import ru.jimbot.table.UserPreference;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Общие методы для действий сервлета
@@ -48,28 +51,67 @@ abstract class MainPageServletActions implements Action {
     }
 
     /**
-         * Формирует форму для редактирования настроек бота
-         * @param p
-         * @return
-         */
-        protected String prefToHtml(UserPreference[] p) {
-            String s = "<TABLE>";
-            for(int i=0;i<p.length;i++){
-                if(p[i].getType()==UserPreference.CATEGORY_TYPE){
-                    s += "<TR><TH ALIGN=LEFT><u>" + p[i].getDisplayedKey() + "</u></TD></TR>";
-                } else if(p[i].getType()== UserPreference.BOOLEAN_TYPE) {
-                    s += "<TR><TH ALIGN=LEFT>"+p[i].getDisplayedKey()+ "</TD> " +
-                    "<TD><INPUT TYPE=CHECKBOX NAME=\"" + p[i].getKey() +
-                    "\" VALUE=\"true\" " + ((Boolean)p[i].getValue() ? "CHECKED" : "") + "></TD></TR>";
-                } else {
-                    s += "<TR><TH ALIGN=LEFT>"+p[i].getDisplayedKey()+ "</TD> " +
-                            "<TD><INPUT size=\"70\" TYPE=text NAME=\"" + p[i].getKey() +
-                            "\" VALUE=\"" + p[i].getValue() + "\"></TD></TR>";
+     * Формирует форму для редактирования настроек бота
+     *
+     * @param p
+     * @return
+     */
+    protected String prefToHtml(UserPreference[] p) {
+        String s = "<TABLE>";
+        for (int i = 0; i < p.length; i++) {
+            if (p[i].getType() == UserPreference.CATEGORY_TYPE) {
+                s += "<TR><TH ALIGN=LEFT><u>" + p[i].getDisplayedKey() + "</u></TD></TR>";
+            } else if (p[i].getType() == UserPreference.BOOLEAN_TYPE) {
+                s += "<TR><TH ALIGN=LEFT>" + p[i].getDisplayedKey() + "</TD> " +
+                        "<TD><INPUT TYPE=CHECKBOX NAME=\"" + p[i].getKey() +
+                        "\" VALUE=\"true\" " + ((Boolean) p[i].getValue() ? "CHECKED" : "") + "></TD></TR>";
+            } else {
+                s += "<TR><TH ALIGN=LEFT>" + p[i].getDisplayedKey() + "</TD> " +
+                        "<TD><INPUT size=\"70\" TYPE=text NAME=\"" + p[i].getKey() +
+                        "\" VALUE=\"" + p[i].getValue() + "\"></TD></TR>";
+            }
+        }
+        s += "</TABLE>";
+        return s;
+    }
+
+    protected String prefToHtml(Object o) {
+        String s = "<TABLE>";
+        PropertyDescriptor[] p = PropertyUtils.getPropertyDescriptors(o);
+        for (int i = 0; i < p.length; i++) {
+            if(p[i].isHidden()) {
+                // пропускаем
+            } else if(p[i].getClass().getName().equals("boolean")) {
+                try {
+                    s += "<TR><TH ALIGN=LEFT>" + p[i].getDisplayName() + "</TD> " +
+                            "<TD><INPUT TYPE=CHECKBOX NAME=\"" + p[i].getName() +
+                            "\" VALUE=\"true\" " +
+                            ((Boolean) PropertyUtils.getProperty(o,p[i].getName()) ? "CHECKED" :
+                                    "") + "></TD></TR>";
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+            } else {
+                try {
+                    s += "<TR><TH ALIGN=LEFT>" + p[i].getDisplayName() + "</TD> " +
+                            "<TD><INPUT size=\"70\" TYPE=text NAME=\"" + p[i].getName() +
+                            "\" VALUE=\"" + PropertyUtils.getProperty(o,p[i].getName()) + "\"></TD></TR>";
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                 }
             }
-            s += "</TABLE>";
-            return s;
-        }    
+        }
+        s += "</TABLE>";
+        return s;
+    }
 
     protected String encodeURL(String str) {
     	System.out.println("Encode URL: "+str);

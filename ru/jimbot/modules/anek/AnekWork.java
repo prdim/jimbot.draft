@@ -44,10 +44,10 @@ public class AnekWork {
     public AnekWork(String name, Service srv) {
     	serviceName = name;
         this.srv = srv;
-    	host = AnekProps.getInstance(name).getStringProperty("db.host");
-    	this.name = AnekProps.getInstance(name).getStringProperty("db.dbname");
-    	user = AnekProps.getInstance(name).getStringProperty("db.user");
-    	pass = AnekProps.getInstance(name).getStringProperty("db.pass");
+    	host = ((AnekConfig)srv.getConfig()).getDb().getHost();
+    	this.name = ((AnekConfig)srv.getConfig()).getDb().getBase();
+    	user = ((AnekConfig)srv.getConfig()).getDb().getUser();
+    	pass = ((AnekConfig)srv.getConfig()).getDb().getPass().getPass();
     }
     
     public void initDB() {
@@ -163,9 +163,9 @@ public class AnekWork {
      * @return
      */
     public String getAds(){
-    	if(!AnekProps.getInstance(serviceName).getBooleanProperty("bot.useAds"))
+    	if(!((AnekConfig)srv.getConfig()).isUseAds())
     		return "";
-        if(!testRnd(AnekProps.getInstance(serviceName).getIntProperty("bot.adsRate")))
+        if(!testRnd(((AnekConfig)srv.getConfig()).getAdsRate()))
             return "";
     	String s = getAds(adsKey.get(r.nextInt(adsKey.size())));
     	if(s.equals(""))
@@ -175,7 +175,7 @@ public class AnekWork {
     }
 
     public String getAdsForStatus() {
-        if(!AnekProps.getInstance(serviceName).getBooleanProperty("bot.useAds"))
+        if(!((AnekConfig)srv.getConfig()).isUseAds())
     		return "";
     	String s = getAds(adsKey.get(r.nextInt(adsKey.size())));
         return s;

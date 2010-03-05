@@ -84,7 +84,7 @@ public class CmdStat extends DefaultCommand {
         s += "\nВ среднем анекдотов в час: " + ((AnekCommandParser)p).getHourStat();
         s += "\nВ среднем анекдотов в сутки: " + ((AnekCommandParser)p).getDayStat();
         s += "\nПрочитано вами анекдотов: " + ((AnekCommandParser)p).uq.get(sn).cnt;
-        if(p.getService().getProps().testAdmin(sn)){
+        if(p.getService().getConfig().testAdmin(sn)){
             s += "\nИспользовано памяти: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
         }
         return s;

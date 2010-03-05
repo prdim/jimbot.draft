@@ -32,7 +32,7 @@ import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import ru.jimbot.util.MainProps;
+import ru.jimbot.MainConfig;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -71,8 +71,8 @@ public class HandlerFactory {
 
         ConstraintSecurityHandler sh = new ConstraintSecurityHandler();
         HashLoginService ls = new HashLoginService("JimBotRealm");
-        ls.putUser(MainProps.getStringProperty("http.user"),
-                new Password(MainProps.getStringProperty("http.pass")),
+        ls.putUser(MainConfig.getInstance().getHttpUser(),
+                new Password(MainConfig.getInstance().getHttpPass().getPass()),
                 new String[]{"admin","user"});
         FormAuthenticator auth = new FormAuthenticator("/logon.html", "/logonError.html", false);
         sh.setAuthenticator(auth);
@@ -87,7 +87,7 @@ public class HandlerFactory {
         context.addServlet(new ServletHolder(new MainPageServlet()),"/main");
         context.addServlet(new ServletHolder(new MainPageServlet()),"/j_security_check");
         context.setSecurityHandler(sh);
-        context.getSessionHandler().getSessionManager().setMaxInactiveInterval(MainProps.getIntProperty("http.delay")*60);
+        context.getSessionHandler().getSessionManager().setMaxInactiveInterval(MainConfig.getInstance().getHttpDelay()*60);
         handlers.setHandlers(new Handler[] { resource_handler, context, new DefaultHandler() });
         return handlers;
     }
