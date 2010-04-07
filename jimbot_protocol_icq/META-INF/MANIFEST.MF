@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Jimbot.protocol.icq
+Bundle-SymbolicName: jimbot.protocol.icq
+Bundle-Version: 0.5.0.qualifier
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ClassPath: lib/icqlib.jar,
+ lib/commons-logging.jar,
+ .
+Require-Bundle: jimbot.core;bundle-version="0.5.0",
+ jimbot.logger;bundle-version="0.5.0",
+ org.eclipse.osgi;bundle-version="3.5.2"
+Export-Package: ru.jimbot.protocol
+Bundle-Activator: jimbot.protocol.Activator
+Bundle-Vendor: spec@jimbot.ru
+Bundle-ActivationPolicy: lazy

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/home/spec/eclipse/plugins/org.eclipse.osgi_3.5.2.R35x_v20100126.jar" sourcepath="/home/spec/eclipse/plugins/org.eclipse.osgi.source_3.5.2.R35x_v20100126.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/home/spec/eclipse/plugins/org.eclipse.platform.doc.isv_3.5.2.r352_v20100119.jar!/reference/api"/>
+		</attributes>
+		<accessrules>
+			<accessrule kind="accessible" pattern="org/osgi/framework/*"/>
+			<accessrule kind="accessible" pattern="org/osgi/util/tracker/*"/>
+		</accessrules>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

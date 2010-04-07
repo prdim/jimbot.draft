@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Jimbot.anek.command
+Bundle-SymbolicName: jimbot.anek.command
+Bundle-Version: 0.5.0.qualifier
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Require-Bundle: jimbot.anek;bundle-version="0.5.0",
+ jimbot.core;bundle-version="0.5.0",
+ jimbot.logger;bundle-version="0.5.0",
+ jimbot.script;bundle-version="0.5.0",
+ org.eclipse.osgi;bundle-version="3.5.2"
+Export-Package: ru.jimbot.modules.anek.commands
+Bundle-Activator: jimbot.anek.command.Activator
+Bundle-Vendor: spec@jimbot.ru
+Bundle-ActivationPolicy: lazy

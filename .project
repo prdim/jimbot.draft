@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>jimbot_osgi_eclipse</name>
+	<comment></comment>
+	<projects>
+		<project>jimbot_anek</project>
+		<project>jimbot_anek_command</project>
+		<project>jimbot_http</project>
+		<project>jimbot_logger</project>
+		<project>jimbot_mysql</project>
+		<project>jimbot_protocol_icq</project>
+		<project>jimbot_script</project>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.pde.ManifestBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.pde.SchemaBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.pde.api.tools.apiAnalysisBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.pde.PluginNature</nature>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+		<nature>org.eclipse.pde.api.tools.apiAnalysisNature</nature>
+	</natures>
+</projectDescription>
