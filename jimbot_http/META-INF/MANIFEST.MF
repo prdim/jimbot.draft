@@ -35,9 +35,9 @@ Export-Package: org.eclipse.jetty.server;
    org.eclipse.jetty.util.thread",
  org.eclipse.jetty.util,
  ru.jimbot.http;uses:="javax.servlet,org.eclipse.jetty.server.handler,javax.servlet.http"
-Require-Bundle: jimbot.logger;bundle-version="0.5.0",
- jimbot.core;bundle-version="0.5.0",
- org.eclipse.osgi;bundle-version="3.5.2"
+Require-Bundle: org.eclipse.osgi;bundle-version="3.5.2",
+ jimbot.logger;bundle-version="0.5.0",
+ jimbot.core;bundle-version="0.5.0"
 Bundle-Activator: jimbot.http.Activator
 Bundle-Vendor: spec@jimbot.ru
 Bundle-ActivationPolicy: lazy

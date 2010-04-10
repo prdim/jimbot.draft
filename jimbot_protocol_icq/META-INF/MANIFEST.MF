@@ -7,9 +7,9 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ClassPath: lib/icqlib.jar,
  lib/commons-logging.jar,
  .
-Require-Bundle: jimbot.core;bundle-version="0.5.0",
- jimbot.logger;bundle-version="0.5.0",
- org.eclipse.osgi;bundle-version="3.5.2"
+Require-Bundle: org.eclipse.osgi;bundle-version="3.5.2",
+ jimbot.core;bundle-version="0.5.0",
+ jimbot.logger;bundle-version="0.5.0"
 Export-Package: ru.jimbot.protocol
 Bundle-Activator: jimbot.protocol.Activator
 Bundle-Vendor: spec@jimbot.ru

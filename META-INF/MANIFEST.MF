@@ -11,8 +11,8 @@ Export-Package: ru.jimbot,
  ru.jimbot.core.events,
  ru.jimbot.db,
  ru.jimbot.util
-Require-Bundle: jimbot.logger;bundle-version="0.5.0",
- jimbot.mysql;bundle-version="0.5.0",
- org.eclipse.osgi;bundle-version="3.5.2"
+Require-Bundle: org.eclipse.osgi;bundle-version="3.5.2",
+ jimbot.logger;bundle-version="0.5.0",
+ jimbot.mysql;bundle-version="0.5.0"
 Bundle-Vendor: spec@jimbot.ru
 Bundle-ActivationPolicy: lazy
