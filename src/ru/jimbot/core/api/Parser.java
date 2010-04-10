@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import ru.jimbot.core.ContextManager;
 import ru.jimbot.core.Message;
 
 /**

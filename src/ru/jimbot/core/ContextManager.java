@@ -16,12 +16,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package ru.jimbot.core.api;
+package ru.jimbot.core;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import ru.jimbot.core.UserContext;
 
 /**
  * Управляет пользовательскими сессиями
