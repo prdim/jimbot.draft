@@ -84,21 +84,29 @@ public class AnekCommandParser extends DefaultCommandParser implements QueueList
     }
 
     public void parse(Message m) {
-        // Игнорируем все лишнее
-        if(m.getType()!=Message.TYPE_TEXT) return;
-        firstMsg(m);
-        addState(m.getSnIn());
-        Command cmd;
-        if("".equals(cm.getContext(m.getSnIn()).getLastCommand())) {
-            cmd = this.getCommand(this.getCommand(m));
-        } else {
-            cmd = this.getCommand(cm.getContext(m.getSnIn()).getLastCommand());
-        }
-        if(cmd==null){
-            notify(new Message(m.getSnOut(), m.getSnIn(), "Неверная команда! Для справки отправте !help"));
-        } else {
-            if(cmd.authorityCheck(m.getSnIn())) notify(cmd.exec(m));
-        }
+		try {
+			// Игнорируем все лишнее
+			if (m.getType() != Message.TYPE_TEXT)
+				return;
+			firstMsg(m);
+			addState(m.getSnIn());
+			Command cmd;
+			if ("".equals(cm.getContext(m.getSnIn()).getLastCommand())) {
+				cmd = this.getCommand(this.getCommand(m));
+			} else {
+				cmd = this.getCommand(cm.getContext(m.getSnIn())
+						.getLastCommand());
+			}
+			if (cmd == null) {
+				notify(new Message(m.getSnOut(), m.getSnIn(),
+						"Неверная команда! Для справки отправте !help"));
+			} else {
+				if (cmd.authorityCheck(m.getSnIn()))
+					notify(cmd.exec(m));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
 
     public void notify(Message m) {

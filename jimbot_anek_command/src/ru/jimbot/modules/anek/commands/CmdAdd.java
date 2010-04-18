@@ -29,6 +29,9 @@ import java.util.Vector;
 import java.util.List;
 import java.util.Arrays;
 
+import com.amazon.carbonado.RepositoryException;
+import com.amazon.carbonado.SupportException;
+
 /**
  * Добавление анекдота
  * @author Prolubnikov Dmitry
@@ -60,10 +63,19 @@ public class CmdAdd extends DefaultCommand {
         if (s.equals("")) return "Пустой анекдот.";
         if (s.length() < 20) return "";
         if (s.length() > 500) return "";
-        ((AnekService) p.getService()).getAnekWork().addTempAnek(s, sn);
-        Log.getLogger(p.getService().getName()).talk("Add anek <" + sn + ">: " + s);
-        ((AnekCommandParser) p).state_add++;
-        return "Анекдот сохранен. После рассмотрения администрацией он будет добавлен в базу.";
+        try {
+			((AnekService) p.getService()).getAnekWork().addTempAnek(s, sn);
+			Log.getLogger(p.getService().getName()).talk("Add anek <" + sn + ">: " + s);
+	        ((AnekCommandParser) p).state_add++;
+	        return "Анекдот сохранен. После рассмотрения администрацией он будет добавлен в базу.";
+		} catch (SupportException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RepositoryException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return "";
     }
 
     /**

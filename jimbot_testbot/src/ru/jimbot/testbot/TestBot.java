@@ -27,7 +27,6 @@ import ru.jimbot.core.api.DefaultService;
 import ru.jimbot.core.api.IProtocolManager;
 import ru.jimbot.core.api.Protocol;
 import ru.jimbot.core.api.ServiceConfig;
-import ru.jimbot.db.DBAdaptor;
 import ru.jimbot.util.Log;
 
 /**
@@ -67,10 +66,6 @@ public class TestBot extends DefaultService {
 
 	public ServiceConfig getConfig() {
 		return config;
-	}
-
-	public DBAdaptor getDB() {
-		return null;
 	}
 
 	public String getName() {

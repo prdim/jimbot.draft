@@ -50,7 +50,7 @@ public class Monitor2 implements Runnable {
         if(count>testMaxCount){
             count=0;
             Manager.getInstance().testState();
-            Manager.getInstance().testDB();
+//            Manager.getInstance().testDB();
         }
     }
       

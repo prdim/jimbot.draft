@@ -20,7 +20,6 @@ package ru.jimbot.core.events;
 
 import ru.jimbot.core.api.DbStatusListener;
 import ru.jimbot.core.api.Service;
-import ru.jimbot.db.DBAdaptor;
 
 /**
  * Событие подключения к базе данных
@@ -28,16 +27,16 @@ import ru.jimbot.db.DBAdaptor;
  */
 public class EventConnectDB implements Event {
     private Service srv;
-    private DBAdaptor db;
+//    private DBAdaptor db;
 
-    public EventConnectDB(Service srv, DBAdaptor db) {
+    public EventConnectDB(Service srv/*, DBAdaptor db*/) {
         this.srv = srv;
-        this.db = db;
+//        this.db = db;
     }
 
     public void handle() {
         for(DbStatusListener i:srv.getDbStatusListeners()){
-            i.onConnect(db);
+            i.onConnect(/*db*/);
         }
     }
 }

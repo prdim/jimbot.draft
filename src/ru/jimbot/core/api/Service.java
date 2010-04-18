@@ -18,7 +18,6 @@
 
 package ru.jimbot.core.api;
 
-import ru.jimbot.db.DBAdaptor;
 import ru.jimbot.core.ChronoMaster;
 import ru.jimbot.core.Message;
 import ru.jimbot.core.MsgInQueue;
@@ -83,11 +82,11 @@ public interface Service {
      */
     public ServiceConfig getConfig();
 
-    /**
-     * Экземпляр класса для работы с БД
-     * @return
-     */
-    public DBAdaptor getDB();
+//    /**
+//     * Экземпляр класса для работы с БД
+//     * @return
+//     */
+//    public DBAdaptor getDB();
 
     /**
      * Засунуть объект в хранилище данных

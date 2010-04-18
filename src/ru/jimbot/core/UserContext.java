@@ -26,7 +26,7 @@ import java.util.HashMap;
  */
 public class UserContext {
     private String userId = "";
-    private HashMap<String, Object> data;
+    private HashMap<String, Object> data = new HashMap<String, Object>();
     private long expired = 0;
     private long maxAge = 0;
     private String mode = "";

@@ -9,7 +9,6 @@ Export-Package: ru.jimbot,
  ru.jimbot.core,
  ru.jimbot.core.api,
  ru.jimbot.core.events,
- ru.jimbot.db,
  ru.jimbot.util
 Require-Bundle: org.eclipse.osgi;bundle-version="3.5.2",
  jimbot.logger;bundle-version="0.5.0",

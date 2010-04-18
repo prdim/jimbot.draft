@@ -74,7 +74,7 @@ public class CmdStat extends DefaultCommand {
      * @return - результат (если нужен)
      */
     public String exec(String sn, Vector param) {
-        String s = "Всего в базе анекдотов: " + ((AnekService)p.getService()).getAnekWork().maxAnek;
+        String s = "Всего в базе анекдотов: " + ((AnekService)p.getService()).getAnekWork().count();
         s += "\nОтправлено анекдотов: " + ((AnekCommandParser)p).state;
         s += "\nДобавлено анекдотов: " + ((AnekCommandParser)p).state_add;
         s += "\nУникальных UIN: " + ((AnekCommandParser)p).uq.size();

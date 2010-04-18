@@ -75,7 +75,9 @@ public class TestCommand extends DefaultCommand {
      * @return - результат (если нужен)
      */
     public String exec(String sn, Vector param) {
-        return "Привет! Я новая тестовая команда!";
+    	System.gc();
+        return "Привет! Я новая тестовая команда!" +
+        		"\nИспользовано памяти: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
     }
 
     /**

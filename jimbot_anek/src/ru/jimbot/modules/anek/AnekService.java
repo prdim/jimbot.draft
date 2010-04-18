@@ -25,7 +25,7 @@ import ru.jimbot.core.api.DbStatusListener;
 import ru.jimbot.core.api.DefaultService;
 import ru.jimbot.core.api.IProtocolManager;
 import ru.jimbot.core.api.Protocol;
-import ru.jimbot.db.DBAdaptor;
+import ru.jimbot.modules.anek.db.DBConverter;
 import ru.jimbot.util.Log;
 
 /**
@@ -37,7 +37,7 @@ public class AnekService extends DefaultService implements DbStatusListener {
     private String name = ""; // Имя сервиса
 //    private HashMap<String, Protocol> prots = new HashMap<String, Protocol>(); // Ссылки на протоколы
     private AnekConfig config;
-    private DBAneks db;
+//    private DBAneks db;
     private AnekWork aw;
     private boolean start = false;
     private AnekCommandParser cmd;
@@ -64,11 +64,21 @@ public class AnekService extends DefaultService implements DbStatusListener {
     public AnekWork getAnekWork() {
         return aw;
     }
-
+    
     /**
      * Запуск сервиса
      */
     public void start() {
+//    	DBConverter dbc = new DBConverter();
+//    	try {
+//    		dbc.openMysql(config.getDb().getHost(), config.getDb().getBase(), config.getDb().getUser(), config.getDb().getPass().getPass());
+//    		dbc.convertAneks("./services/" + name + "/db/aneks");
+//    		dbc.convertAneksTemp("./services/" + name + "/db/aneks");
+//    		dbc.convertAds("./services/" + name + "/db/aneks");
+//    	} catch (Exception ex) {
+//    		ex.printStackTrace();
+//    	}
+//    	if(true) return;
         getCron().clear();
         getCron().start();
         for(int i=0;i<config.getUins().size();i++) {
@@ -103,8 +113,14 @@ public class AnekService extends DefaultService implements DbStatusListener {
         // TODO ...
         addDbStatusListener(this);
         start = true;
-        aw.initDB();
-        db = aw.db;
+        try {
+        	aw.initDB();
+        	onConnect();
+        } catch (Exception ex) {
+        	ex.printStackTrace();
+        	onError(ex.getMessage());
+        }
+//        db = aw.db;
     }
 
     /**
@@ -156,20 +172,20 @@ public class AnekService extends DefaultService implements DbStatusListener {
         return config;
     }
 
-    /**
-     * Экземпляр класса для работы с БД
-     *
-     * @return
-     */
-    public DBAdaptor getDB() {
-        return db;
-    }
+//    /**
+//     * Экземпляр класса для работы с БД
+//     *
+//     * @return
+//     */
+//    public DBAdaptor getDB() {
+//        return db;
+//    }
 
     /**
      * Соединение с базой произошло, можно запускать УИНы
      * @param db - ссылка на базу
      */
-    public void onConnect(DBAdaptor db) {
+    public void onConnect() {
     	System.out.println("Connect DB!");
         for(CommandProtocolListener i:getCommandProtocolListeners()) {
             i.logOn();

@@ -18,8 +18,6 @@
 
 package ru.jimbot.core.api;
 
-import ru.jimbot.db.DBAdaptor;
-
 /**
  * Сообщает слушателю об изменении состояния подключения к базе данных
  * 
@@ -28,9 +26,8 @@ import ru.jimbot.db.DBAdaptor;
 public interface DbStatusListener {
     /**
      * Произошло соединение с БД
-     * @param db
      */
-    public void onConnect(DBAdaptor db);
+    public void onConnect();
 
     /**
      * Произошла ошибка БД и разрыв соединения

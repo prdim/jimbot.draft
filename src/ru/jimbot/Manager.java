@@ -200,20 +200,20 @@ public class Manager {
     /**
      * Проверка подключения к БД. Повоторят попытку подключиться если база недоступна.
      */
-    public void testDB(){
-    	for(String s : services.keySet()){
-    		if(services.get(s).isRun()){
-    			try {
-    				if(services.get(s).getDB()!=null)
-	    				if(services.get(s).getDB().isClosed()){
-	    					services.get(s).getDB().getDb();
-	    				}
-    			} catch (SQLException e) {
-    				e.printStackTrace();
-    			}
-    		}
-    	}
-    }
+//    public void testDB(){
+//    	for(String s : services.keySet()){
+//    		if(services.get(s).isRun()){
+//    			try {
+//    				if(services.get(s).getDB()!=null)
+//	    				if(services.get(s).getDB().isClosed()){
+//	    					services.get(s).getDB().getDb();
+//	    				}
+//    			} catch (SQLException e) {
+//    				e.printStackTrace();
+//    			}
+//    		}
+//    	}
+//    }
     
     /**
      * Создает файл статуса программы
