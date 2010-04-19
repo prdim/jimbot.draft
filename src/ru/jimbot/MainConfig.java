@@ -31,7 +31,7 @@ import java.util.Vector;
 public class MainConfig {
     private static MainConfig config = null;
 
-    public static final String VERSION = "v.0.5.0 alpha 2 (16/02/2010)";
+    public static final String VERSION = "v.0.5.0 alpha 3 (19/04/2010)";
     private static final String PROG_TITLE = "jImBot";
     public static final int VER_INT = 18;
     private static final String FILE_NAME = "jimbot-config.xml";
