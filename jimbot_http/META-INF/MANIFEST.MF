@@ -15,7 +15,9 @@ Bundle-ClassPath: lib/commons-beanutils-1.8.2.jar,
  lib/jetty-util-7.0.1.v20091125.jar,
  lib/servlet-api-2.5.jar,
  .
-Export-Package: org.eclipse.jetty.server;
+Export-Package: javax.servlet,
+ javax.servlet.http,
+ org.eclipse.jetty.server;
   uses:="org.eclipse.jetty.io,
    org.eclipse.jetty.http,
    org.eclipse.jetty.server.handler,

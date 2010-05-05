@@ -20,6 +20,7 @@ package ru.jimbot.http;
 
 import ru.jimbot.MainConfig;
 import ru.jimbot.Manager;
+import ru.jimbot.core.api.IHTTPService;
 import ru.jimbot.util.HttpUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -73,6 +74,9 @@ public class BootstrapAction extends MainPageServletActions {
                 }
                 s += "</TABLE>";
                 print(response, s);
+                for(IHTTPService t : HandlerFactory.getListHTTP()) {
+                	print(response, "<br><A HREF=\"" + t.getPath() + "\">" + t.getName() + "</A>");
+                }
                 print(response, "<br><A HREF=\"?page=stop_bot\">" + "Отключить бота</A>");
                 print(response, "<br><A HREF=\"?page=restart_bot\">" + "Перезапустить бота</A>");
                 print(response, "</FONT></BODY></HTML>");

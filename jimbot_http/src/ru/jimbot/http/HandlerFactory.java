@@ -33,6 +33,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import ru.jimbot.MainConfig;
+import ru.jimbot.core.api.IHTTPService;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -40,6 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -48,12 +50,22 @@ import java.util.Set;
  * @author Prolubnikov Dmitry
  */
 public class HandlerFactory {
-
+	private static List<IHTTPService> lst;
+	
+	/**
+	 * Возвращает список зарегистрированных http-сервисов, чтобы нарисовать ссылки в админке
+	 * @return
+	 */
+	public static List<IHTTPService> getListHTTP() {
+		return lst;
+	}
+	
     /**
      * Создает и возвращает список доступных (установленных в боте) обработчиков
      * @return
      */
-    public static HandlerList getAvailableHandlers() {
+    public static HandlerList getAvailableHandlers(List<IHTTPService> slist) {
+    	lst = slist;
         HandlerList handlers = new HandlerList();
         // Добавляем обработчик файлов
         ResourceHandler resource_handler = new ResourceHandler();
@@ -82,10 +94,14 @@ public class HandlerFactory {
         //Обработчики сервлетов
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
-        context.addServlet(new ServletHolder(new TestServlet()),"/test");
-        context.addServlet(new ServletHolder(new TestServlet2()),"/test2");
+//        context.addServlet(new ServletHolder(new TestServlet()),"/test");
+//        context.addServlet(new ServletHolder(new TestServlet2()),"/test2");
         context.addServlet(new ServletHolder(new MainPageServlet()),"/main");
         context.addServlet(new ServletHolder(new MainPageServlet()),"/j_security_check");
+        for(IHTTPService t : slist) {
+        	context.addServlet(new ServletHolder(t.getServlet()), t.getPath());
+        	//TODO Сделать добавление сервлетов без авторизации
+        }
         context.setSecurityHandler(sh);
         context.getSessionHandler().getSessionManager().setMaxInactiveInterval(MainConfig.getInstance().getHttpDelay()*60);
         handlers.setHandlers(new Handler[] { resource_handler, context, new DefaultHandler() });

@@ -24,48 +24,55 @@ import org.osgi.framework.BundleContext;
 
 import ru.jimbot.MainConfig;
 import ru.jimbot.http.HandlerFactory;
+import ru.jimbot.http.MainPageServlet;
 
 /**
  * @author Prolubnikov Dmitry
  *
  */
 public class Activator implements BundleActivator {
-	private org.eclipse.jetty.server.Server server = null;
+//	private org.eclipse.jetty.server.Server server = null;
+	private HttpServiceConnector httpServiceConnector;
 	
 	public void start(BundleContext context) throws Exception {
 		System.out.println("!!!Start http");
-		startHTTPServer();
+		httpServiceConnector = new HttpServiceConnector(context);
+//		Dictionary<String, Object> properties = new Hashtable<String, Object>();
+//        properties.put(JettyConstants.HTTP_PORT, 8080);
+//        JettyConfigurator.startServer("JimBot", properties);
+//		startHTTPServer();
 		
 	}
 
 	public void stop(BundleContext context) throws Exception {
-		stopHTTPServer();
+//		stopHTTPServer();
+		httpServiceConnector.stopHTTPServer();
 		System.out.println("!!!Stop http");
 	}
 	
-    public synchronized void startHTTPServer() {
-        server = new org.eclipse.jetty.server.Server();
-        try {
-            SelectChannelConnector connector = new SelectChannelConnector();
-            connector.setPort(MainConfig.getInstance().getHttpPort());
-            server.addConnector(connector);
-            server.setHandler(HandlerFactory.getAvailableHandlers());
-
-//            HandlerFactory.setAvailableHandlers(server);
-            server.start();
-//            server.join();
-            
-//            new HandlerFactory().setAvailableHandlers2(server);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public synchronized void stopHTTPServer() {
-        try {
-            if(server != null) server.stop();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
+//    public synchronized void startHTTPServer() {
+//        server = new org.eclipse.jetty.server.Server();
+//        try {
+//            SelectChannelConnector connector = new SelectChannelConnector();
+//            connector.setPort(MainConfig.getInstance().getHttpPort());
+//            server.addConnector(connector);
+//            server.setHandler(HandlerFactory.getAvailableHandlers());
+//
+////            HandlerFactory.setAvailableHandlers(server);
+//            server.start();
+////            server.join();
+//            
+////            new HandlerFactory().setAvailableHandlers2(server);
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+//    }
+//
+//    public synchronized void stopHTTPServer() {
+//        try {
+//            if(server != null) server.stop();
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+//    }
 }

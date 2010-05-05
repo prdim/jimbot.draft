@@ -56,7 +56,7 @@ public class TestBotConfigBeanInfo extends SimpleBeanInfo {
             PropertyDescriptor adminUin = new PropertyDescriptor("adminUin", TestBotConfig.class);
             adminUin.setDisplayName("Админские UIN");
             PropertyDescriptor autoStart = new PropertyDescriptor("autoStart", TestBotConfig.class);
-            autoStart.setDisplayName("Автоматически запускать анекдотный бот");
+            autoStart.setDisplayName("Автоматически запускать бота");
             PropertyDescriptor maxOutMsgSize = new PropertyDescriptor("maxOutMsgSize", TestBotConfig.class);
             maxOutMsgSize.setDisplayName("Максимальный размер одного исходящего сообщения");
             PropertyDescriptor maxOutMsgCount = new PropertyDescriptor("maxOutMsgCount", TestBotConfig.class);
