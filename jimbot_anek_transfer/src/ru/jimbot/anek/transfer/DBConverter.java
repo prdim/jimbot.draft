@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ru.jimbot.modules.anek.db;
+package ru.jimbot.anek.transfer;
 
 import java.io.File;
 import java.sql.Connection;
@@ -9,6 +9,12 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import ru.jimbot.modules.anek.db.AdsLogStore;
+import ru.jimbot.modules.anek.db.AdsStore;
+import ru.jimbot.modules.anek.db.AneksStore;
+import ru.jimbot.modules.anek.db.AneksTempStore;
+import ru.jimbot.modules.anek.db.DbManager;
 
 import com.amazon.carbonado.ConfigurationException;
 import com.amazon.carbonado.RepositoryException;

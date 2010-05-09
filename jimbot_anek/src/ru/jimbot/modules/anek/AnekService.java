@@ -25,7 +25,6 @@ import ru.jimbot.core.api.DbStatusListener;
 import ru.jimbot.core.api.DefaultService;
 import ru.jimbot.core.api.IProtocolManager;
 import ru.jimbot.core.api.Protocol;
-import ru.jimbot.modules.anek.db.DBConverter;
 import ru.jimbot.util.Log;
 
 /**
@@ -69,16 +68,6 @@ public class AnekService extends DefaultService implements DbStatusListener {
      * Запуск сервиса
      */
     public void start() {
-//    	DBConverter dbc = new DBConverter();
-//    	try {
-//    		dbc.openMysql(config.getDb().getHost(), config.getDb().getBase(), config.getDb().getUser(), config.getDb().getPass().getPass());
-//    		dbc.convertAneks("./services/" + name + "/db/aneks");
-//    		dbc.convertAneksTemp("./services/" + name + "/db/aneks");
-//    		dbc.convertAds("./services/" + name + "/db/aneks");
-//    	} catch (Exception ex) {
-//    		ex.printStackTrace();
-//    	}
-//    	if(true) return;
         getCron().clear();
         getCron().start();
         for(int i=0;i<config.getUins().size();i++) {

@@ -18,7 +18,7 @@
 
 package ru.jimbot.modules.anek;
 
-import ru.jimbot.core.DbConfig;
+//import ru.jimbot.core.DbConfig;
 import ru.jimbot.core.Password;
 import ru.jimbot.core.UinConfig;
 import ru.jimbot.core.api.ServiceConfig;
@@ -55,7 +55,7 @@ public class AnekConfig implements ServiceConfig {
     private boolean autoStart = false;
     private int maxOutMsgSize = 500;
     private int maxOutMsgCount = 5;
-    private DbConfig db = new DbConfig();
+//    private DbConfig db = new DbConfig();
 
     public AnekConfig() {
     }
@@ -265,11 +265,11 @@ public class AnekConfig implements ServiceConfig {
         this.maxOutMsgCount = maxOutMsgCount;
     }
 
-    public DbConfig getDb() {
-        return db;
-    }
-
-    public void setDb(DbConfig db) {
-        this.db = db;
-    }
+//    public DbConfig getDb() {
+//        return db;
+//    }
+//
+//    public void setDb(DbConfig db) {
+//        this.db = db;
+//    }
 }

@@ -38,7 +38,8 @@ public class ErrorMessageAction extends MainPageServletActions {
                         "Пустое имя сервиса!",
                         "Сервис с таким именем уже существует!",
                         "Необходимо выбрать тип сервиса!",
-                        "Произошла ошибка при создании сервиса."})[id];
+                        "Произошла ошибка при создании сервиса.",
+                        "Произошла ошибка!"})[id];
         print(response, HTML_HEAD + "<meta http-equiv=\"Refresh\" content=\"3; url=" +
                         "?page="+ ret + "\" />" +
                         "<TITLE>JimBot "+ MainConfig.VERSION+" </TITLE></HEAD><BODY><H3><FONT COLOR=\"#FF0000\">" +

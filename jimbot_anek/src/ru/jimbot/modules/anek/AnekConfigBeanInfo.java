@@ -64,11 +64,11 @@ public class AnekConfigBeanInfo extends SimpleBeanInfo {
             maxOutMsgSize.setDisplayName("Максимальный размер одного исходящего сообщения");
             PropertyDescriptor maxOutMsgCount = new PropertyDescriptor("maxOutMsgCount", AnekConfig.class);
             maxOutMsgCount.setDisplayName("Максимальное число частей исходящего сообщения");
-            PropertyDescriptor db = new PropertyDescriptor("db", AnekConfig.class);
-            db.setDisplayName("Настройки mySQL");
+//            PropertyDescriptor db = new PropertyDescriptor("db", AnekConfig.class);
+//            db.setDisplayName("Настройки mySQL");
             return new PropertyDescriptor[] {name, uins, status, statustxt, xstatus, xstatustxt1,
                 xstatustxt2, pauseIn, pauseOut, msgOutLimit, pauseRestart, adminUin, useAds,
-                adsRate, autoStart, maxOutMsgSize, maxOutMsgCount, db};
+                adsRate, autoStart, maxOutMsgSize, maxOutMsgCount, /*db*/};
         } catch (IntrospectionException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
