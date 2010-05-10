@@ -31,6 +31,7 @@ import ru.jimbot.modules.anek.AnekWork;
 
 /**
  * Работа с рекламой
+ * 
  * @author Prolubnikov Dmitry
  *
  */

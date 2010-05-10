@@ -1,6 +1,6 @@
-/**
+/*
  * JimBot - Java IM Bot
- * Copyright (C) 2006-2009 JimBot project
+ * Copyright (C) 2006-2010 JimBot project
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
@@ -24,6 +24,7 @@ import java.io.InputStreamReader;
 import ru.jimbot.util.Log;
 /**
  * Выполнение внешней программы
+ * 
  * @author Prolubnikov Dmitry
  */
 public class StartDos {

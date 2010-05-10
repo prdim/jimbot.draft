@@ -26,6 +26,7 @@ import java.util.Vector;
 
 /**
  * Периодическая смена х-статуса
+ * 
  * @author Prolubnikov Dmitry
  */
 public class ChangeStatusTask implements Task {

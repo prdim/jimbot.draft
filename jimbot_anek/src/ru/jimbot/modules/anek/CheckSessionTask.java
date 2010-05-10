@@ -23,6 +23,7 @@ import ru.jimbot.core.api.Task;
 
 /**
  * Проверяет и очищает сессии с истекшим сроком
+ * 
  * @author Prolubnikov Dmitry
  */
 public class CheckSessionTask implements Task {

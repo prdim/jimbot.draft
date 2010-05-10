@@ -24,6 +24,7 @@ import ru.jimbot.core.api.Task;
 
 /**
  * Периодическая проверка скриптов на обновления и их установка при необходимости
+ * 
  * @author Prolubnikov Dmitry
  */
 public class CheckScriptTask implements Task {

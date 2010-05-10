@@ -25,6 +25,7 @@ import com.amazon.carbonado.Storable;
 
 /**
  * Сохранение анекдота
+ * 
  * @author Prolubnikov Dmitry
  *
  */
