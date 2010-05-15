@@ -18,6 +18,8 @@
 
 package ru.jimbot.core.api;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServlet;
 
 /**
@@ -31,4 +33,5 @@ public interface IHTTPService {
 	public String getPath();
 	public String getName(); // Название, которое нужно показать в меню
 	public boolean isAuth(); // Требуется авторизация для доступа к сервлету?
+	public Map<String, String> getInitParams(); // Начальные параметры для сервлета
 }

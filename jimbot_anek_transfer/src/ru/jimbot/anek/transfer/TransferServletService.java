@@ -18,6 +18,8 @@
 
 package ru.jimbot.anek.transfer;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServlet;
 
 import ru.jimbot.core.api.IHTTPService;
@@ -56,4 +58,11 @@ public class TransferServletService implements IHTTPService {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see ru.jimbot.core.api.IHTTPService#getInitParams()
+	 */
+	public Map<String, String> getInitParams() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

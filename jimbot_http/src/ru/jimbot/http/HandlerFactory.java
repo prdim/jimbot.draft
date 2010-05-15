@@ -99,7 +99,11 @@ public class HandlerFactory {
         context.addServlet(new ServletHolder(new MainPageServlet()),"/main");
         context.addServlet(new ServletHolder(new MainPageServlet()),"/j_security_check");
         for(IHTTPService t : slist) {
-        	context.addServlet(new ServletHolder(t.getServlet()), t.getPath());
+        	ServletHolder h = new ServletHolder(t.getServlet());
+        	if(t.getInitParams()!=null) {
+        		h.setInitParameters(t.getInitParams());
+        	}
+        	context.addServlet(h, t.getPath());
         	//TODO Сделать добавление сервлетов без авторизации
         }
         context.setSecurityHandler(sh);
