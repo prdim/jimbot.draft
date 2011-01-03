@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Core
+Bundle-SymbolicName: ru.jimbot.core
+Bundle-Version: 0.6.0.qualifier
+Bundle-Activator: ru.jimbot.core.internal.Activator
+Bundle-Vendor: Dmitry Prolubnikov
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy

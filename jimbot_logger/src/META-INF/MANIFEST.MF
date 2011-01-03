@@ -1,7 +1,0 @@
-Manifest-Version: 1.0.0
-Bundle-ManifestVersion: 2
-Bundle-Name: jimbot_logger
-Bundle-SymbolicName: jimbot_logger
-Bundle-Version: 1.0.0
-Bundle-ClassPath: .,./lib/log4j-1.2.15.jar
-Export-Package: org.apache.log4j

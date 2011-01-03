@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>jimbot_osgi_eclipse</name>
+	<name>jimbot_all</name>
 	<comment></comment>
 	<projects>
 		<project>jimbot_anek</project>
 		<project>jimbot_anek_command</project>
+		<project>jimbot_anek_command_ext</project>
+		<project>jimbot_anek_transfer</project>
+		<project>jimbot_bdbje</project>
 		<project>jimbot_http</project>
 		<project>jimbot_logger</project>
 		<project>jimbot_mysql</project>
 		<project>jimbot_protocol_icq</project>
+		<project>jimbot_protocol_test</project>
 		<project>jimbot_script</project>
+		<project>jimbot_testbot</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
