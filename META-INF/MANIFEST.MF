@@ -5,4 +5,3 @@ Bundle-SymbolicName: jimbot.core
 Bundle-Version: 0.6.0.qualifier
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: spec@jimbot.ru
-Bundle-ActivationPolicy: lazy

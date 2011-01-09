@@ -1,50 +1,44 @@
 package ru.jimbot.core.internal;
 
-import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 
-/**
- * The activator class controls the plug-in life cycle
- */
-public class Activator extends AbstractUIPlugin {
+import ru.jimbot.core.ExtendPointRegistry;
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "ru.jimbot.core"; //$NON-NLS-1$
+public class Activator implements BundleActivator {
+	private static BundleContext context;
+	private static ExtendPointRegistry reg;
+	private ServiceRegistration registration;
 
-	// The shared instance
-	private static Activator plugin;
+	static BundleContext getContext() {
+		return context;
+	}
 	
-	/**
-	 * The constructor
-	 */
-	public Activator() {
+	static ExtendPointRegistry getRegistry() {
+		return reg;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
+	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
+	public void start(BundleContext bundleContext) throws Exception {
+		Activator.context = bundleContext;
+		System.out.println("Start core");
+		reg = new ExtendPointRegistry();
+		registration = bundleContext.registerService(ExtendPointRegistry.class.getName(), reg, null);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
+	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
 	 */
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
-	}
-
-	/**
-	 * Returns the shared instance
-	 *
-	 * @return the shared instance
-	 */
-	public static Activator getDefault() {
-		return plugin;
+	public void stop(BundleContext bundleContext) throws Exception {
+		Activator.context = null;
+		reg.unregAll();
+		registration.unregister();
+		System.out.println("Stop core");
 	}
 
 }
