@@ -12,14 +12,18 @@ import ru.jimbot.core.services.Log;
  *
  */
 public class LogService extends Log implements ExtendPoint {
-	private int level = Log.INFO;
+	private int level;
+	
+	public LogService() {
+		level = DefaultLogConfig.getInstance().isDebugMode() ? Log.DEBUG : Log.INFO;
+	}
 
 	/* (non-Javadoc)
 	 * @see ru.jimbot.core.services.Log#setLevel(int)
 	 */
 	@Override
 	public void setLevel(int level) {
-		this.level = level;
+		this.level = DefaultLogConfig.getInstance().isDebugMode() ? Log.DEBUG : level;
 	}
 
 	/* (non-Javadoc)
