@@ -89,7 +89,7 @@ public class LogService extends Log implements ExtendPoint {
 	}
 
 	@Override
-	public String getName() {
+	public String getPointName() {
 		return "DefaultLogService";
 	}
 

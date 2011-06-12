@@ -20,7 +20,7 @@ public interface ExtendPoint {
 	 * Уникальное символьное имя расширения
 	 * @return
 	 */
-	public String getName();
+	public String getPointName();
 	
 	/**
 	 * Вызывается при удалении расширения из системы

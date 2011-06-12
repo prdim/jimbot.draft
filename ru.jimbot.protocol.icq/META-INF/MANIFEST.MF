@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ru.jimbot.protocol.icq
+Bundle-SymbolicName: ru.jimbot.protocol.icq
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: ru.jimbot.protocol.icq.internal.ActivatorIcqProtocol
+Bundle-Vendor: Dmitry Prolubnikov
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.osgi.framework;version="1.3.0",
+ org.osgi.service.event;version="1.2.0",
+ org.osgi.util.tracker;version="1.4.0",
+ ru.caffeineim.protocols.icq.core,
+ ru.caffeineim.protocols.icq.exceptions,
+ ru.caffeineim.protocols.icq.integration,
+ ru.caffeineim.protocols.icq.integration.events,
+ ru.caffeineim.protocols.icq.integration.listeners,
+ ru.caffeineim.protocols.icq.setting.enumerations,
+ ru.jimbot.core,
+ ru.jimbot.core.events,
+ ru.jimbot.core.services
+Bundle-ActivationPolicy: lazy

@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Beanutils
+Bundle-SymbolicName: org.apache.commons.beanutils
+Bundle-Version: 1.8.2
+Bundle-ClassPath: commons-beanutils-1.8.2.jar
+Bundle-Vendor: apache.org
+Export-Package: org.apache.commons.beanutils,
+ org.apache.commons.beanutils.converters,
+ org.apache.commons.beanutils.expression,
+ org.apache.commons.beanutils.locale,
+ org.apache.commons.beanutils.locale.converters,
+ org.apache.commons.collections
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.apache.commons.logging

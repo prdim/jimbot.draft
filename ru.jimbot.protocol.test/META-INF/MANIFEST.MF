@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Test Protocol
+Bundle-SymbolicName: ru.jimbot.protocol.test
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: ru.jimbot.protocol.test.internal.ActivatorTestProtocol
+Bundle-Vendor: Dmitry Prolubnukov
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.osgi.framework;version="1.3.0",
+ org.osgi.service.event;version="1.2.0",
+ org.osgi.util.tracker,
+ ru.jimbot.core,
+ ru.jimbot.core.events,
+ ru.jimbot.core.services
+Bundle-ActivationPolicy: lazy
