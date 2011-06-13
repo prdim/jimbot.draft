@@ -7,7 +7,7 @@ import ru.jimbot.core.MainProps;
 import ru.jimbot.core.MsgStatCounter;
 import ru.jimbot.core.services.UinConfig;
 import ru.jimbot.http.admin.AbstractView;
-import ru.jimbot.http.admin.internal.Activator;
+import ru.jimbot.http.admin.internal.ActivatorHttpAdmin;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -91,23 +91,23 @@ public class StateView extends AbstractView<VerticalLayout> {
 				+ "/" + Runtime.getRuntime().totalMemory()/1024/1024 + "</p>");
 		sb.append("<h3>Сервисы бота</h3>");
 		for(String i : MainProps.getInstance().getServiceNames()) {
-			sb.append("<p><b>" + i + "</b> : " + (Activator.getExtendPointRegistry().getBotService(i).isRun() ? "[Запущен]" : "[Остановлен]"));
+			sb.append("<p><b>" + i + "</b> : " + (ActivatorHttpAdmin.getExtendPointRegistry().getBotService(i).isRun() ? "[Запущен]" : "[Остановлен]"));
 			sb.append("</p>");
-			if(Activator.getExtendPointRegistry().getBotService(i).isRun()) {
-				sb.append("<p>Очередь входящих сообщений: " + Activator.getExtendPointRegistry().getBotService(i).getInQueue().size() + "</p>");
+			if(ActivatorHttpAdmin.getExtendPointRegistry().getBotService(i).isRun()) {
+				sb.append("<p>Очередь входящих сообщений: " + ActivatorHttpAdmin.getExtendPointRegistry().getBotService(i).getInQueue().size() + "</p>");
 				sb.append("<p>Статистика принятых сообщений по номерам");
 				sb.append("<TABLE BORDER=\"1\"><TR><TD>UIN</TD><TD>1 минута</TD><TD>5 митут</TD><TD>60 минут</TD><TD>24 часа</TD><TD>Всего</TD></TR>");
-				for(UinConfig u : Activator.getExtendPointRegistry().getBotService(i).getConfig().getUins()) {
+				for(UinConfig u : ActivatorHttpAdmin.getExtendPointRegistry().getBotService(i).getConfig().getUins()) {
 					sb.append("<TR><TD>" + u.getProtocol() + ":" + u.getScreenName() + " ");
-					sb.append(Activator.getExtendPointRegistry().getBotService(i).getProtocol(u.getScreenName()).isOnLine() ? "[ON]":"[OFF]");
+					sb.append(ActivatorHttpAdmin.getExtendPointRegistry().getBotService(i).getProtocol(u.getScreenName()).isOnLine() ? "[ON]":"[OFF]");
 					sb.append("</TD><TD>" + MsgStatCounter.getElement(u.getScreenName()).getMsgCount(MsgStatCounter.M1));
 					sb.append("</TD><TD>" + MsgStatCounter.getElement(u.getScreenName()).getMsgCount(MsgStatCounter.M5));
 					sb.append("</TD><TD>" + MsgStatCounter.getElement(u.getScreenName()).getMsgCount(MsgStatCounter.M60));
 					sb.append("</TD><TD>" + MsgStatCounter.getElement(u.getScreenName()).getMsgCount(MsgStatCounter.H24));
 					sb.append("</TD><TD>" + MsgStatCounter.getElement(u.getScreenName()).getMsgCount(MsgStatCounter.ALL));
 					sb.append("</TD></TR>");
-					if(!Activator.getExtendPointRegistry().getBotService(i).getProtocol(u.getScreenName()).isOnLine())
-						sb.append(" " + Activator.getExtendPointRegistry().getBotService(i).getProtocol(u.getScreenName()).getLastError());
+					if(!ActivatorHttpAdmin.getExtendPointRegistry().getBotService(i).getProtocol(u.getScreenName()).isOnLine())
+						sb.append(" " + ActivatorHttpAdmin.getExtendPointRegistry().getBotService(i).getProtocol(u.getScreenName()).getLastError());
 					
 				}
 				sb.append("</TABLE></p>");

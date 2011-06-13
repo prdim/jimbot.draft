@@ -3,11 +3,16 @@
  */
 package ru.jimbot.protocol.test;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import ru.jimbot.core.Destroyable;
 import ru.jimbot.core.Message;
@@ -49,6 +54,8 @@ public class TestProtocol extends Destroyable implements Protocol, ProtocolComma
   private EventProxy eva;
   private OutgoingMessageEventHandler h1;
   private ProtocolCommandEventHandler h2;
+  private static Deque<Message> q = new LinkedBlockingDeque<Message>();
+  private static final int MAX_MSGS = 20;
 
 	/**
 	 * 
@@ -73,20 +80,38 @@ public class TestProtocol extends Destroyable implements Protocol, ProtocolComma
 		ActivatorTestProtocol.unregEventHandler(h2);
 	}
 
-
+	public static Deque<Message> getMessages() {
+//		synchronized (q) {
+			return q;
+//		}
+	}
+	
+	private static void addQ(Message m) {
+//		synchronized (q) {
+		if(q.size() > MAX_MSGS) {
+			q.poll();
+		}
+		q.add(m);
+//	}		
+	}
 
 	public void reciveMsg(Message m) {
 //		for(ProtocolListener i:protList) {
 //			i.onTextMessage(m);
 //		}
 		eva.incomingMessage(m);
+		addQ(m);
 	}
 	
 	public static void testError(String sn) {
 		prt.get(sn).onError();
 	}
 	
-	private static void testSend(String from, String to, String msg) {
+	public static void testSend(String from, String to, String msg) {
+		if(!prt.containsKey(to)) {
+			addQ(new Message(to, from, "Ошибка отправки сообщения: нет такого уина в боте! \n" +msg));
+			return;
+		}
 		if(prt.get(to).isOnLine()) 
 			prt.get(to).reciveMsg(new Message(from, to, msg, Message.TYPE_TEXT));
 	}
@@ -130,11 +155,13 @@ public class TestProtocol extends Destroyable implements Protocol, ProtocolComma
 	public void connect() {
 		logger.print("test", "test bot", "Test protocol connected");
 		connected = true;
+		prt.put(screenName, this);
 	}
 
 	public void disconnect() {
 		logger.print("test", "test bot", "Test protocol disconnected");
 		connected = false;
+		prt.remove(screenName);
 	}
 
 	public String getLastError() {
@@ -159,8 +186,10 @@ public class TestProtocol extends Destroyable implements Protocol, ProtocolComma
 
 	public void sendMsg(String sn, String msg) {
 		logger.print("test", "test bot", "Send: " + sn + ">>" + msg);
+		Message m = new Message(screenName, sn, msg, Message.TYPE_TEXT);
+		addQ(m);
 		if(prt.containsKey(sn)) {
-			prt.get(sn).reciveMsg(new Message(screenName, sn, msg, Message.TYPE_TEXT));
+			prt.get(sn).reciveMsg(m);
 		}
 	}
 

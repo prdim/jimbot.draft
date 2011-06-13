@@ -60,6 +60,7 @@ public class IcqProtocol extends Destroyable implements Protocol, ProtocolComman
     private OutgoingMessageEventHandler h1;
     private ProtocolCommandEventHandler h2;
     private long pauseOutMsg = 2000;
+    private int maxOutQueue = 20;
     private ConcurrentLinkedQueue<Message> q = new ConcurrentLinkedQueue<Message>();
     private long timeLastOutMsg = 0; // Время последнего отправленного сообщения
     private Timer timer;
@@ -91,7 +92,12 @@ public class IcqProtocol extends Destroyable implements Protocol, ProtocolComman
 	@Override
 	public void onMessage(Message m) {
 		if(q.size()>0 || (System.currentTimeMillis()-timeLastOutMsg) < pauseOutMsg) {
-			q.add(m);
+			if(q.size()<=maxOutQueue) {
+				q.add(m);
+			} else {
+				q.poll();
+				q.add(m);
+			}
 		} else {
 			sendMsg(m.getSnOut(), m.getMsg());
 			timeLastOutMsg = System.currentTimeMillis();
@@ -101,6 +107,8 @@ public class IcqProtocol extends Destroyable implements Protocol, ProtocolComman
 	@Override
 	public void logon(String sn) {
 		connect();
+		pauseOutMsg = ActivatorIcqProtocol.getExtendPointRegistry().getBotService(serviceName).getConfig().getPauseOut();
+		maxOutQueue = ActivatorIcqProtocol.getExtendPointRegistry().getBotService(serviceName).getConfig().getMsgOutLimit();
 		timer = new Timer("queue out " + screenName);
 		qt = new TimerTask() {
 			

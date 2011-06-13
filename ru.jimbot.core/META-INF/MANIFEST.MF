@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Core
 Bundle-SymbolicName: ru.jimbot.core
 Bundle-Version: 0.6.0.qualifier
-Bundle-Activator: ru.jimbot.core.internal.Activator
+Bundle-Activator: ru.jimbot.core.internal.ActivatorCore
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.google.gson,

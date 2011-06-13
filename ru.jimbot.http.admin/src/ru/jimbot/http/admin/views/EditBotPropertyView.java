@@ -13,7 +13,7 @@ import ru.jimbot.http.admin.AbstractView;
 import ru.jimbot.http.admin.BotConfigFormBuilder;
 import ru.jimbot.http.admin.ConfirmWindow;
 import ru.jimbot.http.admin.PropertyFormBuilder;
-import ru.jimbot.http.admin.internal.Activator;
+import ru.jimbot.http.admin.internal.ActivatorHttpAdmin;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
@@ -46,7 +46,7 @@ public class EditBotPropertyView extends AbstractView<VerticalLayout> {
 		super(new VerticalLayout());
 		this.fragment = fragment;
 		this.serviceName = service;
-		BotServiceConfig p = Activator.getExtendPointRegistry().getBotService(serviceName).getConfig();
+		BotServiceConfig p = ActivatorHttpAdmin.getExtendPointRegistry().getBotService(serviceName).getConfig();
 		Form f = new BotConfigFormBuilder(p).build();
 		getContent().addComponent(f);
 		getContent().addComponent(new Button("Сохранить", new Clicker(p, f)));
@@ -87,18 +87,18 @@ public class EditBotPropertyView extends AbstractView<VerticalLayout> {
 				if(action_edit == action) {
 					Item item = table.getItem(target);
 					String name = (String) item.getItemProperty("screenName").getValue();
-					UinConfig uin = Activator.getExtendPointRegistry().getBotService(serviceName).getConfig().getUin(name);
+					UinConfig uin = ActivatorHttpAdmin.getExtendPointRegistry().getBotService(serviceName).getConfig().getUin(name);
 					getWindow().addWindow(new UinEditWindow(uin));
 				} else if(action_delete == action) {
 					Item item = table.getItem(target);
 					String name = (String) item.getItemProperty("screenName").getValue();
-					final UinConfig uin = Activator.getExtendPointRegistry().getBotService(serviceName).getConfig().getUin(name);
+					final UinConfig uin = ActivatorHttpAdmin.getExtendPointRegistry().getBotService(serviceName).getConfig().getUin(name);
 					Window w = new ConfirmWindow("Удалить УИН <" + name + ">?") {
 						
 						@Override
 						public void confirm() {
-							Activator.getExtendPointRegistry().getBotService(serviceName).getConfig().removeUin(uin);
-							Activator.getExtendPointRegistry().getBotService(serviceName).getConfig().save();
+							ActivatorHttpAdmin.getExtendPointRegistry().getBotService(serviceName).getConfig().removeUin(uin);
+							ActivatorHttpAdmin.getExtendPointRegistry().getBotService(serviceName).getConfig().save();
 							getContent().getWindow().showNotification("Информация сохранена");
 							table.setContainerDataSource(getTableData());
 							table.setColumnCollapsed("password", true);
@@ -137,7 +137,7 @@ public class EditBotPropertyView extends AbstractView<VerticalLayout> {
 		c.addContainerProperty("screenName", String.class, null);
 		c.addContainerProperty("password", String.class, null);
 		c.addContainerProperty("protocol", String.class, null);
-		List<UinConfig> us = Activator.getExtendPointRegistry().getBotService(serviceName).getConfig().getUins();
+		List<UinConfig> us = ActivatorHttpAdmin.getExtendPointRegistry().getBotService(serviceName).getConfig().getUins();
 		for(UinConfig i : us) {
 			Item item = c.addItem(i);
 			item.getItemProperty("screenName").setValue(i.getScreenName());
@@ -197,8 +197,8 @@ public class EditBotPropertyView extends AbstractView<VerticalLayout> {
 				@Override
 				public void buttonClick(ClickEvent event) {
 					uinForm.commit();
-					Activator.getExtendPointRegistry().getBotService(serviceName).getConfig().setUin(uin);
-					Activator.getExtendPointRegistry().getBotService(serviceName).getConfig().save();
+					ActivatorHttpAdmin.getExtendPointRegistry().getBotService(serviceName).getConfig().setUin(uin);
+					ActivatorHttpAdmin.getExtendPointRegistry().getBotService(serviceName).getConfig().save();
 					me.getParent().getWindow().showNotification("Данные сохранены");
 					me.getParent().removeWindow(me);
 					table.setContainerDataSource(getTableData());
@@ -215,7 +215,7 @@ public class EditBotPropertyView extends AbstractView<VerticalLayout> {
 		ComboBox protocols = new ComboBox("Протокол");
 		
 		public PropertiesFieldFactory() {
-			for(String i : Activator.getExtendPointRegistry().getProtocols().keySet()) {
+			for(String i : ActivatorHttpAdmin.getExtendPointRegistry().getProtocols().keySet()) {
 				protocols.addItem(i);
 			}
 			protocols.setNewItemsAllowed(false);

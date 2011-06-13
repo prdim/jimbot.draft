@@ -13,7 +13,7 @@ import org.osgi.framework.BundleException;
 import ru.jimbot.core.MainProps;
 import ru.jimbot.http.admin.AbstractView;
 import ru.jimbot.http.admin.ConfirmWindow;
-import ru.jimbot.http.admin.internal.Activator;
+import ru.jimbot.http.admin.internal.ActivatorHttpAdmin;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
@@ -48,7 +48,7 @@ public class ControlView extends AbstractView<VerticalLayout> {
 						try {
 							// TODO Это сообщение не видно...
 							getWindow().showNotification("Останавливаю JimBot...", "", Notification.TYPE_WARNING_MESSAGE);
-							Activator.getContext().getBundle(0).stop();
+							ActivatorHttpAdmin.getContext().getBundle(0).stop();
 						} catch (BundleException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -76,7 +76,7 @@ public class ControlView extends AbstractView<VerticalLayout> {
 				
 				@Override
 				public void buttonClick(ClickEvent event) {
-					Activator.getExtendPointRegistry().getBotService(i).stop();
+					ActivatorHttpAdmin.getExtendPointRegistry().getBotService(i).stop();
 					getWindow().showNotification("Сервис остановлен");
 					bStops.get(i).setVisible(false);
 					bStarts.get(i).setVisible(true);
@@ -86,13 +86,13 @@ public class ControlView extends AbstractView<VerticalLayout> {
 				
 				@Override
 				public void buttonClick(ClickEvent event) {
-					Activator.getExtendPointRegistry().getBotService(i).start();
+					ActivatorHttpAdmin.getExtendPointRegistry().getBotService(i).start();
 					getWindow().showNotification("Сервис запущен");
 					bStops.get(i).setVisible(true);
 					bStarts.get(i).setVisible(false);
 				}
 			});
-			if(Activator.getExtendPointRegistry().getBotService(i).isRun()) {
+			if(ActivatorHttpAdmin.getExtendPointRegistry().getBotService(i).isRun()) {
 				b2.setVisible(false);
 			} else {
 				b1.setVisible(false);

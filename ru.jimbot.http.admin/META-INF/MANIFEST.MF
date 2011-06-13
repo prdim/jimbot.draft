@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: HTTPAdmin
 Bundle-SymbolicName: ru.jimbot.http.admin
 Bundle-Version: 0.6.0.qualifier
-Bundle-Activator: ru.jimbot.http.admin.internal.Activator
+Bundle-Activator: ru.jimbot.http.admin.internal.ActivatorHttpAdmin
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.google.gson,
@@ -29,3 +29,4 @@ Import-Package: com.google.gson,
  ru.jimbot.core,
  ru.jimbot.core.services
 Require-Bundle: org.vaadin.osgi.staticres;bundle-version="1.0.1"
+Export-Package: ru.jimbot.http.admin

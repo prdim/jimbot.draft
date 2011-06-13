@@ -78,6 +78,8 @@ public class TestBotCommandParser extends DefaultCommandParser /*implements Inco
         if(cmd==null){ // Если сообщение - не команда    	
         	// Просто запишем его в лог
         	srv.log(m.getSnIn() + ">>> " + m.getMsg());
+        	// И отправим назад, чтобы протестировать очередь отправки
+        	notify(new Message(m.getSnOut(), m.getSnIn(), "Принято сообщение >>> " + m.getMsg()));
         } else {
         	// Проверим полномочия и выполним команду
             if(cmd.authorityCheck(m.getSnIn())) notify(cmd.exec(m));

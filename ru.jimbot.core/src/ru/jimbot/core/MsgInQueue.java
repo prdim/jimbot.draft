@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import ru.jimbot.core.events.EventProxy;
 import ru.jimbot.core.events.IncomingMessageEventHandler;
 import ru.jimbot.core.events.IncomingMessageListener;
-import ru.jimbot.core.internal.Activator;
+import ru.jimbot.core.internal.ActivatorCore;
 import ru.jimbot.core.services.BotService;
 import ru.jimbot.core.services.Log;
 
@@ -40,9 +40,9 @@ public class MsgInQueue implements Runnable, IncomingMessageListener {
 //            srv.getProtocol(sn).addProtocolListener(this);
 //        }
         IncomingMessageEventHandler h = new IncomingMessageEventHandler(s.getServiceName(), this);
-        Activator.regEventHandler(h, h.getHandlerServiceProperties());
-        eva = new EventProxy(Activator.getEventAdmin(), srv.getServiceName());
-        logger = Activator.getRegistry().getLogger();
+        ActivatorCore.regEventHandler(h, h.getHandlerServiceProperties());
+        eva = new EventProxy(ActivatorCore.getEventAdmin(), srv.getServiceName());
+        logger = ActivatorCore.getRegistry().getLogger();
     }
     
     /**

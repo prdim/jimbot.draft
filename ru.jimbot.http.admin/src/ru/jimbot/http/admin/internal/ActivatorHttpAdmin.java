@@ -19,10 +19,12 @@ import org.eclipse.equinox.http.jetty.JettyConfigurator;
 
 import ru.jimbot.http.admin.AdminServlet;
 import ru.jimbot.http.admin.HttpProps;
+import ru.jimbot.http.admin.ViewAddon;
+import ru.jimbot.http.admin.ViewAddonRegistry;
 import ru.jimbot.core.ExtendPointRegistry;
 import ru.jimbot.core.services.AbstractProperties;
 
-public class Activator implements BundleActivator {
+public class ActivatorHttpAdmin implements BundleActivator {
 	private HttpServiceConnector httpServiceConnector;
 	private static PropsConnector propsServiceConnector;
 	private static BundleContext context;
@@ -36,6 +38,8 @@ public class Activator implements BundleActivator {
 		new HashMap<EventHandler,ServiceRegistration>();
 	private ServiceTracker serviceTracker;
 	private ServiceTracker extendsServiceTracker;
+	private static ViewAddonRegistry viewAddon;
+	private ServiceRegistration viewAddonService;
 
 	public static BundleContext getContext() {
 		return context;
@@ -63,13 +67,17 @@ public class Activator implements BundleActivator {
 		r.unregister();
 		eventHandlers.remove(e);
 	}
+	
+	public static ViewAddonRegistry getViewAddonRegistry() {
+		return viewAddon;
+	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext bundleContext) throws Exception {
-		Activator.context = bundleContext;
+		ActivatorHttpAdmin.context = bundleContext;
 //		httpServiceConnector = new HttpServiceConnector(context, "/admin", new AdminPageServlet());
 //		httpServiceConnector = new HttpServiceConnector(context, "/admin", new com.vaadin.terminal.gwt.server.ApplicationServlet());
 		
@@ -121,6 +129,9 @@ public class Activator implements BundleActivator {
 		};
 		serviceTracker.open();
 //		eventAdmin = (EventAdmin) serviceTracker.getService();
+		
+		viewAddon = new ViewAddonRegistry();
+		viewAddonService = context.registerService(ViewAddonRegistry.class.getName(), viewAddon, null);
 	}
 
 	/*
@@ -137,7 +148,8 @@ public class Activator implements BundleActivator {
 			unregEventHandler(i);
 		}
 		System.out.println("Server " + SERVER_NAME + " has been stoped");
-		Activator.context = null;
+		ActivatorHttpAdmin.context = null;
+		viewAddonService.unregister();
 	}
 
 }

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ru.jimbot.core.MainProps;
+import ru.jimbot.http.admin.internal.ActivatorHttpAdmin;
 import ru.jimbot.http.admin.views.ControlView;
 import ru.jimbot.http.admin.views.CreateBot;
 import ru.jimbot.http.admin.views.EditBotPropertyView;
@@ -15,22 +16,15 @@ import ru.jimbot.http.admin.views.EmptyView;
 import ru.jimbot.http.admin.views.StateView;
 
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.terminal.Sizeable;
-import com.vaadin.ui.AbstractSplitPanel;
-import com.vaadin.ui.Accordion;
 import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.UriFragmentUtility;
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.VerticalSplitPanel;
-import com.vaadin.ui.Window;
 
 /**
  * @author spec
@@ -41,11 +35,6 @@ public class MainWindow extends VerticalLayout/*Window*/ implements ViewContaine
 //    public static final Object PROPERTY_DESCRIPTION = "description";
 	private HorizontalSplitPanel splitPanel;
 	private MainArea mainArea;
-//	private Accordion menu;
-	private Tree controlTree;
-	private Tree propertyTree;
-	private Tree stateTree;
-	private Tree navigationTree;
 //	private Map<Object, Tree> viewToTree = new HashMap<Object, Tree>();
 	private UriFragmentUtility uriFragmentUtility = new UriFragmentUtility();
 	private Map<String, View> allViews = new HashMap<String, View>();
@@ -74,6 +63,7 @@ public class MainWindow extends VerticalLayout/*Window*/ implements ViewContaine
         View v = new ControlView("control-main");
         allViews.put(v.getFragment(), v);
         addChildrenItem(container, "Главное", v, ve1, true);
+        
         View ve2 = new EmptyView("", "Добро пожаловать в панель управления ботом!");
 //        allViews.put(ve.getFragment(), ve);
         addChildrenItem(container, "Настройки", ve2, null, false);
@@ -88,11 +78,22 @@ public class MainWindow extends VerticalLayout/*Window*/ implements ViewContaine
         	allViews.put(v.getFragment(), v);
         	addChildrenItem(container, "Настройки " + i, v, vv, true);
         }
+        
         View ve3 = new EmptyView("", "Добро пожаловать в панель управления ботом!");
         addChildrenItem(container, "Информация", ve3, null, false);
         v = new StateView("state-main");
         allViews.put(v.getFragment(), v);
         addChildrenItem(container, "Состояние", v, ve3, true);
+        
+        View ve4 = new EmptyView("", "Добро пожаловать в панель управления ботом!");
+        if(!ActivatorHttpAdmin.getViewAddonRegistry().getAddons().isEmpty()) {
+//        	View ve4 = new EmptyView("", "Добро пожаловать в панель управления ботом!");
+        	addChildrenItem(container, "Дополнения", ve4, null, false);
+        	for(ViewAddon i : ActivatorHttpAdmin.getViewAddonRegistry().getAddons()) {
+        		allViews.put(i.getFragment(), i);
+        		addChildrenItem(container, i.getName(), i, ve4, true);
+        	}
+        }
         
         tree.setContainerDataSource(container);
 //        Item item = tree.addItem(v);
@@ -112,6 +113,8 @@ public class MainWindow extends VerticalLayout/*Window*/ implements ViewContaine
         tree.expandItemsRecursively(ve1);
         tree.expandItemsRecursively(ve2);
         tree.expandItemsRecursively(ve3);
+        if(!ActivatorHttpAdmin.getViewAddonRegistry().getAddons().isEmpty())
+        	tree.expandItemsRecursively(ve4);
 //        tree.expandItemsRecursively(vv);
         return tree;
 	}

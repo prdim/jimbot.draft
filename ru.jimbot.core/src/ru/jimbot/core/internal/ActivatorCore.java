@@ -16,7 +16,7 @@ import ru.jimbot.core.ExtendPointRegistry;
 import ru.jimbot.core.MainProps;
 import ru.jimbot.core.services.AbstractProperties;
 
-public class Activator implements BundleActivator {
+public class ActivatorCore implements BundleActivator {
 	private static BundleContext context;
 	private static ExtendPointRegistry reg;
 	private ServiceRegistration registration;
@@ -53,7 +53,7 @@ public class Activator implements BundleActivator {
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext bundleContext) throws Exception {
-		Activator.context = bundleContext;
+		ActivatorCore.context = bundleContext;
 		System.out.println("Start core");
 		reg = new ExtendPointRegistry();
 		registration = bundleContext.registerService(ExtendPointRegistry.class.getName(), reg, null);
@@ -81,7 +81,7 @@ public class Activator implements BundleActivator {
 	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext bundleContext) throws Exception {
-		Activator.context = null;
+		ActivatorCore.context = null;
 		reg.unregAll();
 		registration.unregister();
 		serviceTracker.close();

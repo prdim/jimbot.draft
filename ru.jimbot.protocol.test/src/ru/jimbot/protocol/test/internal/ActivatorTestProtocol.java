@@ -13,6 +13,8 @@ import org.osgi.service.event.EventHandler;
 import org.osgi.util.tracker.ServiceTracker;
 
 import ru.jimbot.core.ExtendPointRegistry;
+import ru.jimbot.http.admin.ViewAddonRegistry;
+import ru.jimbot.protocol.test.ProtocolAdmin;
 import ru.jimbot.protocol.test.TestProtocolManager;
 
 public class ActivatorTestProtocol implements BundleActivator {
@@ -21,6 +23,7 @@ public class ActivatorTestProtocol implements BundleActivator {
 		new HashMap<EventHandler,ServiceRegistration>();
 	private ServiceTracker extendsServiceTracker;
 	private ServiceTracker serviceTracker;
+	private ServiceTracker httpAddonServiceTracker;
 	private static BundleContext context;
 	private static ExtendPointRegistry reg;
 	
@@ -95,6 +98,20 @@ public class ActivatorTestProtocol implements BundleActivator {
 			
 		};
 		extendsServiceTracker.open();
+		httpAddonServiceTracker = new ServiceTracker(context, ViewAddonRegistry.class.getName(), null) {
+
+			/* (non-Javadoc)
+			 * @see org.osgi.util.tracker.ServiceTracker#addingService(org.osgi.framework.ServiceReference)
+			 */
+			@Override
+			public Object addingService(ServiceReference reference) {
+				Object service = super.addingService(reference);
+				((ViewAddonRegistry)service).add(new ProtocolAdmin());
+				return service;
+			}
+			
+		};
+		httpAddonServiceTracker.open();
 	}
 
 	/*
@@ -105,6 +122,7 @@ public class ActivatorTestProtocol implements BundleActivator {
 		ActivatorTestProtocol.context = null;
 		extendsServiceTracker.close();
 		serviceTracker.close();
+		httpAddonServiceTracker.close();
 		for(EventHandler i : eventHandlers.keySet()) {
 			unregEventHandler(i);
 		}

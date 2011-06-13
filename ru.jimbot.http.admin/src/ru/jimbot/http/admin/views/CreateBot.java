@@ -7,7 +7,7 @@ import ru.jimbot.core.ExtendPoint;
 import ru.jimbot.core.MainProps;
 import ru.jimbot.core.services.IBotServiceBuilder;
 import ru.jimbot.http.admin.AbstractView;
-import ru.jimbot.http.admin.internal.Activator;
+import ru.jimbot.http.admin.internal.ActivatorHttpAdmin;
 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -82,7 +82,7 @@ public class CreateBot extends AbstractView<VerticalLayout> {
 			h = new HorizontalLayout();
 			c = new ComboBox("Тип сервиса");
 			c.removeAllItems();
-			for(IBotServiceBuilder i : Activator.getExtendPointRegistry().getBotServiceBuilders()) {
+			for(IBotServiceBuilder i : ActivatorHttpAdmin.getExtendPointRegistry().getBotServiceBuilders()) {
 				c.addItem(((ExtendPoint)i).getPointName());
 			}
 			c.setNewItemsAllowed(false);
@@ -110,7 +110,7 @@ public class CreateBot extends AbstractView<VerticalLayout> {
 							return;
 						}
 					}
-					Activator.getExtendPointRegistry().getBuilderForService(s2).createServiceData(s1);
+					ActivatorHttpAdmin.getExtendPointRegistry().getBuilderForService(s2).createServiceData(s1);
 //					MainProps.getInstance().getServiceNames().add(s1);
 //					MainProps.getInstance().getServiceTypes().add(s2);
 					MainProps.getInstance().addService(s1, s2);

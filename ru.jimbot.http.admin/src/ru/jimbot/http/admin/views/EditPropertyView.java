@@ -10,7 +10,7 @@ import ru.jimbot.core.services.IBotServiceBuilder;
 import ru.jimbot.http.admin.AbstractView;
 import ru.jimbot.http.admin.HttpProps;
 import ru.jimbot.http.admin.PropertyFormBuilder;
-import ru.jimbot.http.admin.internal.Activator;
+import ru.jimbot.http.admin.internal.ActivatorHttpAdmin;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -35,7 +35,7 @@ public class EditPropertyView extends AbstractView<VerticalLayout> {
 		super(new VerticalLayout());
 		this.fragment = fragment;
 		getContent().setMargin(true);
-		for(AbstractProperties p : Activator.getProps()) {
+		for(AbstractProperties p : ActivatorHttpAdmin.getProps()) {
 			Form f = new PropertyFormBuilder(p).build();
 			getContent().addComponent(f);
 			getContent().addComponent(new Button("Сохранить", new Clicker(p, f)));
