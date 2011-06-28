@@ -14,7 +14,7 @@ import ru.jimbot.core.events.EventProxy;
 import ru.jimbot.core.events.IncomingMessageEventHandler;
 import ru.jimbot.core.events.IncomingMessageListener;
 import ru.jimbot.core.services.BotService;
-import ru.jimbot.testbot.internal.Activator;
+import ru.jimbot.testbot.internal.ActivatorTestBot;
 
 /**
  * 
@@ -33,7 +33,7 @@ public class TestBotCommandParser extends DefaultCommandParser /*implements Inco
         initCommands();	
 //        h = new IncomingMessageEventHandler(srv.getServiceName(), this);
 //        Activator.regEventHandler(h, h.getHandlerServiceProperties());
-        eva = new EventProxy(Activator.getEventAdmin(), srv.getServiceName());
+        eva = new EventProxy(ActivatorTestBot.getEventAdmin(), srv.getServiceName());
 	}
 
     /**

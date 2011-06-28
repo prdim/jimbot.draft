@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: anekbot db
+Bundle-SymbolicName: ru.jimbot.anekbot.db
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: ru.jimbot.anekbot.db.internal.ActivatorAnekDb
+Bundle-Vendor: Dmitry Prolubnikov
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: com.amazon.carbonado,
+ com.amazon.carbonado.adapter,
+ com.amazon.carbonado.cursor,
+ com.amazon.carbonado.gen,
+ com.amazon.carbonado.raw,
+ com.amazon.carbonado.repo.sleepycat,
+ com.amazon.carbonado.spi,
+ com.sleepycat.je,
+ org.osgi.framework;version="1.3.0",
+ org.osgi.util.tracker,
+ ru.jimbot.anekbot,
+ ru.jimbot.core.exceptions
+Bundle-ActivationPolicy: lazy

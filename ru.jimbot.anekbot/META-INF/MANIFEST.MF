@@ -1,18 +1,19 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Core
-Bundle-SymbolicName: ru.jimbot.core
-Bundle-Version: 0.6.0.qualifier
-Bundle-Activator: ru.jimbot.core.internal.ActivatorCore
-Bundle-ActivationPolicy: lazy
+Bundle-Name: Anekbot
+Bundle-SymbolicName: ru.jimbot.anekbot
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: ru.jimbot.anekbot.internal.ActivatorAnekBot
+Bundle-Vendor: Dmitry Prolubnikov
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.google.gson,
  com.google.gson.reflect,
  org.osgi.framework;version="1.3.0",
  org.osgi.service.event;version="1.2.0",
- org.osgi.util.tracker;version="1.4.0"
-Export-Package: ru.jimbot.core,
+ org.osgi.util.tracker;version="1.4.0",
+ ru.jimbot.core,
  ru.jimbot.core.events,
  ru.jimbot.core.exceptions,
  ru.jimbot.core.services
-Require-Bundle: org.eclipse.equinox.event;bundle-version="1.2.0"
+Bundle-ActivationPolicy: lazy
+Export-Package: ru.jimbot.anekbot

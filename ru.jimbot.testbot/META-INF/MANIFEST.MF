@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Testbot
 Bundle-SymbolicName: ru.jimbot.testbot
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: ru.jimbot.testbot.internal.Activator
+Bundle-Activator: ru.jimbot.testbot.internal.ActivatorTestBot
 Bundle-Vendor: Dmitry Prolubnikov
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.google.gson,

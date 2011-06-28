@@ -6,6 +6,8 @@ package ru.jimbot.core;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Vector;
 
 import ru.jimbot.core.services.BotService;

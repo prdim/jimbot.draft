@@ -13,7 +13,7 @@ import ru.jimbot.core.services.DefaultBotService;
 import ru.jimbot.core.services.IProtocolManager;
 import ru.jimbot.core.services.Log;
 import ru.jimbot.core.services.Protocol;
-import ru.jimbot.testbot.internal.Activator;
+import ru.jimbot.testbot.internal.ActivatorTestBot;
 
 /**
  * Пример реализации тестового бота в виде плагина
@@ -36,8 +36,8 @@ public class TestBot extends DefaultBotService {
 	public TestBot(String name) {
 		this.name = name;
 		config = TestBotConfig.load(name);
-		logger = Activator.getExtendPointRegistry().getLogger();
-		eva = new EventProxy(Activator.getEventAdmin(), name);
+		logger = ActivatorTestBot.getExtendPointRegistry().getLogger();
+		eva = new EventProxy(ActivatorTestBot.getEventAdmin(), name);
 	}
 
 	/* (non-Javadoc)
@@ -58,8 +58,8 @@ public class TestBot extends DefaultBotService {
 		this.name = name;
 		this.con = con;
 		config = TestBotConfig.load(name);
-		logger = Activator.getExtendPointRegistry().getLogger();
-		eva = new EventProxy(Activator.getEventAdmin(), name);
+		logger = ActivatorTestBot.getExtendPointRegistry().getLogger();
+		eva = new EventProxy(ActivatorTestBot.getEventAdmin(), name);
 	}
 
 	public CommandConnector getCommandConnector() {
@@ -83,7 +83,7 @@ public class TestBot extends DefaultBotService {
 //        getCron().start();
         for(int i=0;i<config.getUins().size();i++) {
 //            IProtocolManager pm = Manager.getInstance().getAllProtocolManagers().get(config.getUins().get(i).getProtocol());
-        	IProtocolManager pm = Activator.getExtendPointRegistry().getProtocols().get(config.getUins().get(i).getProtocol());
+        	IProtocolManager pm = ActivatorTestBot.getExtendPointRegistry().getProtocols().get(config.getUins().get(i).getProtocol());
             
         	Protocol p = pm.addProtocol(pm.getBuilder(config.getUins().get(i).getScreenName())
         			.pass(config.getUins().get(i).getPassword())
@@ -96,7 +96,7 @@ public class TestBot extends DefaultBotService {
         	p.setLogger(logger);
 //        	addCommandProtocolListener((CommandProtocolListener)p);
             protocols.put(config.getUins().get(i).getScreenName(), p);
-            System.out.println("Create protocol " + p.getScreenName());
+            logger.debug(name, "Create protocol " + p.getScreenName());
         }        
 //        qe.start();
         inq = new MsgInQueue(this);

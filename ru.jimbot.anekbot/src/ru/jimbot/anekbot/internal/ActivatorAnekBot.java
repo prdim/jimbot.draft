@@ -1,4 +1,4 @@
-package ru.jimbot.testbot.internal;
+package ru.jimbot.anekbot.internal;
 
 import java.util.Dictionary;
 import java.util.HashMap;
@@ -14,22 +14,28 @@ import org.osgi.service.event.EventAdmin;
 import org.osgi.service.event.EventHandler;
 import org.osgi.util.tracker.ServiceTracker;
 
+import ru.jimbot.anekbot.AnekBotServiceBuilder;
+import ru.jimbot.anekbot.AnekDBExtendPoint;
+import ru.jimbot.anekbot.CommandConnector;
+import ru.jimbot.anekbot.IAnekBotDB;
 import ru.jimbot.core.ExtendPointRegistry;
-import ru.jimbot.testbot.CommandConnector;
-import ru.jimbot.testbot.TestBotServiceBuilder;
 
-public class Activator implements BundleActivator {
+public class ActivatorAnekBot implements BundleActivator {
 
 	private static BundleContext context;
 	private ServiceTracker extendsServiceTracker;
 	private static ExtendPointRegistry reg;
-	CommandConnector con;
+	private CommandConnector con;
 	private static EventAdmin eventAdmin;
 	private static Map<EventHandler,ServiceRegistration> eventHandlers = 
 		new HashMap<EventHandler,ServiceRegistration>();
 	private ServiceTracker serviceTracker;
+//	private static AnekDBExtendPoint anekDB;
+//	private ServiceRegistration registration;
+	private ServiceTracker anekBotDBServiceTracker;
+	private static IAnekBotDB db;
 
-	public static BundleContext getContext() {
+	static BundleContext getContext() {
 		return context;
 	}
 	
@@ -51,13 +57,19 @@ public class Activator implements BundleActivator {
 		r.unregister();
 		eventHandlers.remove(e);
 	}
+	
+	public static IAnekBotDB getAnekDB() {
+//		return anekDB.getDB();
+		return db;
+	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext bundleContext) throws Exception {
-		Activator.context = bundleContext;
+		ActivatorAnekBot.context = bundleContext;
+		
 		serviceTracker = new ServiceTracker(context, EventAdmin.class.getName(), null){
 
 			/* (non-Javadoc)
@@ -67,14 +79,12 @@ public class Activator implements BundleActivator {
 			public Object addingService(ServiceReference reference) {
 				Object service = super.addingService(reference);
 				eventAdmin = (EventAdmin)service;
-//				System.out.println(">>>" + eventAdmin);
 				return service;
 			}
 			
 		};
 		serviceTracker.open();
-//		eventAdmin = (EventAdmin) serviceTracker.getService();
-		System.out.println(">>>>" + eventAdmin);
+		
 		con = new CommandConnector(context);
 		extendsServiceTracker = new ServiceTracker(context, ExtendPointRegistry.class.getName(), null) {
 
@@ -89,13 +99,12 @@ public class Activator implements BundleActivator {
 					
 					@Override
 					public void run() {
-						reg.addExtend(new TestBotServiceBuilder(con));
+						reg.addExtend(new AnekBotServiceBuilder(con));
 					}
 				};
 				// Регистрируем бота в сервисах с задержкой, для того чтобы 
 				// вспомогательные сервисы к этому времени уже были зарегистрированы и запущены
 				new Timer().schedule(t, 1000);
-//				reg.addExtend(new TestBotServiceBuilder(con));
 				return service;
 			}
 
@@ -111,6 +120,22 @@ public class Activator implements BundleActivator {
 			
 		};
 		extendsServiceTracker.open();
+//		anekDB = new AnekDBExtendPoint();
+//		registration = context.registerService(AnekDBExtendPoint.class.getName(), anekDB, null);
+		anekBotDBServiceTracker = new ServiceTracker(context, IAnekBotDB.class.getName(), null) {
+
+			/* (non-Javadoc)
+			 * @see org.osgi.util.tracker.ServiceTracker#addingService(org.osgi.framework.ServiceReference)
+			 */
+			@Override
+			public Object addingService(ServiceReference reference) {
+				Object service = super.addingService(reference);
+				db = (IAnekBotDB)service;
+				return service;
+			}
+			
+		};
+		anekBotDBServiceTracker.open();
 	}
 
 	/*
@@ -118,12 +143,14 @@ public class Activator implements BundleActivator {
 	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext bundleContext) throws Exception {
-		Activator.context = null;
+		ActivatorAnekBot.context = null;
 		extendsServiceTracker.close();
 		serviceTracker.close();
 		for(EventHandler i : eventHandlers.keySet()) {
 			unregEventHandler(i);
 		}
+//		registration.unregister();
+		anekBotDBServiceTracker.close();
 	}
 
 }
