@@ -256,7 +256,7 @@ public class AnekDB implements IAnekBotDB {
     	if(!adsKey.contains(id)) return false;
     	try {
     		AdsStore t = db_aneks.getRepository().storageFor(AdsStore.class).query("id=?").with(id).loadOne();
-    		t.setExpDate(t.getExpDate() + 7*24*3600*1000);
+    		t.setExpDate(t.getExpDate() + time/*7*24*3600*1000*/);
     		t.update();
     		f = true;
     	} catch (Exception e) {
@@ -301,6 +301,22 @@ public class AnekDB implements IAnekBotDB {
 		} catch (Exception e) {
 			throw new DbException(e.getMessage(), e);
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see ru.jimbot.anekbot.IAnekBotDB#count()
+	 */
+	@Override
+	public int count() {
+		return aneksKey.size();
+	}
+
+	/* (non-Javadoc)
+	 * @see ru.jimbot.anekbot.IAnekBotDB#adsCount()
+	 */
+	@Override
+	public int adsCount() {
+		return adsKey.size();
 	}
 
 	/**

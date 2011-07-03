@@ -102,4 +102,16 @@ public interface IAnekBotDB {
      * @param uin
      */
     public void addTempAnek(String s, String uin) throws DbException;
+    
+    /**
+     * Количество анекдотов в базе
+     * @return
+     */
+    public int count();
+    
+    /**
+     * Количество рекламных объявлений в базе
+     * @return
+     */
+    public int adsCount();
 }

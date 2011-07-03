@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Anekbot Commands
+Bundle-SymbolicName: ru.jimbot.anekbot.commands
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: ru.jimbot.anekbot.commands.internal.ActivatorAnekbotCommands
+Bundle-Vendor: Dmitry Prolubnikov
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.osgi.framework;version="1.3.0",
+ ru.jimbot.anekbot,
+ ru.jimbot.core,
+ ru.jimbot.core.events,
+ ru.jimbot.core.exceptions,
+ ru.jimbot.core.services
+Bundle-ActivationPolicy: lazy

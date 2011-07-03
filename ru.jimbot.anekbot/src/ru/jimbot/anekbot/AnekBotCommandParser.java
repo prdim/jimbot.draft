@@ -103,7 +103,7 @@ public class AnekBotCommandParser extends DefaultCommandParser {
         return h;
 	}
 	
-	private void notify(Message m) {
+	public void notify(Message m) {
     	eva.outgoingMessage(m);
     }
     
