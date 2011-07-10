@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Vector;
 
@@ -17,8 +18,13 @@ import com.amazon.carbonado.RepositoryException;
 import com.amazon.carbonado.Storage;
 import com.amazon.carbonado.SupportException;
 
+import ru.jimbot.anekbot.AneksBean;
 import ru.jimbot.anekbot.IAnekBotDB;
 import ru.jimbot.core.exceptions.DbException;
+import ru.jimbot.modules.anek.db.AdsLogStore;
+import ru.jimbot.modules.anek.db.AdsStore;
+import ru.jimbot.modules.anek.db.AneksStore;
+import ru.jimbot.modules.anek.db.AneksTempStore;
 
 /**
  * @author spec
@@ -31,6 +37,7 @@ public class AnekDB implements IAnekBotDB {
     private List<Long> aneksKey;
     private DbManager db_log;
     private DbManager db_aneks;
+    private Map<String, AnekDB> dbs = new HashMap<String, AnekDB>();
 	
 	/**
 	 * @param name
@@ -49,8 +56,10 @@ public class AnekDB implements IAnekBotDB {
 			initDB();
 			return this;
 		}
+		if(dbs.containsKey(name)) return dbs.get(name);
 		AnekDB t = new AnekDB(name);
 		t.initDB();
+		dbs.put(name, t);
 		return t;
 	}
 	
@@ -84,6 +93,7 @@ public class AnekDB implements IAnekBotDB {
 			AneksStore s = k.next();
 			aneksKey.add(s.getId());
 		}
+		System.out.println("-->" + aneksKey.size());
 	}
 
 	/* (non-Javadoc)
@@ -282,6 +292,7 @@ public class AnekDB implements IAnekBotDB {
 			AneksStore t = db_aneks.getRepository().storageFor(AneksStore.class).prepare();
 	    	t.setText(s);
 	    	t.insert();
+	    	aneksKey.add(t.getId());
 		} catch (Exception e) {
 			throw new DbException(e.getMessage(), e);
 		}
@@ -342,4 +353,90 @@ public class AnekDB implements IAnekBotDB {
     		return i;
     	}
     }
+	
+	/*****************************************************************
+	 * 
+	 */
+	
+	private AneksBean aneksToBean(AneksStore a) {
+		AneksBean b = new AneksBean();
+		b.setId(a.getId());
+		b.setText(a.getText());
+		return b;
+	}
+	
+	/* (non-Javadoc)
+	 * @see ru.jimbot.anekbot.IAnekBotDB#d_getAneks(long, int)
+	 */
+	@Override
+	public List<AneksBean> d_getAneks(long start, long count) throws DbException {
+		List<AneksBean> t = new ArrayList<AneksBean>();
+		int i = 0;
+		try {
+			Cursor<AneksStore> c = db_aneks.getRepository().storageFor(AneksStore.class).query().fetchSlice(start, start + count);
+			while (c.hasNext()) {
+				t.add(aneksToBean(c.next()));
+				if(i++ >= count) break;
+			}
+		} catch (Exception e) {
+			throw new DbException(e.getMessage(), e);
+		}
+		return t;
+	}
+
+	/* (non-Javadoc)
+	 * @see ru.jimbot.anekbot.IAnekBotDB#d_saveAnek(ru.jimbot.anekbot.AneksBean)
+	 */
+	@Override
+	public void d_saveAnek(AneksBean a) throws DbException {
+		try {
+			AneksStore t = db_aneks.getRepository().storageFor(AneksStore.class).prepare();
+	    	t.setText(a.getText());
+	    	t.setId(a.getId());
+	    	t.update();
+		} catch (Exception e) {
+			throw new DbException(e.getMessage(), e);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see ru.jimbot.anekbot.IAnekBotDB#d_removeAnek(ru.jimbot.anekbot.AneksBean)
+	 */
+	@Override
+	public void d_removeAnek(AneksBean a) throws DbException {
+		try {
+			AneksStore t = db_aneks.getRepository().storageFor(AneksStore.class).prepare();
+	    	t.setText(a.getText());
+	    	t.setId(a.getId());
+	    	t.delete();
+		} catch (Exception e) {
+			throw new DbException(e.getMessage(), e);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see ru.jimbot.anekbot.IAnekBotDB#d_aneksCount()
+	 */
+	@Override
+	public long d_aneksCount(){
+		try {
+			return db_aneks.getRepository().storageFor(AneksStore.class).query().count();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	/* (non-Javadoc)
+	 * @see ru.jimbot.anekbot.IAnekBotDB#refreshCash()
+	 */
+	@Override
+	public void refreshCash() {
+		try {
+			readKey();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 }

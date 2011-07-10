@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ru.jimbot.anekbot.db;
+package ru.jimbot.modules.anek.db;
 
 import com.amazon.carbonado.PrimaryKey;
 import com.amazon.carbonado.Sequence;

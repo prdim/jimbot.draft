@@ -3,6 +3,8 @@
  */
 package ru.jimbot.anekbot;
 
+import java.util.List;
+
 import ru.jimbot.core.exceptions.DbException;
 
 /**
@@ -114,4 +116,42 @@ public interface IAnekBotDB {
      * @return
      */
     public int adsCount();
+    
+    /**
+     * Обновить кеш ключей анекдотов, вызывается при изменениях в БД
+     */
+    public void refreshCash();
+    
+    /**
+     * Методы для работы с БД напрямую. Используются в админке для прямого доступа к данным или импорта-экспорта
+     */
+    
+    /**
+     * получить список анекдотов
+     * @param start - позиция начало
+     * @param count - количество возвращаемых записей
+     * @return
+     * @throws DbException
+     */
+    public List<AneksBean> d_getAneks(long start, long count) throws DbException;
+    
+    /**
+     * Сохранить изменненый анекдот. Для создания нового использовать addAnek
+     * @param a
+     * @throws DbException
+     */
+    public void d_saveAnek(AneksBean a) throws DbException;
+    
+    /**
+     * Удалить анекдот
+     * @param a
+     * @throws DbException
+     */
+    public void d_removeAnek(AneksBean a) throws DbException;
+    
+    /**
+     * Размер таблицы анекдотов
+     * @throws DbException
+     */
+    public long d_aneksCount();
 }

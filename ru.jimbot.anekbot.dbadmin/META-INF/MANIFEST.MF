@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: DB Admin
+Bundle-SymbolicName: ru.jimbot.anekbot.dbadmin
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: ru.jimbot.anekbot.dbadmin.internal.ActivatorAnekDbadmin
+Bundle-Vendor: Dmitry Prolubnikov
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: com.vaadin.data,
+ com.vaadin.data.util,
+ com.vaadin.ui,
+ org.osgi.framework;version="1.3.0",
+ org.osgi.util.tracker,
+ ru.jimbot.anekbot,
+ ru.jimbot.core,
+ ru.jimbot.core.exceptions,
+ ru.jimbot.core.services,
+ ru.jimbot.http.admin
+Bundle-ActivationPolicy: lazy

@@ -91,7 +91,7 @@ public class ProtocolAdmin extends AbstractView<VerticalLayout> implements ViewA
 		Iterator<Message> i = TestProtocol.getMessages().descendingIterator();
 		while(i.hasNext()) {
 			Message m = i.next();
-			sb.append("<p>" + m.getSnIn() + "->" + m.getSnOut() + ": " + m.getMsg() + "</p>");
+			sb.append("<p>" + m.getSnIn() + "->" + m.getSnOut() + ": " + m.getMsg().replaceAll("\n", "<br/>") + "</p>");
 		}
 		logLabel.setValue(sb.toString());
 	}
