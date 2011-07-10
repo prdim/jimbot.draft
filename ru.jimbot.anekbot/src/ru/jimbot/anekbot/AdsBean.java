@@ -9,7 +9,7 @@ package ru.jimbot.anekbot;
  */
 public class AdsBean {
 	private long id = 0;
-	private String Txt = "";
+	private String txt = "";
 	private boolean enable = false;
 	private String note = "";
 	private String clientId = "";
@@ -31,13 +31,13 @@ public class AdsBean {
 	 * @return the txt
 	 */
 	public String getTxt() {
-		return Txt;
+		return txt;
 	}
 	/**
 	 * @param txt the txt to set
 	 */
 	public void setTxt(String txt) {
-		Txt = txt;
+		this.txt = txt;
 	}
 	/**
 	 * @return the enable

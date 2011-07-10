@@ -18,6 +18,7 @@ import com.amazon.carbonado.RepositoryException;
 import com.amazon.carbonado.Storage;
 import com.amazon.carbonado.SupportException;
 
+import ru.jimbot.anekbot.AdsBean;
 import ru.jimbot.anekbot.AneksBean;
 import ru.jimbot.anekbot.IAnekBotDB;
 import ru.jimbot.core.exceptions.DbException;
@@ -437,6 +438,83 @@ public class AnekDB implements IAnekBotDB {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+	}
+	
+	private AdsBean adsToBean(AdsStore a) {
+		AdsBean b = new AdsBean();
+		b.setId(a.getId());
+		b.setClientId(a.getClientId());
+		b.setEnable(a.isEnable());
+		b.setExpDate(a.getExpDate());
+		b.setMaxCount(a.getMaxCount());
+		b.setNote(a.getNote());
+		b.setTxt(a.getTxt());
+		return b;
+	}
+
+	/* (non-Javadoc)
+	 * @see ru.jimbot.anekbot.IAnekBotDB#d_getAds(long, long)
+	 */
+	@Override
+	public List<AdsBean> d_getAds(long start, long count) throws DbException {
+		List<AdsBean> t = new ArrayList<AdsBean>();
+		int i = 0;
+		try {
+			Cursor<AdsStore> c = db_aneks.getRepository().storageFor(AdsStore.class).query().fetchSlice(start, start + count);
+			while (c.hasNext()) {
+				t.add(adsToBean(c.next()));
+				if(i++ >= count) break;
+			}
+		} catch (Exception e) {
+			throw new DbException(e.getMessage(), e);
+		}
+		return t;
+	}
+
+	/* (non-Javadoc)
+	 * @see ru.jimbot.anekbot.IAnekBotDB#d_saveAds(ru.jimbot.anekbot.AdsBean)
+	 */
+	@Override
+	public void d_saveAds(AdsBean a) throws DbException {
+		try {
+			AdsStore t = db_aneks.getRepository().storageFor(AdsStore.class).prepare();
+			t.setId(a.getId());
+			t.setClientId(a.getClientId());
+			t.setEnable(a.isEnable());
+			t.setExpDate(a.getExpDate());
+			t.setMaxCount(a.getMaxCount());
+			t.setNote(a.getNote());
+			t.setTxt(a.getTxt());
+	    	t.update();
+		} catch (Exception e) {
+			throw new DbException(e.getMessage(), e);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see ru.jimbot.anekbot.IAnekBotDB#d_removeAds(ru.jimbot.anekbot.AdsBean)
+	 */
+	@Override
+	public void d_removeAds(AdsBean a) throws DbException {
+		try {
+			AdsStore t = db_aneks.getRepository().storageFor(AdsStore.class).prepare();
+	    	t.setId(a.getId());
+	    	t.delete();
+		} catch (Exception e) {
+			throw new DbException(e.getMessage(), e);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see ru.jimbot.anekbot.IAnekBotDB#d_adsCount()
+	 */
+	@Override
+	public long d_adsCount() {
+		try {
+			return db_aneks.getRepository().storageFor(AdsStore.class).query().count();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
 	}
 }

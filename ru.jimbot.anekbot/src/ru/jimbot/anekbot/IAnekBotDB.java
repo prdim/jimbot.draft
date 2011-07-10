@@ -154,4 +154,12 @@ public interface IAnekBotDB {
      * @throws DbException
      */
     public long d_aneksCount();
+    
+    public List<AdsBean> d_getAds(long start, long count) throws DbException;
+    
+    public void d_saveAds(AdsBean a) throws DbException;
+    
+    public void d_removeAds(AdsBean a) throws DbException;
+    
+    public long d_adsCount();
 }
