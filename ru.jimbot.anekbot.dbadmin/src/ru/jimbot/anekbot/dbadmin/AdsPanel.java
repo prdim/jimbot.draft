@@ -6,21 +6,28 @@ package ru.jimbot.anekbot.dbadmin;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.xml.soap.Text;
+
 import ru.jimbot.anekbot.AdsBean;
 import ru.jimbot.anekbot.AneksBean;
 import ru.jimbot.anekbot.IAnekBotDB;
+import ru.jimbot.core.exceptions.DbException;
 
 import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Window.Notification;
 
 /**
  * @author spec
@@ -35,6 +42,10 @@ public class AdsPanel extends VerticalLayout{
 	private long count1 = 100;
 	private TextArea editor1;
 	private AdsBean selectedAds;
+	private CheckBox cb;
+	private PopupDateField dt;
+	private TextField tf2, tf3, tf4;
+	private CheckBox cbConfirm;
 	
 	/**
 	 * 
@@ -72,7 +83,7 @@ public class AdsPanel extends VerticalLayout{
 			@Override
 			public void buttonClick(ClickEvent event) {
 				count1 = getCount(tf1);
-				long max = db.d_aneksCount();
+				long max = db.d_adsCount();
 				start1 = (start1+count1)>=max ? (max-1) : (start1+count1);
 				refreshData();
 			}
@@ -83,7 +94,7 @@ public class AdsPanel extends VerticalLayout{
 			@Override
 			public void buttonClick(ClickEvent event) {
 				count1 = getCount(tf1);
-				long max = db.d_aneksCount();
+				long max = db.d_adsCount();
 				start1 = max-count1;
 				refreshData();
 			}
@@ -114,15 +125,136 @@ public class AdsPanel extends VerticalLayout{
                 	editor1.setValue(value.getTxt());
                 	editor1.setCaption("Id=" + value.getId());
                 	selectedAds = value;
+                	cb.setValue(value.isEnable());
+                	dt.setValue(new Date(value.getExpDate()));
+                	tf2.setValue(value.getNote());
+                	tf3.setValue(value.getClientId());
+                	tf4.setValue(value.getMaxCount());
                 }
 			}
         	
         });
         addComponent(table);
+        HorizontalLayout h2 = new HorizontalLayout();
+        cb = new CheckBox("Включить");
+        h2.addComponent(cb);
+        dt = new PopupDateField();
+        dt.setResolution(PopupDateField.RESOLUTION_MIN);
+        dt.setCaption("Активно до");
+        h2.addComponent(dt);
+        tf2 = new TextField("Примечание");
+        tf3 = new TextField("Кто");
+        tf4 = new TextField("Ограничение показов");
+        h2.addComponent(tf2);
+        h2.addComponent(tf3);
+        h2.addComponent(tf4);
+        addComponent(h2);
         editor1 = new TextArea();
         editor1.setHeight("50px");
         editor1.setWidth("100%");
         addComponent(editor1);
+        
+        HorizontalLayout h12 = new HorizontalLayout();
+        Button bSave = new Button("Сохранить", new Button.ClickListener() {
+			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				boolean f = false;
+				if(null == selectedAds) {
+					getParent().getWindow().showNotification("Нужно выделить один элемент", Notification.TYPE_WARNING_MESSAGE);
+					return;
+				}
+				selectedAds.setTxt(editor1.getValue().toString());
+				if((Boolean)cb.getValue() != selectedAds.isEnable()) {
+					f = true; // нужно обновить кеш ключей после сохранения изменений
+				}
+				selectedAds.setEnable((Boolean)cb.getValue());
+				selectedAds.setExpDate(((Date)dt.getValue()).getTime());
+				selectedAds.setNote(tf2.getValue().toString());
+				selectedAds.setClientId(tf3.getValue().toString());
+				selectedAds.setMaxCount(Long.parseLong(tf3.getValue().toString()));
+				try {
+					db.d_saveAds(selectedAds);
+				} catch (DbException e) {
+					e.printStackTrace();
+					getParent().getWindow().showNotification("При сохранении произошла ошибка", e.getMessage(), 
+							Notification.TYPE_ERROR_MESSAGE);
+				}
+				if(f) db.refreshCash();
+				getParent().getWindow().showNotification("Сохранено успешно!");
+			}
+		});
+        h12.addComponent(bSave);
+        Button bExtend = new Button("Продлить", new Button.ClickListener() {
+			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				if(null == selectedAds) {
+					getParent().getWindow().showNotification("Нужно выделить один элемент", Notification.TYPE_WARNING_MESSAGE);
+					return;
+				}
+				try {
+					if(!db.extendAds(selectedAds.getId(), 7*24*3600*1000)) {
+						getParent().getWindow().showNotification("Упс... неудачно :(", 
+								"Объявление активно? Продлять можно только активные объявления", Notification.TYPE_WARNING_MESSAGE);
+					}
+				} catch (DbException e) {
+					e.printStackTrace();
+					getParent().getWindow().showNotification("При сохранении произошла ошибка", e.getMessage(), 
+							Notification.TYPE_ERROR_MESSAGE);
+				}
+				refreshData();
+				getParent().getWindow().showNotification("Сохранено успешно!");
+			}
+		});
+        h12.addComponent(bExtend);
+        Button bDelete = new Button("Удалить", new Button.ClickListener() {
+			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				if(null == selectedAds) {
+					getParent().getWindow().showNotification("Нужно выделить один элемент", Notification.TYPE_WARNING_MESSAGE);
+					return;
+				}
+				if(!cbConfirm.booleanValue()) {
+					cbConfirm.setVisible(true);
+					return;
+				}
+				try {
+					cbConfirm.setValue(false);
+					cbConfirm.setVisible(false);
+					db.d_removeAds(selectedAds);
+				} catch (DbException e) {
+					e.printStackTrace();
+					getParent().getWindow().showNotification("При сохранении произошла ошибка", e.getMessage(), 
+							Notification.TYPE_ERROR_MESSAGE);
+				}
+				db.refreshCash();
+				refreshData();
+				getParent().getWindow().showNotification("Сохранено успешно!");
+			}
+		});
+        h12.addComponent(bDelete);
+        cbConfirm = new CheckBox("Подтверждение удаления", false);
+        cbConfirm.setVisible(false);
+        h12.addComponent(cbConfirm);
+        addComponent(h12);
+        Button bAdd = new Button("Добавить новое объявление", new Button.ClickListener() {
+			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				try {
+					db.addAds(editor1.getValue().toString(), tf2.getValue().toString(), tf3.getValue().toString());
+				} catch (DbException e) {
+					e.printStackTrace();
+					getParent().getWindow().showNotification("При сохранении произошла ошибка", e.getMessage(), 
+							Notification.TYPE_ERROR_MESSAGE);
+				}
+				refreshData();
+				getParent().getWindow().showNotification("Сохранено успешно!");
+			}
+		});
+        addComponent(bAdd);
 	}
 	
 	public void setDB(IAnekBotDB d) {

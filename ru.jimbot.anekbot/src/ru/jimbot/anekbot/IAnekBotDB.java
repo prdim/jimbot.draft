@@ -162,4 +162,6 @@ public interface IAnekBotDB {
     public void d_removeAds(AdsBean a) throws DbException;
     
     public long d_adsCount();
+    
+    
 }
