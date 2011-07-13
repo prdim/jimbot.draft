@@ -3,25 +3,20 @@
  */
 package ru.jimbot.anekbot.dbadmin;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Set;
 
-import javax.xml.soap.Text;
-
-import ru.jimbot.anekbot.AdsBean;
 import ru.jimbot.anekbot.AneksBean;
+import ru.jimbot.anekbot.AneksTempBean;
 import ru.jimbot.anekbot.IAnekBotDB;
 import ru.jimbot.core.exceptions.DbException;
 
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
@@ -33,7 +28,7 @@ import com.vaadin.ui.Window.Notification;
  * @author spec
  *
  */
-public class AdsPanel extends VerticalLayout {
+public class AneksTempPanel extends VerticalLayout{
 	private IAnekBotDB db;
 	private Table table;
 	private TextField tf1;
@@ -41,16 +36,14 @@ public class AdsPanel extends VerticalLayout {
 	private long start1 = 0;
 	private long count1 = 100;
 	private TextArea editor1;
-	private AdsBean selectedAds;
-	private CheckBox cb;
-	private PopupDateField dt;
-	private TextField tf2, tf3, tf4;
+	private AneksTempBean selectedAnek;
+	private Set<AneksTempBean> selectedAneks;
 	private CheckBox cbConfirm;
 	
 	/**
 	 * 
 	 */
-	public AdsPanel() {
+	public AneksTempPanel() {
 		HorizontalLayout h11 = new HorizontalLayout();
         h11.setMargin(true);
         tf1 = new TextField("Число записей");
@@ -83,7 +76,7 @@ public class AdsPanel extends VerticalLayout {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				count1 = getCount(tf1);
-				long max = db.d_adsCount();
+				long max = db.d_aneksCount();
 				start1 = (start1+count1)>=max ? (max-1) : (start1+count1);
 				refreshData();
 			}
@@ -94,7 +87,7 @@ public class AdsPanel extends VerticalLayout {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				count1 = getCount(tf1);
-				long max = db.d_adsCount();
+				long max = db.d_aneksCount();
 				start1 = max-count1;
 				refreshData();
 			}
@@ -105,7 +98,7 @@ public class AdsPanel extends VerticalLayout {
         table.setWidth("100%");
         table.setHeight("300px");
         table.setSelectable(true);
-        table.setMultiSelect(false);
+        table.setMultiSelect(true);
         table.setImmediate(true); // react at once when something is selected
         
         table.setColumnReorderingAllowed(true);
@@ -116,122 +109,79 @@ public class AdsPanel extends VerticalLayout {
 			public void valueChange(ValueChangeEvent event) {
 				// in multiselect mode, a Set of itemIds is returned,
                 // in singleselect mode the itemId is returned directly
-//                Set<?> value = (Set<?>) event.getProperty().getValue();
-				AdsBean value = (AdsBean)event.getProperty().getValue();
-                if (null == value/* || value.size() == 0*/) {
+                Set<AneksTempBean> value = (Set<AneksTempBean>) event.getProperty().getValue();
+//				AneksTempBean value = (AneksTempBean)event.getProperty().getValue();
+                if(cbConfirm.isVisible()) cbConfirm.setVisible(false);
+                if (null == value || value.size() == 0) {
                     editor1.setValue("");
-                    selectedAds = null;
+                    selectedAnek = null;
                 } else {
-                	editor1.setValue(value.getTxt());
-                	editor1.setCaption("Id=" + value.getId());
-                	selectedAds = value;
-                	cb.setValue(value.isEnable());
-                	dt.setValue(new Date(value.getExpDate()));
-                	tf2.setValue(value.getNote());
-                	tf3.setValue(value.getClientId());
-                	tf4.setValue(value.getMaxCount());
+                	AneksTempBean v = value.iterator().next(); // Берем первую строчку из выделенных
+                	editor1.setValue(v.getText());
+                	editor1.setCaption("Id=" + v.getId());
+                	selectedAnek = v;
                 }
+                selectedAneks = value; // набор используем потом для массового удаления
 			}
         	
         });
         addComponent(table);
-        HorizontalLayout h2 = new HorizontalLayout();
-        cb = new CheckBox("Включить");
-        h2.addComponent(cb);
-        dt = new PopupDateField();
-        dt.setResolution(PopupDateField.RESOLUTION_MIN);
-        dt.setCaption("Активно до");
-        h2.addComponent(dt);
-        tf2 = new TextField("Примечание");
-        tf3 = new TextField("Кто");
-        tf4 = new TextField("Ограничение показов");
-        h2.addComponent(tf2);
-        h2.addComponent(tf3);
-        h2.addComponent(tf4);
-        addComponent(h2);
         editor1 = new TextArea();
-        editor1.setHeight("50px");
+        editor1.setHeight("100px");
         editor1.setWidth("100%");
         addComponent(editor1);
-        
         HorizontalLayout h12 = new HorizontalLayout();
         Button bSave = new Button("Сохранить", new Button.ClickListener() {
 			
 			@Override
 			public void buttonClick(ClickEvent event) {
-				boolean f = false;
-				if(null == selectedAds) {
+				if(null == selectedAnek) {
 					getParent().getWindow().showNotification("Нужно выделить один элемент", Notification.TYPE_WARNING_MESSAGE);
 					return;
 				}
-				selectedAds.setTxt(editor1.getValue().toString());
-				if((Boolean)cb.getValue() != selectedAds.isEnable()) {
-					f = true; // нужно обновить кеш ключей после сохранения изменений
-				}
-				selectedAds.setEnable((Boolean)cb.getValue());
-				selectedAds.setExpDate(((Date)dt.getValue()).getTime());
-				selectedAds.setNote(tf2.getValue().toString());
-				selectedAds.setClientId(tf3.getValue().toString());
-				selectedAds.setMaxCount(Long.parseLong(tf3.getValue().toString()));
+				selectedAnek.setText(editor1.getValue().toString());
 				try {
-					db.d_saveAds(selectedAds);
+					db.d_saveAnekTemp(selectedAnek);
 				} catch (DbException e) {
 					e.printStackTrace();
 					getParent().getWindow().showNotification("При сохранении произошла ошибка", e.getMessage(), 
 							Notification.TYPE_ERROR_MESSAGE);
 				}
-				if(f) db.refreshCash();
 				getParent().getWindow().showNotification("Сохранено успешно!");
 			}
 		});
         h12.addComponent(bSave);
-        Button bExtend = new Button("Продлить", new Button.ClickListener() {
-			
-			@Override
-			public void buttonClick(ClickEvent event) {
-				if(null == selectedAds) {
-					getParent().getWindow().showNotification("Нужно выделить один элемент", Notification.TYPE_WARNING_MESSAGE);
-					return;
-				}
-				try {
-					if(!db.extendAds(selectedAds.getId(), 7*24*3600*1000)) {
-						getParent().getWindow().showNotification("Упс... неудачно :(", 
-								"Объявление активно? Продлять можно только активные объявления", Notification.TYPE_WARNING_MESSAGE);
-					}
-				} catch (DbException e) {
-					e.printStackTrace();
-					getParent().getWindow().showNotification("При сохранении произошла ошибка", e.getMessage(), 
-							Notification.TYPE_ERROR_MESSAGE);
-				}
-				refreshData();
-				getParent().getWindow().showNotification("Сохранено успешно!");
-			}
-		});
-        h12.addComponent(bExtend);
         Button bDelete = new Button("Удалить", new Button.ClickListener() {
 			
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if(null == selectedAds) {
-					getParent().getWindow().showNotification("Нужно выделить один элемент", Notification.TYPE_WARNING_MESSAGE);
+				if(null == selectedAnek) {
+					getParent().getWindow().showNotification("Нужно выделить одну или несколько строк таблицы", 
+							Notification.TYPE_WARNING_MESSAGE);
 					return;
 				}
 				if(!cbConfirm.booleanValue()) {
+					cbConfirm.setCaption("подтвердите удаление анекдотов: " + selectedAneks.size());
 					cbConfirm.setVisible(true);
 					return;
 				}
 				try {
 					cbConfirm.setValue(false);
 					cbConfirm.setVisible(false);
-					db.d_removeAds(selectedAds);
+					for(AneksTempBean i : selectedAneks) {
+						db.d_removeAnekTemp(i);
+					}
 				} catch (DbException e) {
 					e.printStackTrace();
-					getParent().getWindow().showNotification("При сохранении произошла ошибка", e.getMessage(), 
+					getParent().getWindow().showNotification("При удалении произошла ошибка", e.getMessage(),
 							Notification.TYPE_ERROR_MESSAGE);
 				}
-				db.refreshCash();
+				if(selectedAneks.size()>1) {
+					getParent().getWindow().showNotification("Удалено анекдотов:" + selectedAneks.size());
+				} else {
+					getParent().getWindow().showNotification("Анекдот с ID=" + selectedAnek.getId() + " успешно удален из базы!");
+				}
 				refreshData();
-				getParent().getWindow().showNotification("Сохранено успешно!");
 			}
 		});
         h12.addComponent(bDelete);
@@ -239,19 +189,27 @@ public class AdsPanel extends VerticalLayout {
         cbConfirm.setVisible(false);
         h12.addComponent(cbConfirm);
         addComponent(h12);
-        Button bAdd = new Button("Добавить новое объявление", new Button.ClickListener() {
+        Button bAdd = new Button("Переместить в анекдоты", new Button.ClickListener() {
 			
 			@Override
 			public void buttonClick(ClickEvent event) {
+				if(null == selectedAnek) {
+					getParent().getWindow().showNotification("Нужно выделить одну или несколько строк таблицы", 
+							Notification.TYPE_WARNING_MESSAGE);
+					return;
+				}
 				try {
-					db.addAds(editor1.getValue().toString(), tf2.getValue().toString(), tf3.getValue().toString());
+					for(AneksTempBean i : selectedAneks) {
+						db.addAnek(i.getText());
+						db.d_removeAnekTemp(i);
+					}
 				} catch (DbException e) {
 					e.printStackTrace();
 					getParent().getWindow().showNotification("При сохранении произошла ошибка", e.getMessage(), 
 							Notification.TYPE_ERROR_MESSAGE);
 				}
+				getParent().getWindow().showNotification("Перенесено анекдотов: " + selectedAneks.size());
 				refreshData();
-				getParent().getWindow().showNotification("Сохранено успешно!");
 			}
 		});
         addComponent(bAdd);
@@ -269,33 +227,27 @@ public class AdsPanel extends VerticalLayout {
 	
 	public void refreshData() {
 		table.setContainerDataSource(getTableData());
-        lb1.setCaption("с " + start1 + " по " + (start1 + count1) + " из " + db.d_adsCount());
+        lb1.setCaption("с " + start1 + " по " + (start1 + count1) + " из " + db.d_anekTempCount());
 	}
 	
 	public IndexedContainer getTableData() {
 		IndexedContainer c = new IndexedContainer();
 		c.addContainerProperty("id", Long.class, 0);
-		c.addContainerProperty("e", String.class, 0);
-		c.addContainerProperty("exp date", String.class, 0);
+		c.addContainerProperty("length", Integer.class, 0);
 		c.addContainerProperty("text", String.class, "");
-		c.addContainerProperty("note", String.class, "");
-		c.addContainerProperty("client", String.class, "");
-		c.addContainerProperty("max count", Long.class, 0);
-		
+		c.addContainerProperty("uin", String.class, "");
 		try {
-			for (AdsBean i : db.d_getAds(start1, count1)) {
+			for (AneksTempBean i : db.d_getAnekTemp(start1, count1)) {
 				Item item = c.addItem(i);
 				item.getItemProperty("id").setValue(i.getId());
-				item.getItemProperty("e").setValue(i.isEnable() ? "Y" : "N");
-				item.getItemProperty("exp date").setValue(new SimpleDateFormat("yyyy-MM-dd").format(new Date(i.getExpDate())));
-				item.getItemProperty("text").setValue(i.getTxt());
-				item.getItemProperty("note").setValue(i.getNote());
-				item.getItemProperty("client").setValue(i.getClientId());
-				item.getItemProperty("max count").setValue(i.getMaxCount());
+				item.getItemProperty("length").setValue(i.getText().length());
+				item.getItemProperty("text").setValue(i.getText());
+				item.getItemProperty("uin").setValue(i.getUin());
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			
 		}
 		return c;
 	}

@@ -20,6 +20,7 @@ import com.amazon.carbonado.SupportException;
 
 import ru.jimbot.anekbot.AdsBean;
 import ru.jimbot.anekbot.AneksBean;
+import ru.jimbot.anekbot.AneksTempBean;
 import ru.jimbot.anekbot.IAnekBotDB;
 import ru.jimbot.core.exceptions.DbException;
 import ru.jimbot.modules.anek.db.AdsLogStore;
@@ -512,6 +513,79 @@ public class AnekDB implements IAnekBotDB {
 	public long d_adsCount() {
 		try {
 			return db_aneks.getRepository().storageFor(AdsStore.class).query().count();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	/* (non-Javadoc)
+	 * @see ru.jimbot.anekbot.IAnekBotDB#d_getAnekTemp(long, long)
+	 */
+	@Override
+	public List<AneksTempBean> d_getAnekTemp(long start, long count)
+			throws DbException {
+		List<AneksTempBean> t = new ArrayList<AneksTempBean>();
+		int i = 0;
+		try {
+			Cursor<AneksTempStore> c = db_aneks.getRepository().storageFor(AneksTempStore.class).query().fetchSlice(start, start + count);
+			while (c.hasNext()) {
+				t.add(aneksTempToBean(c.next()));
+				if(i++ >= count) break;
+			}
+		} catch (Exception e) {
+			throw new DbException(e.getMessage(), e);
+		}
+		return t;
+	}
+	
+	private AneksTempBean aneksTempToBean(AneksTempStore a) {
+		AneksTempBean b = new AneksTempBean();
+		b.setId(a.getId());
+		b.setText(a.getText());
+		b.setUin(a.getUin());
+		return b;
+	}
+
+	/* (non-Javadoc)
+	 * @see ru.jimbot.anekbot.IAnekBotDB#d_saveAnekTemp(ru.jimbot.anekbot.AneksTempBean)
+	 */
+	@Override
+	public void d_saveAnekTemp(AneksTempBean a) throws DbException {
+		try {
+			AneksTempStore t = db_aneks.getRepository().storageFor(AneksTempStore.class).prepare();
+	    	t.setText(a.getText());
+	    	t.setId(a.getId());
+	    	t.setUin(a.getUin());
+	    	t.update();
+		} catch (Exception e) {
+			throw new DbException(e.getMessage(), e);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see ru.jimbot.anekbot.IAnekBotDB#d_removeAnekTemp(ru.jimbot.anekbot.AneksTempBean)
+	 */
+	@Override
+	public void d_removeAnekTemp(AneksTempBean a) throws DbException {
+		try {
+			AneksTempStore t = db_aneks.getRepository().storageFor(AneksTempStore.class).prepare();
+	    	t.setText(a.getText());
+	    	t.setId(a.getId());
+	    	t.setUin(a.getUin());
+	    	t.delete();
+		} catch (Exception e) {
+			throw new DbException(e.getMessage(), e);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see ru.jimbot.anekbot.IAnekBotDB#d_anekTempCount()
+	 */
+	@Override
+	public long d_anekTempCount() {
+		try {
+			return db_aneks.getRepository().storageFor(AneksTempStore.class).query().count();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -23,6 +23,7 @@ public class WebDbAdmin extends AbstractView<VerticalLayout> implements ViewAddo
 	private boolean flagInit = false; // Таблица с данными инициализирована?
 	private AneksPanel aneks;
 	private AdsPanel ads;
+	private AneksTempPanel aneksTemp;
 	
 	/**
 	 * @param layout
@@ -40,10 +41,10 @@ public class WebDbAdmin extends AbstractView<VerticalLayout> implements ViewAddo
         
         aneks = new AneksPanel();
         ads = new AdsPanel();
-        VerticalLayout l3 = new VerticalLayout();
-        t.addTab(aneks, "AneksStore", null);
-        t.addTab(ads, "AdsStore", null);
-        t.addTab(l3, "AneksTempStore", null);
+        aneksTemp = new AneksTempPanel();
+        t.addTab(aneks, "Анекдоты", null);
+        t.addTab(ads, "Реклама", null);
+        t.addTab(aneksTemp, "Присланные анекдоты", null);
         getContent().addComponent(t);
 	}
 
@@ -60,6 +61,8 @@ public class WebDbAdmin extends AbstractView<VerticalLayout> implements ViewAddo
 		aneks.refreshData();
 		ads.setDB(db);
 		ads.refreshData();
+		aneksTemp.setDB(db);
+		aneksTemp.refreshData();
         flagInit = true;
 	}
 

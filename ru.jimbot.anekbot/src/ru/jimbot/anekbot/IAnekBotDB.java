@@ -163,5 +163,11 @@ public interface IAnekBotDB {
     
     public long d_adsCount();
     
+    public List<AneksTempBean> d_getAnekTemp(long start, long count) throws DbException;
     
+    public void d_saveAnekTemp(AneksTempBean a) throws DbException;
+    
+    public void d_removeAnekTemp(AneksTempBean a) throws DbException;
+    
+    public long d_anekTempCount();
 }
