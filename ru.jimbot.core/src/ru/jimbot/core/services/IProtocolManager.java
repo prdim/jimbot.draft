@@ -14,4 +14,5 @@ public interface IProtocolManager {
 	public Protocol addProtocol(Protocol p);
 	public String getProptocolName();
 	public IProtocolBuilder getBuilder(String sn);
+	public AbstractProperties getProtocolProperties(String serviceName);
 }

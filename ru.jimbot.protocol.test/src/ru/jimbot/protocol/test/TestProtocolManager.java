@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import ru.jimbot.core.ExtendPoint;
 import ru.jimbot.core.IProtocolBuilder;
+import ru.jimbot.core.services.AbstractProperties;
 import ru.jimbot.core.services.IProtocolManager;
 import ru.jimbot.core.services.Log;
 import ru.jimbot.core.services.Protocol;
@@ -50,13 +51,13 @@ public class TestProtocolManager implements IProtocolManager, ExtendPoint {
 	class Builder implements IProtocolBuilder {
 		private String screenName = "";
 		private String pass = "";
-		private String server = "login.icq.com";
-		private int port = 5980;
-		private int status = 0;
-		private String statustxt = "";
-		private int xstatus = 0;
-		private String xstatustxt1 = "";
-		private String xstatustxt2 = "";
+//		private String server = "login.icq.com";
+//		private int port = 5980;
+//		private int status = 0;
+//		private String statustxt = "";
+//		private int xstatus = 0;
+//		private String xstatustxt1 = "";
+//		private String xstatustxt2 = "";
 		private Log logger = ActivatorTestProtocol.getExtendPointRegistry().getLogger();
 		
 		public Builder(String screenName) {
@@ -68,40 +69,40 @@ public class TestProtocolManager implements IProtocolManager, ExtendPoint {
 			return this;
 		}
 		
-		public Builder server(String val) {
-			server = val;
-			return this;
-		}
-		
-		public Builder port(int val) {
-			port = val;
-			return this;
-		}
-		
-		public Builder status(int val) {
-			status = val;
-			return this;
-		}
-		
-		public Builder statustxt(String val) {
-			statustxt = val;
-			return this;
-		}
-		
-		public Builder xstatus(int val) {
-			xstatus = val;
-			return this;
-		}
-		
-		public Builder xstatustxt1(String val) {
-			xstatustxt1 = val;
-			return this;
-		}
-		
-		public Builder xstatustxt2(String val) {
-			xstatustxt2 = val;
-			return this;
-		}
+//		public Builder server(String val) {
+//			server = val;
+//			return this;
+//		}
+//		
+//		public Builder port(int val) {
+//			port = val;
+//			return this;
+//		}
+//		
+//		public Builder status(int val) {
+//			status = val;
+//			return this;
+//		}
+//		
+//		public Builder statustxt(String val) {
+//			statustxt = val;
+//			return this;
+//		}
+//		
+//		public Builder xstatus(int val) {
+//			xstatus = val;
+//			return this;
+//		}
+//		
+//		public Builder xstatustxt1(String val) {
+//			xstatustxt1 = val;
+//			return this;
+//		}
+//		
+//		public Builder xstatustxt2(String val) {
+//			xstatustxt2 = val;
+//			return this;
+//		}
 		
 		public Builder logger(Log val) {
 			logger = val;
@@ -110,9 +111,9 @@ public class TestProtocolManager implements IProtocolManager, ExtendPoint {
 		
 		public TestProtocol build(String serviceName) {
 			TestProtocol p = new TestProtocol(serviceName);
-			p.setConnectionData(server, port, screenName, pass);
-			p.setStatusData(status, statustxt);
-			p.setXStatusData(xstatus, xstatustxt1, xstatustxt2);
+			p.setConnectionData("", 0, screenName, pass);
+//			p.setStatusData(status, statustxt);
+//			p.setXStatusData(xstatus, xstatustxt1, xstatustxt2);
 			p.setLogger(logger);
 			
 			return p;
@@ -133,5 +134,11 @@ public class TestProtocolManager implements IProtocolManager, ExtendPoint {
 	public void unreg() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public AbstractProperties getProtocolProperties(String serviceName) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

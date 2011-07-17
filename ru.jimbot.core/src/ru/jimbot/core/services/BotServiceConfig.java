@@ -35,29 +35,29 @@ public interface BotServiceConfig {
 	 */
 	public String[] getAdminUins();
 	
-	/**
-	 * Пауза исходящих сообщений
-	 * @return
-	 */
-	public int getPauseOut();
-	
-	/**
-	 * Максимальный размер очереди исходящих сообщений
-	 * @return
-	 */
-    public int getMsgOutLimit();
-    
-    /**
-     * Максимальный размер исходящего сообщения
-     * @return
-     */
-    public int getMaxOutMsgSize();
-    
-    /**
-     * Максимальное число частей, на которые будет разбито большое исходящее сообщение
-     * @return
-     */
-    public int getMaxOutMsgCount();
+//	/**
+//	 * Пауза исходящих сообщений
+//	 * @return
+//	 */
+//	public int getPauseOut();
+//	
+//	/**
+//	 * Максимальный размер очереди исходящих сообщений
+//	 * @return
+//	 */
+//    public int getMsgOutLimit();
+//    
+//    /**
+//     * Максимальный размер исходящего сообщения
+//     * @return
+//     */
+//    public int getMaxOutMsgSize();
+//    
+//    /**
+//     * Максимальное число частей, на которые будет разбито большое исходящее сообщение
+//     * @return
+//     */
+//    public int getMaxOutMsgCount();
     
     /**
      * Пауза между входящими сообщениями от одного пользователя, частые сообщения будут считаться флудом

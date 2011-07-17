@@ -65,10 +65,12 @@ public class IcqProtocol extends Destroyable implements Protocol, ProtocolComman
     private long timeLastOutMsg = 0; // Время последнего отправленного сообщения
     private Timer timer;
     private TimerTask qt;
+    private IcqProtocolProperties p;
     
-	public IcqProtocol(String serviceName) {
+	public IcqProtocol(String serviceName, IcqProtocolProperties p) {
 		super();
 		this.serviceName = serviceName;
+		this.p = p;
 //		// Зарегистрируем себя в качестве обработчика событий
 //		h1 = new OutgoingMessageEventHandler(screenName, this);
 //		h2 = new ProtocolCommandEventHandler(screenName, this);
@@ -107,8 +109,8 @@ public class IcqProtocol extends Destroyable implements Protocol, ProtocolComman
 	@Override
 	public void logon(String sn) {
 		connect();
-		pauseOutMsg = ActivatorIcqProtocol.getExtendPointRegistry().getBotService(serviceName).getConfig().getPauseOut();
-		maxOutQueue = ActivatorIcqProtocol.getExtendPointRegistry().getBotService(serviceName).getConfig().getMsgOutLimit();
+		pauseOutMsg = p.getPauseOut();
+		maxOutQueue = p.getMsgOutLimit();
 		timer = new Timer("queue out " + screenName);
 		qt = new TimerTask() {
 			

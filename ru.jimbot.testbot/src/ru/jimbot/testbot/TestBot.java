@@ -87,11 +87,11 @@ public class TestBot extends DefaultBotService {
             
         	Protocol p = pm.addProtocol(pm.getBuilder(config.getUins().get(i).getScreenName())
         			.pass(config.getUins().get(i).getPassword())
-        			.status(config.getStatus())
-        			.statustxt(config.getStatustxt())
-        			.xstatus(config.getXstatus())
-        			.xstatustxt1(config.getXstatustxt1())
-        			.xstatustxt2(config.getXstatustxt2())
+//        			.status(config.getStatus())
+//        			.statustxt(config.getStatustxt())
+//        			.xstatus(config.getXstatus())
+//        			.xstatustxt1(config.getXstatustxt1())
+//        			.xstatustxt2(config.getXstatustxt2())
         			.build(name));
         	p.setLogger(logger);
 //        	addCommandProtocolListener((CommandProtocolListener)p);

@@ -8,6 +8,7 @@ import java.util.List;
 
 import ru.jimbot.core.services.AbstractProperties;
 import ru.jimbot.core.services.BotServiceConfig;
+import ru.jimbot.core.services.IProtocolManager;
 import ru.jimbot.core.services.UinConfig;
 import ru.jimbot.http.admin.AbstractView;
 import ru.jimbot.http.admin.BotConfigFormBuilder;
@@ -59,6 +60,16 @@ public class EditBotPropertyView extends AbstractView<VerticalLayout> {
 				getWindow().addWindow(new UinEditWindow(new UinConfig("", "", "test")));
 			}
 		});
+		
+		for(IProtocolManager i : ActivatorHttpAdmin.getExtendPointRegistry().getProtocols().values()) {
+			AbstractProperties pr = i.getProtocolProperties(serviceName);
+			if(pr != null) {
+				Form fp = new PropertyFormBuilder(pr).build();
+				getContent().addComponent(fp);
+				getContent().addComponent(new Button("Сохранить", new Clicker(pr, fp)));
+			}
+		}
+		
 		getContent().addComponent(newUin);
 		table = new Table("Список УИНов бота:");
 		getContent().addComponent(table);
@@ -148,18 +159,28 @@ public class EditBotPropertyView extends AbstractView<VerticalLayout> {
 	}
 
 	private class Clicker implements Button.ClickListener {
-		private BotServiceConfig props;
+		private BotServiceConfig props1;
+		private AbstractProperties props2;
 		private Form form;
 		
+		public Clicker(AbstractProperties p, Form f) {
+			props2 = p;
+			form = f;
+		}
+		
 		public Clicker(BotServiceConfig p, Form f) {
-			props = p;
+			props1 = p;
 			form = f;
 		}
 
 		@Override
 		public void buttonClick(ClickEvent event) {
 			form.commit();
-			props.save();
+			if(props1 == null) {
+				props2.save();
+			} else {
+				props1.save();
+			}
 			getContent().getWindow().showNotification("Информация сохранена");
 		}
 		

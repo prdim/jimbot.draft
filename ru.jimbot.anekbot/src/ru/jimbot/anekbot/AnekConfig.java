@@ -30,21 +30,21 @@ public class AnekConfig implements BotServiceConfig {
     private String name = "AnekBot";
     private List<UinConfig> uins = new ArrayList<UinConfig>();
     private transient HashMap<String, UinConfig> uinsCopy = new HashMap<String, UinConfig>();
-    private int status = 0;
-    private String statustxt = "";
-    private int xstatus = 0;
-    private String xstatustxt1 = "";
-    private String xstatustxt2 = "";
+//    private int status = 0;
+//    private String statustxt = "";
+//    private int xstatus = 0;
+//    private String xstatustxt1 = "";
+//    private String xstatustxt2 = "";
     private int pauseIn = 3000;
-    private int pauseOut = 500;
-    private int msgOutLimit = 20;
-    private long pauseRestart = 11*60*1000;
+//    private int pauseOut = 500;
+//    private int msgOutLimit = 20;
+//    private long pauseRestart = 11*60*1000;
     private String adminUin = "111111;222222";
     private boolean useAds = false;
     private int adsRate = 3;
     private boolean autoStart = false;
-    private int maxOutMsgSize = 500;
-    private int maxOutMsgCount = 5;
+//    private int maxOutMsgSize = 500;
+//    private int maxOutMsgCount = 5;
     
 	/**
 	 * 
@@ -153,132 +153,6 @@ public class AnekConfig implements BotServiceConfig {
 	}
 
 	/**
-	 * @return the status
-	 */
-	public int getStatus() {
-		return status;
-	}
-
-	/**
-	 * @param status the status to set
-	 */
-	public void setStatus(int status) {
-		this.status = status;
-	}
-
-	/**
-	 * @return the statustxt
-	 */
-	public String getStatustxt() {
-		return statustxt;
-	}
-
-	/**
-	 * @param statustxt the statustxt to set
-	 */
-	public void setStatustxt(String statustxt) {
-		this.statustxt = statustxt;
-	}
-
-	/**
-	 * @return the xstatus
-	 */
-	public int getXstatus() {
-		return xstatus;
-	}
-
-	/**
-	 * @param xstatus the xstatus to set
-	 */
-	public void setXstatus(int xstatus) {
-		this.xstatus = xstatus;
-	}
-
-	/**
-	 * @return the xstatustxt1
-	 */
-	public String getXstatustxt1() {
-		return xstatustxt1;
-	}
-
-	/**
-	 * @param xstatustxt1 the xstatustxt1 to set
-	 */
-	public void setXstatustxt1(String xstatustxt1) {
-		this.xstatustxt1 = xstatustxt1;
-	}
-
-	/**
-	 * @return the xstatustxt2
-	 */
-	public String getXstatustxt2() {
-		return xstatustxt2;
-	}
-
-	/**
-	 * @param xstatustxt2 the xstatustxt2 to set
-	 */
-	public void setXstatustxt2(String xstatustxt2) {
-		this.xstatustxt2 = xstatustxt2;
-	}
-
-	/**
-	 * @return the pauseIn
-	 */
-	public int getPauseIn() {
-		return pauseIn;
-	}
-
-	/**
-	 * @param pauseIn the pauseIn to set
-	 */
-	public void setPauseIn(int pauseIn) {
-		this.pauseIn = pauseIn;
-	}
-
-	/**
-	 * @return the pauseOut
-	 */
-	public int getPauseOut() {
-		return pauseOut;
-	}
-
-	/**
-	 * @param pauseOut the pauseOut to set
-	 */
-	public void setPauseOut(int pauseOut) {
-		this.pauseOut = pauseOut;
-	}
-
-	/**
-	 * @return the msgOutLimit
-	 */
-	public int getMsgOutLimit() {
-		return msgOutLimit;
-	}
-
-	/**
-	 * @param msgOutLimit the msgOutLimit to set
-	 */
-	public void setMsgOutLimit(int msgOutLimit) {
-		this.msgOutLimit = msgOutLimit;
-	}
-
-	/**
-	 * @return the pauseRestart
-	 */
-	public long getPauseRestart() {
-		return pauseRestart;
-	}
-
-	/**
-	 * @param pauseRestart the pauseRestart to set
-	 */
-	public void setPauseRestart(long pauseRestart) {
-		this.pauseRestart = pauseRestart;
-	}
-
-	/**
 	 * @return the adminUin
 	 */
 	public String getAdminUin() {
@@ -335,34 +209,6 @@ public class AnekConfig implements BotServiceConfig {
 	}
 
 	/**
-	 * @return the maxOutMsgSize
-	 */
-	public int getMaxOutMsgSize() {
-		return maxOutMsgSize;
-	}
-
-	/**
-	 * @param maxOutMsgSize the maxOutMsgSize to set
-	 */
-	public void setMaxOutMsgSize(int maxOutMsgSize) {
-		this.maxOutMsgSize = maxOutMsgSize;
-	}
-
-	/**
-	 * @return the maxOutMsgCount
-	 */
-	public int getMaxOutMsgCount() {
-		return maxOutMsgCount;
-	}
-
-	/**
-	 * @param maxOutMsgCount the maxOutMsgCount to set
-	 */
-	public void setMaxOutMsgCount(int maxOutMsgCount) {
-		this.maxOutMsgCount = maxOutMsgCount;
-	}
-
-	/**
 	 * @return the name
 	 */
 	public String getName() {
@@ -374,6 +220,20 @@ public class AnekConfig implements BotServiceConfig {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * @param pauseIn the pauseIn to set
+	 */
+	public void setPauseIn(int pauseIn) {
+		this.pauseIn = pauseIn;
+	}
+
+	/**
+	 * @return the pauseIn
+	 */
+	public int getPauseIn() {
+		return pauseIn;
 	}
     
     
