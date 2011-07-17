@@ -15,6 +15,7 @@ public class ActivatorAnekDb implements BundleActivator {
 	private static BundleContext context;
 //	private ServiceTracker anekBotServiceTracker;
 	private ServiceRegistration registration;
+	private AnekDB db;
 
 	static BundleContext getContext() {
 		return context;
@@ -40,7 +41,8 @@ public class ActivatorAnekDb implements BundleActivator {
 //			
 //		};
 //		anekBotServiceTracker.open();
-		registration = context.registerService(IAnekBotDB.class.getName(), new AnekDB(""), null);
+		db = new AnekDB("");
+		registration = context.registerService(IAnekBotDB.class.getName(), db, null);
 	}
 
 	/*
@@ -48,6 +50,7 @@ public class ActivatorAnekDb implements BundleActivator {
 	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext bundleContext) throws Exception {
+		db.closeAllDB();
 		ActivatorAnekDb.context = null;
 		registration.unregister();
 	}

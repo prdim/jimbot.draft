@@ -37,6 +37,10 @@ public class IcqProtocolProperties implements AbstractProperties {
     private long pauseRestart = 11*60*1000;
     private int maxOutMsgSize = 500;
     private int maxOutMsgCount = 5;
+    
+    public IcqProtocolProperties() {
+    	// конструктор без параметра нужен для восстановления сереализованных данных
+    }
 	
 	/**
 	 * @param serviceName

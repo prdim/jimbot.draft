@@ -88,9 +88,9 @@ public class AnekBot extends DefaultBotService {
 
 	@Override
 	public void stop() {
-		if(db != null) {
-			db.closeDB();
-		}
+//		if(db != null) {
+//			db.closeDB();
+//		}
 		for(int i=0;i<config.getUins().size();i++) {
         	eva.protocolCommand(config.getUins().get(i).getScreenName(), EventProxy.STATE_LOGOFF);
         }
@@ -111,7 +111,7 @@ public class AnekBot extends DefaultBotService {
 	}
 
 	@Override
-	public BotServiceConfig getConfig() {
+	public AnekConfig getConfig() {
 		return config;
 	}
 

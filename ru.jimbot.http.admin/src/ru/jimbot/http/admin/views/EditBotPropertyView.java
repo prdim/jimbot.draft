@@ -51,15 +51,6 @@ public class EditBotPropertyView extends AbstractView<VerticalLayout> {
 		Form f = new BotConfigFormBuilder(p).build();
 		getContent().addComponent(f);
 		getContent().addComponent(new Button("Сохранить", new Clicker(p, f)));
-		Label lb = new Label("<span>Настройки УИНов</span>", Label.CONTENT_XHTML);
-		getContent().addComponent(lb);
-		Button newUin = new Button("Добавить уин", new Button.ClickListener() {
-			
-			@Override
-			public void buttonClick(ClickEvent event) {
-				getWindow().addWindow(new UinEditWindow(new UinConfig("", "", "test")));
-			}
-		});
 		
 		for(IProtocolManager i : ActivatorHttpAdmin.getExtendPointRegistry().getProtocols().values()) {
 			AbstractProperties pr = i.getProtocolProperties(serviceName);
@@ -70,6 +61,15 @@ public class EditBotPropertyView extends AbstractView<VerticalLayout> {
 			}
 		}
 		
+		Label lb = new Label("<span>Настройки УИНов</span>", Label.CONTENT_XHTML);
+		getContent().addComponent(lb);
+		Button newUin = new Button("Добавить уин", new Button.ClickListener() {
+			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				getWindow().addWindow(new UinEditWindow(new UinConfig("", "", "test")));
+			}
+		});
 		getContent().addComponent(newUin);
 		table = new Table("Список УИНов бота:");
 		getContent().addComponent(table);

@@ -41,7 +41,13 @@ public class Cmd1 extends DefaultCommand {
 		((AnekBotCommandParser)p).state++;
         ((AnekBotCommandParser)p).stateInc(sn);
         try {
-			return ((AnekBot)p.getService()).getAnekDB().getAnek();
+        	StringBuffer sb = new StringBuffer();
+        	sb.append(((AnekBot)p.getService()).getAnekDB().getAnek());
+        	if(((AnekBot)p.getService()).getConfig().isUseAds()) {
+        		int r = ((AnekBot)p.getService()).getConfig().getAdsRate();
+        		sb.append(((AnekBot)p.getService()).getAnekDB().getAds(r));
+        	}
+			return sb.toString();
 		} catch (Exception e) {
 			p.getService().err(e.getMessage(), e);
 			return "Ошибка получения анекдота :(";

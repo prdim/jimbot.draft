@@ -76,6 +76,19 @@ public class AnekDB implements IAnekBotDB {
 	}
 	
 	/**
+	 * Закрытие всех базз данных. Будем вызывать при выгрузке бандла
+	 */
+	public void closeAllDB() {
+		for(AnekDB i : dbs.values()) {
+			try {
+				i.closeDB();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/**
      * Читает ключи к активным рекламным объявлениям
 	 * @throws RepositoryException 
 	 * @throws SupportException 
