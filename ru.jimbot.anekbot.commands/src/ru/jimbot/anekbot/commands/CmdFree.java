@@ -28,7 +28,9 @@ public class CmdFree extends DefaultCommand {
 	 */
 	@Override
 	public Message exec(Message m) {
-		return new Message(m.getSnOut(), m.getSnIn(), exec(m.getSnIn(), null));
+		String sn2 = ((AnekBotCommandParser)p).getFreeUin(m.getSnOut());
+		((AnekBotCommandParser)p).notify(new Message(sn2, m.getSnIn(), "Привет! Я самый свободный УИН ;)"));
+		return new Message(m.getSnOut(), m.getSnIn(), "Номер самого свободного УИНа - " + sn2);
 	}
 
 	/* (non-Javadoc)
@@ -36,9 +38,10 @@ public class CmdFree extends DefaultCommand {
 	 */
 	@Override
 	public String exec(String sn, Vector param) {
-		String sn2 = ((AnekBotCommandParser)p).getFreeUin();
-        ((AnekBotCommandParser)p).notify(new Message(sn2, sn, "Привет! Я самый свободный УИН ;)"));
-        return "Номер самого свободного УИНа - " + sn2;
+//		String sn2 = ((AnekBotCommandParser)p).getFreeUin();
+//        ((AnekBotCommandParser)p).notify(new Message(sn2, sn, "Привет! Я самый свободный УИН ;)"));
+//        return "Номер самого свободного УИНа - " + sn2;
+		return null;
 	}
 
 	/* (non-Javadoc)

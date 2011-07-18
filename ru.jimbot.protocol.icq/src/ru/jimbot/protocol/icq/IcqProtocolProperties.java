@@ -23,7 +23,7 @@ import ru.jimbot.core.services.AbstractProperties;
  */
 public class IcqProtocolProperties implements AbstractProperties {
 	public static final String FILE_NAME = "icq-config";
-    private transient String serviceName = "";
+    private String serviceName = ""; // TODO Зачем он мне?
     private String server = "login.icq.com";
     private int port = 5980;
     private int status = 0;

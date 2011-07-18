@@ -166,15 +166,17 @@ public class AnekBotCommandParser extends DefaultCommandParser {
 
     /**
      * Возвращает наименее загруженный номер
+     * sn - через какой номер пришло сообщение, искать номера только этого же протокола
      * @return
      */
-    public String getFreeUin(){
-    	String u = "";
+    public String getFreeUin(String sn){
+    	String u = sn;
     	int k = 99;
     	int c = 0;
+    	String np = srv.getConfig().getUin(sn).getProtocol();
     	for(int i=0;i<srv.getConfig().getUins().size();i++){
             String s = srv.getConfig().getUins().get(i).getScreenName();
-    		if(srv.getProtocol(s).isOnLine()){
+    		if(srv.getProtocol(s).isOnLine() && np.equals(srv.getConfig().getUins().get(i).getProtocol())){
                 c = MsgStatCounter.getElement(s).getMsgCount(MsgStatCounter.M1);
     			if(k>c){
     				k = c;
