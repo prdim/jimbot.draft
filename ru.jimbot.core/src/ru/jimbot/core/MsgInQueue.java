@@ -147,7 +147,7 @@ public class MsgInQueue implements Runnable, IncomingMessageListener {
         if(!testFlood(m.getSnIn()))
             q.add(m);
         else {
-        	logger.print("FLOOD", srv.getServiceName(), "FLOOD from " + m.getSnIn() + ">> " + m.getMsg());
+        	logger.print("flood", srv.getServiceName(), "FLOOD from " + m.getSnIn() + ">> " + m.getMsg());
 //            Log.getLogger(srv.getServiceName()).flood("FLOOD from " + m.getSnIn() + ">> " + m.getMsg());
             // TODO Подумать над флудом
             m.setType(Message.TYPE_FLOOD_NOTICE);

@@ -185,7 +185,7 @@ public class TestProtocol extends Destroyable implements Protocol, ProtocolComma
 //	}
 
 	public void sendMsg(String sn, String msg) {
-		logger.print("test", "test bot", "Send: " + sn + ">>" + msg);
+		logger.print("msg", "test_protocol", "Send: " + sn + ">>" + msg);
 		Message m = new Message(screenName, sn, msg, Message.TYPE_TEXT);
 		addQ(m);
 		if(prt.containsKey(sn)) {

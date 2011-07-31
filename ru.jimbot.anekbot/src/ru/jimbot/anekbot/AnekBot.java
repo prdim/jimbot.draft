@@ -122,7 +122,7 @@ public class AnekBot extends DefaultBotService {
 
 	@Override
 	public void err(String s, Throwable throwable) {
-		logger.error("error", s, throwable);
+		logger.error(name, s, throwable);
 	}
 
 	@Override

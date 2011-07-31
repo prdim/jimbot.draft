@@ -3,8 +3,12 @@
  */
 package ru.jimbot.defaults.logger;
 
+import java.io.IOException;
+import java.util.HashMap;
+
 import ru.jimbot.core.ExtendPoint;
 import ru.jimbot.core.services.Log;
+import org.apache.log4j.*;
 
 /**
  * Прототип сервиса логирования. Позже нужно доработать
@@ -13,9 +17,24 @@ import ru.jimbot.core.services.Log;
  */
 public class LogService extends Log implements ExtendPoint {
 	private int level;
+	private HashMap<String, Logger> loggers = new HashMap<String, Logger>();
+	public static final String PATTERN = "[%d{dd.MM.yy HH:mm:ss}] %m%n";
+	public static final int MAX_BACKUP_INDEX = 5;
+	private Logger rootLogger;
 	
 	public LogService() {
 		level = DefaultLogConfig.getInstance().isDebugMode() ? Log.DEBUG : Log.INFO;
+		rootLogger = Logger.getRootLogger();
+		RollingFileAppender t;
+		try {
+			t = new RollingFileAppender(new PatternLayout(PATTERN), "./log/system.log", true);
+			t.setName("system");
+			t.setMaxBackupIndex(MAX_BACKUP_INDEX);
+			t.setMaxFileSize("1MB");
+			rootLogger.addAppender(t);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/* (non-Javadoc)
@@ -39,7 +58,12 @@ public class LogService extends Log implements ExtendPoint {
 	 */
 	@Override
 	public void print(String type, String name, Object msg) {
-		System.out.println("LOG: [" + type + "]:[" + name + "]:" + msg);
+//		System.out.println("LOG: [" + type + "]:[" + name + "]:" + msg);
+		String n = name + "_" + type;
+		if(!loggers.containsKey(n)) {
+			loggers.put(n, initLoggerDaily(name, type));
+		}
+		loggers.get(n).info(msg);
 	}
 
 	/* (non-Javadoc)
@@ -47,7 +71,12 @@ public class LogService extends Log implements ExtendPoint {
 	 */
 	@Override
 	public void debug(String name, Object msg) {
-		System.out.println("DEBUG: [" + name + "]:" + msg);
+		if(Log.DEBUG != level) return;
+//		System.out.println("DEBUG: [" + name + "]:" + msg);
+//		if(!loggers.containsKey(name)) {
+//			loggers.put(name, initLoggerFile(name, ""));
+//		}
+		rootLogger.debug(msg);
 	}
 
 	/* (non-Javadoc)
@@ -55,8 +84,13 @@ public class LogService extends Log implements ExtendPoint {
 	 */
 	@Override
 	public void debug(String name, Object msg, Throwable throwable) {
-		System.err.println("DEBUG: [" + name + "]:" + msg);
-		throwable.printStackTrace();
+		if(Log.DEBUG != level) return;
+//		System.err.println("DEBUG: [" + name + "]:" + msg);
+//		if(!loggers.containsKey(name)) {
+//			loggers.put(name, initLoggerFile(name, ""));
+//		}
+		rootLogger.debug(msg, throwable);
+//		throwable.printStackTrace();
 	}
 
 	/* (non-Javadoc)
@@ -64,7 +98,12 @@ public class LogService extends Log implements ExtendPoint {
 	 */
 	@Override
 	public void error(String name, Object msg) {
-		System.err.println("ERROR: [" + name + "]:" + msg);
+//		System.err.println("ERROR: [" + name + "]:" + msg);
+		String n = name + "_error";
+		if(!loggers.containsKey(n)) {
+			loggers.put(n, initLoggerFile(name, "error"));
+		}
+		loggers.get(n).error(msg);
 	}
 
 	/* (non-Javadoc)
@@ -72,8 +111,13 @@ public class LogService extends Log implements ExtendPoint {
 	 */
 	@Override
 	public void error(String name, Object msg, Throwable throwable) {
-		System.err.println("ERROR: [" + name + "]:" + msg);
-		throwable.printStackTrace();
+//		System.err.println("ERROR: [" + name + "]:" + msg);
+		String n = name + "_error";
+		if(!loggers.containsKey(n)) {
+			loggers.put(n, initLoggerFile(name, "error"));
+		}
+		loggers.get(n).error(msg, throwable);
+//		throwable.printStackTrace();
 	}
 
 	@Override
@@ -83,9 +127,8 @@ public class LogService extends Log implements ExtendPoint {
 
 	@Override
 	public void unreg() {
-		debug("Default Log Service", "Unreg this");
-		// TODO Auto-generated method stub
-		
+//		debug("Default Log Service", "Unreg this");
+		Logger.shutdown();
 	}
 
 	@Override
@@ -93,4 +136,34 @@ public class LogService extends Log implements ExtendPoint {
 		return "DefaultLogService";
 	}
 
+	private Logger initLoggerDaily(String name, String type) {
+		String n = "".equals(type) ? name : (name + "_" + type);
+		Logger l = Logger.getLogger(n);
+		
+		DailyRollingFileAppender t;
+		try {
+			t = new DailyRollingFileAppender(new PatternLayout(PATTERN), "./log/" + n + ".log", "'.'yyyy-MM-dd");
+			t.setName(n);
+			l.addAppender(t);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return l;
+	}
+	
+	private Logger initLoggerFile(String name, String type) {
+		String n = "".equals(type) ? name : (name + "_" + type);
+		Logger l = Logger.getLogger(n);
+		RollingFileAppender t;
+		try {
+			t = new RollingFileAppender(new PatternLayout(PATTERN), "./log/" + n + ".log", true);
+			t.setName("n");
+			t.setMaxBackupIndex(MAX_BACKUP_INDEX);
+			t.setMaxFileSize("1MB");
+			l.addAppender(t);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return l;
+	}
 }
