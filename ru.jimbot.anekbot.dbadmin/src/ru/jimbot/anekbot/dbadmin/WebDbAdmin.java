@@ -24,12 +24,14 @@ public class WebDbAdmin extends AbstractView<VerticalLayout> implements ViewAddo
 	private AneksPanel aneks;
 	private AdsPanel ads;
 	private AneksTempPanel aneksTemp;
+	private String serviceName = "";
 	
 	/**
-	 * @param layout
+	 * @param service - имя бота, для которого будет админиться база
 	 */
-	public WebDbAdmin() {
+	public WebDbAdmin(String service) {
 		super(new VerticalLayout());
+		serviceName = service;
 		getContent().setMargin(true);
 //		HorizontalLayout refreshState = new HorizontalLayout();
 		if(ActivatorAnekDbadmin.getAnekDB() == null) {
@@ -52,7 +54,7 @@ public class WebDbAdmin extends AbstractView<VerticalLayout> implements ViewAddo
 	public void activated(Object... params) {
 		if(flagInit) return;
 		try {
-			db = ActivatorAnekDbadmin.getAnekDB().initDB("test_anek");
+			db = ActivatorAnekDbadmin.getAnekDB().initDB(serviceName);
 		} catch (DbException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -74,11 +76,11 @@ public class WebDbAdmin extends AbstractView<VerticalLayout> implements ViewAddo
 
 	@Override
 	public String getFragment() {
-		return "addon-anek-dbadmin";
+		return "addon-anek-dbadmin-" + serviceName;
 	}
 
 	@Override
 	public String getName() {
-		return "Управление базой анекбота";
+		return "Управление базой " + serviceName;
 	}
 }

@@ -7,6 +7,8 @@ import org.osgi.util.tracker.ServiceTracker;
 
 import ru.jimbot.anekbot.IAnekBotDB;
 import ru.jimbot.anekbot.dbadmin.WebDbAdmin;
+import ru.jimbot.core.MainProps;
+import ru.jimbot.core.ServiceConfig;
 import ru.jimbot.http.admin.ViewAddonRegistry;
 
 public class ActivatorAnekDbadmin implements BundleActivator {
@@ -52,7 +54,12 @@ public class ActivatorAnekDbadmin implements BundleActivator {
 			@Override
 			public Object addingService(ServiceReference reference) {
 				Object service = super.addingService(reference);
-				((ViewAddonRegistry)service).add(new WebDbAdmin());
+				for(ServiceConfig i : MainProps.getInstance().getServices()) {
+					if("AnekBot".equals(i.getServiceType())) {
+						((ViewAddonRegistry)service).add(new WebDbAdmin(i.getServiceName()));
+					}
+				}
+				
 				return service;
 			}
 			

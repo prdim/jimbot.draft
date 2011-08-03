@@ -36,8 +36,10 @@ public class AdminApp extends Application {
 	        login.setHeight("300px");
 	        login.addListener(new LoginForm.LoginListener() {
 	            public void onLogin(LoginEvent event) {
-	            	if("admin".equals(event.getLoginParameter("username")) &&
-	            			"admin".equals(event.getLoginParameter("password"))) {
+	            	String n = HttpProps.getInstance().getAdminUserName();
+	            	String p = HttpProps.getInstance().getAdminPassword();
+	            	if(n.equals(event.getLoginParameter("username")) &&
+	            			p.equals(event.getLoginParameter("password"))) {
 //	            		main.setContent(new MainView());
 	            		MainWindow mainWindow = new MainWindow();
 	            		mainWindow.setSizeFull();
