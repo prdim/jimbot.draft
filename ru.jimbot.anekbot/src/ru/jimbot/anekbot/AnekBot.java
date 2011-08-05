@@ -3,6 +3,8 @@
  */
 package ru.jimbot.anekbot;
 
+import java.util.Date;
+
 import ru.jimbot.anekbot.internal.ActivatorAnekBot;
 import ru.jimbot.core.Destroyable;
 import ru.jimbot.core.MsgInQueue;
@@ -28,6 +30,7 @@ public class AnekBot extends DefaultBotService {
 	private Log logger;
 	private EventProxy eva;
 	private IAnekBotDB db;
+	private Thread t;
 	
 	/**
 	 * @param name
@@ -80,9 +83,22 @@ public class AnekBot extends DefaultBotService {
 		inq = new MsgInQueue(this);
 		inq.start();
 		cmd = new AnekBotCommandParser(this);
-		for(int i=0;i<config.getUins().size();i++) {
-        	eva.protocolCommand(config.getUins().get(i).getScreenName(), EventProxy.STATE_LOGON);
-        }
+		t = new Thread() {
+
+			/* (non-Javadoc)
+			 * @see java.lang.Thread#run()
+			 */
+			@Override
+			public void run() {
+				for(int i=0;i<config.getUins().size();i++) {
+					eva.protocolCommand(config.getUins().get(i).getScreenName(), EventProxy.STATE_LOGON);
+					try {sleep(config.getPauseConnect());} catch (InterruptedException e) {}
+//        	System.out.println(">>>" + new Date(System.currentTimeMillis()));
+				}
+			}
+			
+		};
+		t.start();
         start = true;
 	}
 
@@ -91,6 +107,7 @@ public class AnekBot extends DefaultBotService {
 //		if(db != null) {
 //			db.closeDB();
 //		}
+		if (t != null) t.stop();
 		for(int i=0;i<config.getUins().size();i++) {
         	eva.protocolCommand(config.getUins().get(i).getScreenName(), EventProxy.STATE_LOGOFF);
         }
