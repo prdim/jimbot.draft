@@ -256,7 +256,7 @@ public class OscarConnection {
             connected = true;
 
             // starting the pinger thread
-            //pingHandler = new OscarPingHandler(this, 1000);
+            pingHandler = new OscarPingHandler(this, 60000);
 
             log.debug("OscarConnection has been connected");
     	}

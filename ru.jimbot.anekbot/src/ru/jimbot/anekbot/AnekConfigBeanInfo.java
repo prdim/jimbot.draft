@@ -38,6 +38,10 @@ public class AnekConfigBeanInfo extends SimpleBeanInfo {
 			p.setDisplayName("Автоматически запускать анекдотный бот");
 			pr.add(p);
 			
+			p = new PropertyDescriptor("pauseStart", AnekConfig.class);
+			p.setDisplayName("Пауза перед автостартом бота");
+			pr.add(p);
+			
 			p = new PropertyDescriptor("pauseConnect", AnekConfig.class);
 			p.setDisplayName("Пауза подключений уинов при старте бота");
 			pr.add(p);

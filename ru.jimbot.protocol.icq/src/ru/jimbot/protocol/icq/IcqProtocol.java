@@ -328,6 +328,14 @@ public class IcqProtocol extends Destroyable implements Protocol, ProtocolComman
 //        notifyLogout();
         eva.protocolChangeState(screenName, EventProxy.STATE_LOGOFF, null);
         // TODO подумать где отключать таймер и нужно ли в случае ошибок очищать очередь
+        try {
+        	System.err.println("Pause reConnect...");
+			Thread.sleep(60000);
+			connect();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override

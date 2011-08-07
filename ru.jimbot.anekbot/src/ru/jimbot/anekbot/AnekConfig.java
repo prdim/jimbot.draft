@@ -46,6 +46,7 @@ public class AnekConfig implements BotServiceConfig {
 //    private int maxOutMsgSize = 500;
 //    private int maxOutMsgCount = 5;
     private long pauseConnect = 1000;
+    private long pauseStart = 10000;
     
 	/**
 	 * 
@@ -249,6 +250,20 @@ public class AnekConfig implements BotServiceConfig {
 	 */
 	public long getPauseConnect() {
 		return pauseConnect;
+	}
+
+	/**
+	 * @param pauseStart the pauseStart to set
+	 */
+	public void setPauseStart(long pauseStart) {
+		this.pauseStart = pauseStart;
+	}
+
+	/**
+	 * @return the pauseStart
+	 */
+	public long getPauseStart() {
+		return pauseStart;
 	}
     
     

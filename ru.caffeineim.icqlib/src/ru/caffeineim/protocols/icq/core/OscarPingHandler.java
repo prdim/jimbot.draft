@@ -18,6 +18,8 @@ package ru.caffeineim.protocols.icq.core;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import ru.caffeineim.protocols.icq.packet.sent.generic.KeepAlive;
+
 
 /**
  * <p>Created by 22.06.2008
@@ -47,7 +49,17 @@ public class OscarPingHandler implements Runnable {
 	}
 
 	public void run() {
-
+		try {
+			while (connection.getClient().isRuning() && running) {
+				if(connection.isAuthorized()) {
+//					log.debug("PING!!!");
+					connection.sendFlap(new KeepAlive());
+				}
+				Thread.sleep(interval);
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public synchronized void stop() {

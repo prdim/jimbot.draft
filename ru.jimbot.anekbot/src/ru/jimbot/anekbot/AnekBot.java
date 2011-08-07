@@ -31,6 +31,7 @@ public class AnekBot extends DefaultBotService {
 	private EventProxy eva;
 	private IAnekBotDB db;
 	private Thread t;
+	private AnekBot me;
 	
 	/**
 	 * @param name
@@ -43,6 +44,27 @@ public class AnekBot extends DefaultBotService {
 		config = AnekConfig.load(name);
 		logger = ActivatorAnekBot.getExtendPointRegistry().getLogger();
 		eva = new EventProxy(ActivatorAnekBot.getEventAdmin(), name);
+		me = this;
+		if(config.isAutoStart()) {
+			Thread t = new Thread() {
+
+				/* (non-Javadoc)
+				 * @see java.lang.Thread#run()
+				 */
+				@Override
+				public void run() {
+					try {
+						Thread.sleep(config.getPauseStart());
+						me.start();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+			};
+			t.start();
+		}
 	}
 	
 	public IAnekBotDB getAnekDB() {

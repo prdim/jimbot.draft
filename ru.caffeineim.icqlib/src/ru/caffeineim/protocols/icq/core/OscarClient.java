@@ -231,4 +231,8 @@ public class OscarClient implements Runnable {
         out.write(packet);
         out.flush();
     }
+    
+    public synchronized boolean isRuning() {
+    	return running;
+    }
 }

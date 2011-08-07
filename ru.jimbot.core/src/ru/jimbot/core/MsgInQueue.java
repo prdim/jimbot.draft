@@ -26,8 +26,8 @@ public class MsgInQueue implements Runnable, IncomingMessageListener {
     // Пары уин - время последнего сообщения
     private HashMap<String,Long> flood = new HashMap<String,Long>();
     private BotService srv; // Ссылка на сервис
-    private ConcurrentHashMap<String, LogoutInfo> lastLogout; // время последнего падения уина
-    private int checkCount = 0;
+//    private ConcurrentHashMap<String, LogoutInfo> lastLogout; // время последнего падения уина
+//    private int checkCount = 0;
     private EventProxy eva;
     private Log logger;
         
@@ -35,10 +35,7 @@ public class MsgInQueue implements Runnable, IncomingMessageListener {
     public MsgInQueue(BotService s) {
         srv = s;
         q = new ConcurrentLinkedQueue<Message>();
-        lastLogout = new ConcurrentHashMap<String, LogoutInfo>();
-//        for(String sn : srv.getAllProtocols()) {
-//            srv.getProtocol(sn).addProtocolListener(this);
-//        }
+//        lastLogout = new ConcurrentHashMap<String, LogoutInfo>();
         IncomingMessageEventHandler h = new IncomingMessageEventHandler(s.getServiceName(), this);
         ActivatorCore.regEventHandler(h, h.getHandlerServiceProperties());
         eva = new EventProxy(ActivatorCore.getEventAdmin(), srv.getServiceName());
@@ -99,16 +96,13 @@ public class MsgInQueue implements Runnable, IncomingMessageListener {
 
     private void notifyCommandParser(Message m) {
     	srv.getParser().parse(m);
-//        for(QueueListener i:srv.getParserListeners()) {
-//            i.onMessage(m);
-//        }
     }
     
     public void run() {
         Thread me = Thread.currentThread(); 
         while (th == me) {
             parseMsg();
-            checkLogout();
+//            checkLogout();
             try {
                 Thread.sleep(sleepAmount);
             } catch (InterruptedException e) { break; }             
@@ -119,20 +113,20 @@ public class MsgInQueue implements Runnable, IncomingMessageListener {
     /**
      * Проверка упадших уинов и их переподключение
      */
-    private void checkLogout() {
-        checkCount++;
-        if(checkCount<100) return;
-        checkCount = 0;
-        for(LogoutInfo i:lastLogout.values()){
-            if(i.getTime()>0 &&
-                    (System.currentTimeMillis()-i.getTime())>
-                            ((i.getCount()*30000)>900000 ? 900000 : (i.getCount()*30000))){
-//                srv.createEvent(new CommandProtocolLogonEvent(srv, i.getSn()));
-            	eva.protocolCommand(i.getSn(), EventProxy.STATE_LOGON);
-                i.incCount();
-            }
-        }
-    }
+//    private void checkLogout() {
+//        checkCount++;
+//        if(checkCount<100) return;
+//        checkCount = 0;
+//        for(LogoutInfo i:lastLogout.values()){
+//            if(i.getTime()>0 &&
+//                    (System.currentTimeMillis()-i.getTime())>
+//                            ((i.getCount()*30000)>900000 ? 900000 : (i.getCount()*30000))){
+////                srv.createEvent(new CommandProtocolLogonEvent(srv, i.getSn()));
+//            	eva.protocolCommand(i.getSn(), EventProxy.STATE_LOGON);
+//                i.incCount();
+//            }
+//        }
+//    }
 
     /**
      * Размер очереди
@@ -148,7 +142,6 @@ public class MsgInQueue implements Runnable, IncomingMessageListener {
             q.add(m);
         else {
         	logger.print("flood", srv.getServiceName(), "FLOOD from " + m.getSnIn() + ">> " + m.getMsg());
-//            Log.getLogger(srv.getServiceName()).flood("FLOOD from " + m.getSnIn() + ">> " + m.getMsg());
             // TODO Подумать над флудом
             m.setType(Message.TYPE_FLOOD_NOTICE);
             q.add(m);
@@ -159,27 +152,27 @@ public class MsgInQueue implements Runnable, IncomingMessageListener {
         q.add(m);
     }
 
-    public void onError(Message m) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public void logOn(String sn) {
-        System.out.println("OnLogon " + sn);
-        lastLogout.put(sn, new LogoutInfo(sn));
-    }
-
-    public void logOut(String sn) {
-        try {
-            System.out.println("OnLogout " + sn);
-            LogoutInfo u = lastLogout.get(sn);
-            if(u==null) u = new LogoutInfo(sn);
-            u.setTime(System.currentTimeMillis());
-            u.incCount();
-            lastLogout.put(sn, u);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    public void onError(Message m) {
+//        //To change body of implemented methods use File | Settings | File Templates.
+//    }
+//
+//    public void logOn(String sn) {
+//        System.out.println("OnLogon " + sn);
+//        lastLogout.put(sn, new LogoutInfo(sn));
+//    }
+//
+//    public void logOut(String sn) {
+//        try {
+//            System.out.println("OnLogout " + sn);
+//            LogoutInfo u = lastLogout.get(sn);
+//            if(u==null) u = new LogoutInfo(sn);
+//            u.setTime(System.currentTimeMillis());
+//            u.incCount();
+//            lastLogout.put(sn, u);
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public void onOtherMessage(Message m) {
         //To change body of implemented methods use File | Settings | File Templates.
@@ -189,46 +182,46 @@ public class MsgInQueue implements Runnable, IncomingMessageListener {
      * Класс содержит информацию о падениях уина. Используется для переподключения и определения паузы между
      * переподключениями номера.
      */
-    private class LogoutInfo {
-        private long time = 0;
-        private int count = 0;
-        private String sn;
-
-        private LogoutInfo(String sn) {
-            this.sn = sn;
-        }
-
-        public String getSn() {
-            return sn;
-        }
-
-        /**
-         * Время последнего падения
-         * @return
-         */
-        public long getTime() {
-            return time;
-        }
-
-        public void setTime(long time) {
-            this.time = time;
-        }
-
-        /**
-         * Общее число падений
-         * @return
-         */
-        public int getCount() {
-            return count;
-        }
-
-        public void setCount(int count) {
-            this.count = count;
-        }
-
-        public void incCount() {
-            count++;
-        }
-    }
+//    private class LogoutInfo {
+//        private long time = 0;
+//        private int count = 0;
+//        private String sn;
+//
+//        private LogoutInfo(String sn) {
+//            this.sn = sn;
+//        }
+//
+//        public String getSn() {
+//            return sn;
+//        }
+//
+//        /**
+//         * Время последнего падения
+//         * @return
+//         */
+//        public long getTime() {
+//            return time;
+//        }
+//
+//        public void setTime(long time) {
+//            this.time = time;
+//        }
+//
+//        /**
+//         * Общее число падений
+//         * @return
+//         */
+//        public int getCount() {
+//            return count;
+//        }
+//
+//        public void setCount(int count) {
+//            this.count = count;
+//        }
+//
+//        public void incCount() {
+//            count++;
+//        }
+//    }
 }
 
