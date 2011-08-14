@@ -93,6 +93,22 @@ public class IcqProtocol extends Destroyable implements Protocol, ProtocolComman
 
 	@Override
 	public void onMessage(Message m) {
+		if(m.getMsg().length() > p.getMaxOutMsgSize()) {
+			int cnt = m.getMsg().length()/p.getMaxOutMsgSize()+1;
+			int max = p.getMaxOutMsgCount() > cnt ? cnt : p.getMaxOutMsgCount();
+			int maxx = p.getMaxOutMsgSize();
+			for(int i=0; i<max; i++) {
+				if(((i+1) * maxx - 1) < m.getMsg().length()) {
+					if(i == (max - 1)) {
+						q.add(m.getCopy(m.getMsg().substring(i*maxx, (i+1)*maxx) + "\nЧасть сообщения была обрезана..."));
+					} else {
+						q.add(m.getCopy(m.getMsg().substring(i*maxx, (i+1)*maxx)));
+					}
+				} else {
+					q.add(m.getCopy(m.getMsg().substring(i * maxx)));
+				}
+			}
+		}
 		if(q.size()>0 || (System.currentTimeMillis()-timeLastOutMsg) < pauseOutMsg) {
 			if(q.size()<=maxOutQueue) {
 				q.add(m);
