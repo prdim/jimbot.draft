@@ -18,9 +18,9 @@ public class MainPropsBeanInfo extends SimpleBeanInfo {
 			ArrayList<PropertyDescriptor> pr = new ArrayList<PropertyDescriptor>();
 			PropertyDescriptor p;
 			
-			p = new PropertyDescriptor("autoStart", MainProps.class);
-			p.setDisplayName("Автоматически запускать сервисы при старте бота");
-			pr.add(p);
+//			p = new PropertyDescriptor("autoStart", MainProps.class);
+//			p.setDisplayName("Автоматически запускать сервисы при старте бота");
+//			pr.add(p);
 			
 			p = new PropertyDescriptor("startHTTP", MainProps.class);
 			p.setDisplayName("Запускать встроенный HTTP-сервер (требуется для работы веб-админки)");

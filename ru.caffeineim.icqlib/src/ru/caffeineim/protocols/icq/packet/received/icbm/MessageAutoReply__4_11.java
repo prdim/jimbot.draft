@@ -159,16 +159,17 @@ public class MessageAutoReply__4_11 extends ReceivedPacket {
 			message = StringTools.utf8ByteArrayToString(data, index, data.length - index);
 		}
 
-		if (messageType.getType() == MessageTypeEnum.PLAIN_MESSAGE) {
-			RawData textColor = new RawData(data, index, RawData.DWORD_LENGHT);
-			index += RawData.DWORD_LENGHT;
-			RawData backgroundColor = new RawData(data, index, RawData.DWORD_LENGHT);
-			index += RawData.DWORD_LENGHT;
-			// TODO fix this invocation exception
-			/*RawData guidLg = new RawData(data, index, RawData.DWORD_LENGHT);
-			index += RawData.DWORD_LENGHT;
-			RawData guid = new RawData(data, index, guidLg.getValue());*/
-		}
+		// TODO Зачем нужен этот кусок?
+//		if (messageType.getType() == MessageTypeEnum.PLAIN_MESSAGE) {
+//			RawData textColor = new RawData(data, index, RawData.DWORD_LENGHT);
+//			index += RawData.DWORD_LENGHT;
+//			RawData backgroundColor = new RawData(data, index, RawData.DWORD_LENGHT);
+//			index += RawData.DWORD_LENGHT;
+//			// TODO fix this invocation exception
+//			/*RawData guidLg = new RawData(data, index, RawData.DWORD_LENGHT);
+//			index += RawData.DWORD_LENGHT;
+//			RawData guid = new RawData(data, index, guidLg.getValue());*/
+//		}
 
 		return message;
 	}

@@ -71,7 +71,7 @@ public class AnekBotServiceBuilder implements IBotServiceBuilder, ExtendPoint {
 	public boolean deleteServiceData(String name) {
 		boolean b = false;
 		try {
-			b = deleteDirectory(new File("./services/ + name"));
+			b = deleteDirectory(new File("./services/" + name));
 			if(!b) return b;
 			b = deleteDirectory(new File("./log/" + name));
 		} catch (Exception ex) {

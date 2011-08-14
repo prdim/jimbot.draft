@@ -177,6 +177,7 @@ public class AneksPanel extends VerticalLayout{
 							Notification.TYPE_ERROR_MESSAGE);
 				}
 				getParent().getWindow().showNotification("Сохранено успешно!");
+				editor1.setValue("");
 				refreshData();
 			}
 		});

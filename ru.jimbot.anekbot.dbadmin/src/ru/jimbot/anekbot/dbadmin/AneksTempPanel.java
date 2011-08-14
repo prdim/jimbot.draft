@@ -76,7 +76,7 @@ public class AneksTempPanel extends VerticalLayout{
 			@Override
 			public void buttonClick(ClickEvent event) {
 				count1 = getCount(tf1);
-				long max = db.d_aneksCount();
+				long max = db.d_anekTempCount();
 				start1 = (start1+count1)>=max ? (max-1) : (start1+count1);
 				refreshData();
 			}
@@ -87,7 +87,7 @@ public class AneksTempPanel extends VerticalLayout{
 			@Override
 			public void buttonClick(ClickEvent event) {
 				count1 = getCount(tf1);
-				long max = db.d_aneksCount();
+				long max = db.d_anekTempCount();
 				start1 = max-count1;
 				refreshData();
 			}

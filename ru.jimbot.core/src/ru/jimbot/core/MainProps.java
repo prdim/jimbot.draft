@@ -29,7 +29,7 @@ public class MainProps implements AbstractProperties {
 	private static transient MainProps me = null;
 	private static final String FILE_NAME = "jimbot_config";
 	
-    private boolean autoStart = false;
+//    private boolean autoStart = false;
     private boolean startHTTP = true;
     private boolean checkNewVer = true;
 //    private List<String> serviceNames = new ArrayList<String>();
@@ -105,19 +105,19 @@ public class MainProps implements AbstractProperties {
 		return me;	
 	}
 
-	/**
-	 * @return the autoStart
-	 */
-	public boolean isAutoStart() {
-		return autoStart;
-	}
-
-	/**
-	 * @param autoStart the autoStart to set
-	 */
-	public void setAutoStart(boolean autoStart) {
-		this.autoStart = autoStart;
-	}
+//	/**
+//	 * @return the autoStart
+//	 */
+//	public boolean isAutoStart() {
+//		return autoStart;
+//	}
+//
+//	/**
+//	 * @param autoStart the autoStart to set
+//	 */
+//	public void setAutoStart(boolean autoStart) {
+//		this.autoStart = autoStart;
+//	}
 
 	/**
 	 * @return the startHTTP
