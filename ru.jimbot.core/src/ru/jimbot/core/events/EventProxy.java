@@ -30,7 +30,7 @@ public class EventProxy {
 	public EventProxy(EventAdmin e, String serviceName) {
 		eva = e;
 		this.serviceName = serviceName;
-		System.out.println(">>>" + serviceName + ":" + eva);
+//		System.out.println(">>>" + serviceName + ":" + eva);
 	}
 
 	/**
@@ -52,8 +52,9 @@ public class EventProxy {
 		Dictionary<String, Object> p = new Hashtable<String, Object>();
 		String sn = m.getSnIn();
 		p.put("message", m);
+		p.put("screenname", sn);
 		p.put("service", serviceName);
-		eva.postEvent(new Event("ru/jimbot/core/default/outgoing_message/" + sn, p));
+		eva.postEvent(new Event("ru/jimbot/core/default/outgoing_message", p));
 	}
 	
 	/**
@@ -64,9 +65,9 @@ public class EventProxy {
 	public void protocolCommand(String sn, int state) {
 		Dictionary<String, Object> p = new Hashtable<String, Object>();
 		p.put("service", serviceName);
-		p.put("sreenname", sn);
+		p.put("screenname", sn);
 		p.put("command", state);
-		eva.postEvent(new Event("ru/jimbot/core/default/protocol_command/" + sn, p));
+		eva.postEvent(new Event("ru/jimbot/core/default/protocol_command", p));
 	}
 	
 	/**
@@ -78,11 +79,11 @@ public class EventProxy {
 	public void changeStatus(String sn, int i, String s) {
 		Dictionary<String, Object> p = new Hashtable<String, Object>();
 		p.put("service", serviceName);
-		p.put("sreenname", sn);
+		p.put("screenname", sn);
 		p.put("command", CHANGE_STATUS);
 		p.put("status", i);
 		p.put("statustxt", s);
-		eva.postEvent(new Event("ru/jimbot/core/default/protocol_command/" + sn, p));
+		eva.postEvent(new Event("ru/jimbot/core/default/protocol_command", p));
 	}
 	
 	/**
@@ -95,12 +96,12 @@ public class EventProxy {
 	public void changeXStatus(String sn, int i, String s1, String s2) {
 		Dictionary<String, Object> p = new Hashtable<String, Object>();
 		p.put("service", serviceName);
-		p.put("sreenname", sn);
+		p.put("screenname", sn);
 		p.put("command", CHANGE_XSTATUS);
 		p.put("status", i);
 		p.put("statustxt1", s1);
 		p.put("statustxt2", s2);
-		eva.postEvent(new Event("ru/jimbot/core/default/protocol_command/" + sn, p));
+		eva.postEvent(new Event("ru/jimbot/core/default/protocol_command", p));
 	}
 	
 	/**
@@ -112,7 +113,7 @@ public class EventProxy {
 	public void protocolChangeState(String sn, int state, Message m) {
 		Dictionary<String, Object> p = new Hashtable<String, Object>();
 		p.put("service", serviceName);
-		p.put("sreenname", sn);
+		p.put("screenname", sn);
 		p.put("state", state);
 		if(state == STATE_ERROR) p.put("message", m);
 		eva.postEvent(new Event("ru/jimbot/core/default/protocol_state/" + serviceName, p));

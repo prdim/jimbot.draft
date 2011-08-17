@@ -28,12 +28,13 @@ public class OutgoingMessageEventHandler implements EventHandler {
 	 */
 	public Dictionary<String, Object> getHandlerServiceProperties() {
 		Dictionary<String, Object> result = new Hashtable<String, Object>();
-		result.put(EventConstants.EVENT_TOPIC, "ru/jimbot/core/default/outgoing_message/" + sn);
+		result.put(EventConstants.EVENT_TOPIC, "ru/jimbot/core/default/outgoing_message");
 		return result;
 	}
 
 	@Override
 	public void handleEvent(Event event) {
+		if(!sn.equals(event.getProperty("screenname"))) return;
 		Message m = (Message)event.getProperty("message");
 		lis.onMessage(m);
 	}

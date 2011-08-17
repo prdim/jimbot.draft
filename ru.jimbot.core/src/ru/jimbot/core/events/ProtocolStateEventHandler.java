@@ -42,7 +42,7 @@ public class ProtocolStateEventHandler implements EventHandler {
 	@Override
 	public void handleEvent(Event event) {
 		int c = (Integer)event.getProperty("command");
-		String sn = (String)event.getProperty("sreenname");
+		String sn = (String)event.getProperty("screenname");
 		if(c==EventProxy.STATE_LOGON) {
 			lis.onLogon(sn);
 		} else if(c==EventProxy.STATE_LOGOFF) {

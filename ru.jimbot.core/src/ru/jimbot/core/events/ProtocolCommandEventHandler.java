@@ -33,13 +33,14 @@ public class ProtocolCommandEventHandler implements EventHandler {
 	 */
 	public Dictionary<String, Object> getHandlerServiceProperties() {
 		Dictionary<String, Object> result = new Hashtable<String, Object>();
-		result.put(EventConstants.EVENT_TOPIC, "ru/jimbot/core/default/protocol_command/" + sn);
+		result.put(EventConstants.EVENT_TOPIC, "ru/jimbot/core/default/protocol_command");
 //		System.out.println(">>>REG " + "ru/jimbot/core/default/protocol_command/" + sn);
 		return result;
 	}
 	
 	@Override
 	public void handleEvent(Event event) {
+		if(!sn.equals(event.getProperty("screenname"))) return;
 		int c = (Integer)event.getProperty("command");
 //		System.out.println(">>>EVENT " + event.getTopic() + " : " + c);
 		if(c==EventProxy.STATE_LOGON) {
