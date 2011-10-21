@@ -6,6 +6,7 @@ package ru.jimbot.core;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 
 /**
  * Общие функции для команд. Чтобы не реализовывать их в простых командах.
@@ -18,6 +19,14 @@ public abstract class DefaultCommand implements Command {
     protected DefaultCommand(Parser p) {
         this.p = p;
     }
+    
+//    /**
+//     * Шаблон для анализа аргументов команды
+//     * @return
+//     */
+//    public String getArgsPattern() {
+//    	return "";
+//    }
 
     /**
      * Инициализация. Вызывается после создания экземпляра класса.
@@ -59,4 +68,19 @@ public abstract class DefaultCommand implements Command {
     public boolean authorityCheck(String screenName) {
         return authorityCheck(p.getAuthList(screenName));
     }
+    
+    /**
+     * По умолчанию, ничего особого с отправляемым сообщением делать не нужно - просто отсылаем текст, 
+     * создание которого нужно реализовать в нужной команде
+     */
+    public Message exec(Message m) {
+		return new Message(m.getSnOut(), m.getSnIn(), exec(m.getSnIn()));
+	}
+    
+    /**
+     * В простейших командах нужно реализовать только возврат текста в ответ
+     * @param sn
+     * @return
+     */
+    public abstract String exec(String sn);
 }

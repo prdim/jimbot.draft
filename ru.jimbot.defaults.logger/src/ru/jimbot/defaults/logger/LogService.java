@@ -32,6 +32,9 @@ public class LogService extends Log implements ExtendPoint {
 			t.setMaxBackupIndex(MAX_BACKUP_INDEX);
 			t.setMaxFileSize("1MB");
 			rootLogger.addAppender(t);
+			if(DefaultLogConfig.getInstance().isConsoleMode()) {
+				rootLogger.addAppender(new ConsoleAppender(new PatternLayout(PATTERN)));
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

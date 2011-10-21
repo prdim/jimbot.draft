@@ -3,10 +3,9 @@
  */
 package ru.jimbot.core;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 
 /**
  * Интерфейс команды бота.
@@ -31,21 +30,27 @@ public interface Command {
      * @return - результат (если нужен)
      */
     public Message exec(Message m);
-
+    
     /**
-     * Выполнение команды
-     * @param sn - от кого?
-     * @param param - вектор параметров (могут быть как строки, так и числа)
-     * @return - результат (если нужен)
+     * Выставляет переменные для парсера. Парсер интерпретирует значения и записывает их в эти переменные.
+     * @param params
      */
-    @SuppressWarnings("unchecked")
-	public String exec(String sn, Vector param);
+    public void publishParameters(Collection<Variable> params);
+
+//    /**
+//     * Выполнение команды
+//     * @param sn - от кого?
+//     * @param param - вектор параметров (могут быть как строки, так и числа)
+//     * @return - результат (если нужен)
+//     */
+//    @SuppressWarnings("unchecked")
+//	public String exec(String sn, Vector param);
 
     /**
-     * Список ключевых слов, по которым можно вызвать эту команду
+     * Имя, по которому можно вызвать эту команду
      * @return
      */
-    public List<String> getCommandPatterns();
+    public String getName();
 
     /**
      * Выводит короткую помощь по команде (1 строка)

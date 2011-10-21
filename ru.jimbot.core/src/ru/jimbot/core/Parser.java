@@ -35,13 +35,13 @@ public interface Parser {
      */
     public String getCommand(Message m);
 
-    /**
-     * Массив аргументов по шаблону
-     * @param m
-     * @return
-     */
-    @SuppressWarnings("unchecked")
-	public Vector getArgs(Message m, String pattern);
+//    /**
+//     * Массив аргументов по шаблону
+//     * @param m
+//     * @return
+//     */
+//    @SuppressWarnings("unchecked")
+//	public Vector getArgs(Message m, String pattern);
 
     /**
      * От кого пришла команда

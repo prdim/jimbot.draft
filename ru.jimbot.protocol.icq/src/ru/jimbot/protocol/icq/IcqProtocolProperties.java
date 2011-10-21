@@ -23,7 +23,7 @@ import ru.jimbot.core.services.AbstractProperties;
  */
 public class IcqProtocolProperties implements AbstractProperties {
 	public static final String FILE_NAME = "icq-config";
-    private String serviceName = ""; // TODO Зачем он мне?
+    private transient String serviceName = ""; // TODO Зачем он мне?
     private String server = "login.icq.com";
     private int port = 5980;
     private int status = 0;
@@ -64,6 +64,7 @@ public class IcqProtocolProperties implements AbstractProperties {
 		} catch (Exception e) {
 			System.err.println("Error loading configuration " + e.getMessage());
 		}
+		((IcqProtocolProperties)o).setServiceName(name);
 		return (IcqProtocolProperties)o;
 	}
 
@@ -289,5 +290,12 @@ public class IcqProtocolProperties implements AbstractProperties {
 	 */
 	public int getPort() {
 		return port;
+	}
+
+	/**
+	 * @param serviceName the serviceName to set
+	 */
+	public void setServiceName(String serviceName) {
+		this.serviceName = serviceName;
 	}
 }

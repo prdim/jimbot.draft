@@ -35,4 +35,10 @@ public class CommandBuilder extends AnekCommandBuilder {
 		return lc;
 	}
 
+	@Override
+	public void destroy() {
+		// Не создаю динамические команды, поэтому тут нечего делать
+		
+	}
+
 }

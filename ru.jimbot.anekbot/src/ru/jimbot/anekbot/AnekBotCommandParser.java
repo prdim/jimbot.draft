@@ -86,8 +86,10 @@ public class AnekBotCommandParser extends DefaultCommandParser {
 				notify(new Message(m.getSnOut(), m.getSnIn(),
 						"Неверная команда! Для справки отправте !help"));
 			} else {
-				if (cmd.authorityCheck(m.getSnIn()))
+				if (cmd.authorityCheck(m.getSnIn())) {
+					parseArgs(cmd, m);
 					notify(cmd.exec(m));
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -104,6 +106,7 @@ public class AnekBotCommandParser extends DefaultCommandParser {
 	}
 	
 	public void notify(Message m) {
+		if("".equals(m.getMsg())) return; // некоторые команды могут не отправлять ответ
     	eva.outgoingMessage(m);
     }
     

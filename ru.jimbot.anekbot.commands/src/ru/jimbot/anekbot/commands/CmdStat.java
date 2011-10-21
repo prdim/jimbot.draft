@@ -4,15 +4,12 @@
 package ru.jimbot.anekbot.commands;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
-import java.util.Vector;
-
 import ru.jimbot.anekbot.AnekBot;
 import ru.jimbot.core.DefaultCommand;
-import ru.jimbot.core.Message;
 import ru.jimbot.core.Parser;
+import ru.jimbot.core.Variable;
 import ru.jimbot.anekbot.AnekBotCommandParser;
 
 /**
@@ -25,20 +22,12 @@ public class CmdStat extends DefaultCommand {
 	public CmdStat(Parser p) {
         super(p);
     }
-	
-	/* (non-Javadoc)
-	 * @see ru.jimbot.core.Command#exec(ru.jimbot.core.Message)
-	 */
-	@Override
-	public Message exec(Message m) {
-		return new Message(m.getSnOut(), m.getSnIn(), exec(m.getSnIn(), null));
-	}
 
 	/* (non-Javadoc)
 	 * @see ru.jimbot.core.Command#exec(java.lang.String, java.util.Vector)
 	 */
 	@Override
-	public String exec(String sn, Vector param) {
+	public String exec(String sn) {
 		String s = "Всего в базе анекдотов: " + ((AnekBot)p.getService()).getAnekDB().count();
         s += "\nОтправлено анекдотов: " + ((AnekBotCommandParser)p).state;
         s += "\nДобавлено анекдотов: " + ((AnekBotCommandParser)p).state_add;
@@ -56,14 +45,6 @@ public class CmdStat extends DefaultCommand {
 	}
 
 	/* (non-Javadoc)
-	 * @see ru.jimbot.core.Command#getCommandPatterns()
-	 */
-	@Override
-	public List<String> getCommandPatterns() {
-		return Arrays.asList(new String[] {"!stat"});
-	}
-
-	/* (non-Javadoc)
 	 * @see ru.jimbot.core.Command#getHelp()
 	 */
 	@Override
@@ -77,6 +58,16 @@ public class CmdStat extends DefaultCommand {
 	@Override
 	public String getXHelp() {
 		return getHelp();
+	}
+
+	@Override
+	public void publishParameters(Collection<Variable> params) {
+		
+	}
+
+	@Override
+	public String getName() {
+		return "!stat";
 	}
 
 }

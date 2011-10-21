@@ -3,44 +3,31 @@
  */
 package ru.jimbot.anekbot.commands;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Vector;
-
+import java.util.Collection;
 import ru.jimbot.core.DefaultCommand;
-import ru.jimbot.core.Message;
 import ru.jimbot.core.Parser;
+import ru.jimbot.core.Variable;
+import ru.jimbot.core.VariableWord;
 
 /**
  * Помощь по боту
  * @author Prolubnikov Dmitry
  */
 public class CmdHelp extends DefaultCommand {
+	VariableWord c = new VariableWord();
 
 	public CmdHelp(Parser p) {
         super(p);
     }
-	
-	/* (non-Javadoc)
-	 * @see ru.jimbot.core.Command#exec(ru.jimbot.core.Message)
-	 */
-	@Override
-	public Message exec(Message m) {
-		return new Message(m.getSnOut(), m.getSnIn(), exec(m.getSnIn(), p.getArgs(m, "$c")));
-	}
 
 	/* (non-Javadoc)
 	 * @see ru.jimbot.core.Command#exec(java.lang.String, java.util.Vector)
 	 */
 	@Override
-	public String exec(String sn, Vector param) {
+	public String exec(String sn) {
 		String s = "";
-        String c = "";
         try {
-            c = (String)param.get(0);
-        } catch (Exception e) {}
-        try {
-            if(c.equals("")){
+            if(c.getValue().equals("")){
                 s += "Список доступных команд бота:\nво всех командах символы <> указывать не нужно\n";
                 for(String i:p.getCommands()) {
                     if(p.getCommand(i).authorityCheck(sn)) {
@@ -50,23 +37,15 @@ public class CmdHelp extends DefaultCommand {
                 }
             } else {
                 if(p.getCommands().contains(c)) {
-                    s += c + p.getCommand(c).getXHelp();
+                    s += c.getValue() + p.getCommand(c.getValue()).getXHelp();
                 } else {
-                    s += "Команда " + c + " не найдена.";
+                    s += "Команда " + c.getValue() + " не найдена.";
                 }
             }
         } catch (Exception e) {
         	p.getService().err(e.getMessage(), e);
         }
         return s;
-	}
-
-	/* (non-Javadoc)
-	 * @see ru.jimbot.core.Command#getCommandPatterns()
-	 */
-	@Override
-	public List<String> getCommandPatterns() {
-		return Arrays.asList(new String[] {"!help"});
 	}
 
 	/* (non-Javadoc)
@@ -83,6 +62,16 @@ public class CmdHelp extends DefaultCommand {
 	@Override
 	public String getXHelp() {
 		return " <команда> - подробная информация по использованию команды.";
+	}
+
+	@Override
+	public void publishParameters(Collection<Variable> params) {
+		params.add(c);
+	}
+
+	@Override
+	public String getName() {
+		return "!help";
 	}
 
 }

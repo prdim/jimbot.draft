@@ -27,6 +27,7 @@ public class DefaultLogConfig implements AbstractProperties {
 	private static final String FILE_NAME = "default_log_config";
 
 	private boolean debugMode = false;
+	private boolean consoleMode = true;
 	
 	/* (non-Javadoc)
 	 * @see ru.jimbot.core.services.AbstractProperties#getTitle()
@@ -109,5 +110,19 @@ public class DefaultLogConfig implements AbstractProperties {
 	 */
 	public void setDebugMode(boolean debugMode) {
 		this.debugMode = debugMode;
+	}
+
+	/**
+	 * @param consoleMode the consoleMode to set
+	 */
+	public void setConsoleMode(boolean consoleMode) {
+		this.consoleMode = consoleMode;
+	}
+
+	/**
+	 * @return the consoleMode
+	 */
+	public boolean isConsoleMode() {
+		return consoleMode;
 	}
 }

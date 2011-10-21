@@ -3,17 +3,14 @@
  */
 package ru.jimbot.anekbot.commands;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Vector;
-
+import java.util.Collection;
 import ru.jimbot.anekbot.AnekBot;
 import ru.jimbot.anekbot.IAnekBotDB;
 import ru.jimbot.core.DefaultCommand;
 import ru.jimbot.core.Message;
 import ru.jimbot.core.Parser;
 import ru.jimbot.core.UserContext;
-import ru.jimbot.core.exceptions.DbException;
+import ru.jimbot.core.Variable;
 
 /**
  * Работа с рекламой
@@ -95,16 +92,8 @@ public class CmdAds extends DefaultCommand {
 	 * @see ru.jimbot.core.Command#exec(java.lang.String, java.util.Vector)
 	 */
 	@Override
-	public String exec(String sn, Vector param) {
+	public String exec(String sn) {
 		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see ru.jimbot.core.Command#getCommandPatterns()
-	 */
-	@Override
-	public List<String> getCommandPatterns() {
-		return Arrays.asList(new String[] {"!ads"});
 	}
 
 	/* (non-Javadoc)
@@ -129,5 +118,15 @@ public class CmdAds extends DefaultCommand {
 	@Override
 	public boolean authorityCheck(String screenName) {
 		return p.getService().getConfig().testAdmin(screenName);
+	}
+
+	@Override
+	public void publishParameters(Collection<Variable> params) {
+		
+	}
+
+	@Override
+	public String getName() {
+		return "!ads";
 	}
 }

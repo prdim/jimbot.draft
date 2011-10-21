@@ -3,16 +3,13 @@
  */
 package ru.jimbot.anekbot.commands;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Vector;
-
+import java.util.Collection;
 import ru.jimbot.anekbot.AnekBot;
 import ru.jimbot.anekbot.AnekBotCommandParser;
 import ru.jimbot.core.DefaultCommand;
-import ru.jimbot.core.Message;
 import ru.jimbot.core.Parser;
-import ru.jimbot.core.exceptions.DbException;
+import ru.jimbot.core.Variable;
+import ru.jimbot.core.VariableNumber;
 
 /**
  * Получение анекдота по номеру
@@ -20,40 +17,25 @@ import ru.jimbot.core.exceptions.DbException;
  * @author Prolubnikov Dmitry
  */
 public class CmdAnek extends DefaultCommand {
+	VariableNumber anek = new VariableNumber();
 
 	public CmdAnek(Parser p) {
         super(p);
     }
-	
-	/* (non-Javadoc)
-	 * @see ru.jimbot.core.Command#exec(ru.jimbot.core.Message)
-	 */
-	@Override
-	public Message exec(Message m) {
-		return new Message(m.getSnOut(), m.getSnIn(), exec(m.getSnIn(), p.getArgs(m, "$n")));
-	}
 
 	/* (non-Javadoc)
 	 * @see ru.jimbot.core.Command#exec(java.lang.String, java.util.Vector)
 	 */
 	@Override
-	public String exec(String sn, Vector param) {
+	public String exec(String sn) {
 		((AnekBotCommandParser)p).state++;
         ((AnekBotCommandParser)p).stateInc(sn);
         try {
-			return ((AnekBot)p.getService()).getAnekDB().getAnek((Integer)param.get(0));
+			return ((AnekBot)p.getService()).getAnekDB().getAnek(anek.getValue());
 		} catch (Exception e) {
 			p.getService().err(e.getMessage(), e);
 			return "Ошибка получения анекдота :(";
 		}
-	}
-
-	/* (non-Javadoc)
-	 * @see ru.jimbot.core.Command#getCommandPatterns()
-	 */
-	@Override
-	public List<String> getCommandPatterns() {
-		return Arrays.asList(new String[] {"!anek"});
 	}
 
 	/* (non-Javadoc)
@@ -72,4 +54,13 @@ public class CmdAnek extends DefaultCommand {
 		return getHelp();
 	}
 
+	@Override
+	public void publishParameters(Collection<Variable> params) {
+		params.add(anek);
+	}
+
+	@Override
+	public String getName() {
+		return "!anek";
+	}
 }

@@ -3,14 +3,12 @@
  */
 package ru.jimbot.anekbot.commands;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Vector;
-
+import java.util.Collection;
 import ru.jimbot.anekbot.AnekBotCommandParser;
 import ru.jimbot.core.DefaultCommand;
 import ru.jimbot.core.Message;
 import ru.jimbot.core.Parser;
+import ru.jimbot.core.Variable;
 
 /**
  * Поиск свободнго УИНа
@@ -37,19 +35,8 @@ public class CmdFree extends DefaultCommand {
 	 * @see ru.jimbot.core.Command#exec(java.lang.String, java.util.Vector)
 	 */
 	@Override
-	public String exec(String sn, Vector param) {
-//		String sn2 = ((AnekBotCommandParser)p).getFreeUin();
-//        ((AnekBotCommandParser)p).notify(new Message(sn2, sn, "Привет! Я самый свободный УИН ;)"));
-//        return "Номер самого свободного УИНа - " + sn2;
+	public String exec(String sn) {
 		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see ru.jimbot.core.Command#getCommandPatterns()
-	 */
-	@Override
-	public List<String> getCommandPatterns() {
-		return Arrays.asList(new String[] {"!free"});
 	}
 
 	/* (non-Javadoc)
@@ -66,6 +53,16 @@ public class CmdFree extends DefaultCommand {
 	@Override
 	public String getXHelp() {
 		return getHelp();
+	}
+
+	@Override
+	public void publishParameters(Collection<Variable> params) {
+		
+	}
+
+	@Override
+	public String getName() {
+		return "!free";
 	}
 
 }

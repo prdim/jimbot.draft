@@ -22,6 +22,10 @@ public class DefaultLogConfigBeanInfo extends SimpleBeanInfo {
 			p.setDisplayName("Режим отладки в логе");
 			pr.add(p);
 			
+			p = new PropertyDescriptor("consoleMode", DefaultLogConfig.class);
+			p.setDisplayName("Дублировать логи на консоль");
+			pr.add(p);
+			
 			return pr.toArray(new PropertyDescriptor[] {});
 		} catch (Exception e) {
 			// TODO: handle exception

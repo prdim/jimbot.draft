@@ -3,6 +3,8 @@
  */
 package ru.jimbot.core;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -72,9 +74,10 @@ public abstract class DefaultCommandParser implements Parser {
      * @param cmd
      */
     public void addCommand(Command cmd) {
-        for(String s:cmd.getCommandPatterns()) {
-            addCommand(s, cmd);
-        }
+//        for(String s:cmd.getCommandPatterns()) {
+//            addCommand(s, cmd);
+//        }
+    	addCommand(cmd.getName(), cmd);
     }
 
     /**
@@ -129,65 +132,83 @@ public abstract class DefaultCommandParser implements Parser {
         } catch (Exception e) {}
         return s;
     }
-
+    
     /**
-     * Массив аргументов по шаблону
-     * $n - число
-     * $c - слово без пробелов
-     * $s - произвольная строка до конца сообщения
-     *
+     * Разбирает аргументы команды и присваивает их внутренним переменным
+     * @param cmd
      * @param m
-     * @return
      */
-    @SuppressWarnings("unchecked")
-	public Vector getArgs(Message m, String arg) {
-        Vector v = new Vector();
-        if(arg.equals("")) return v;
-        for(int i=0;i<arg.split(" ").length;i++){
-            if(i>=(m.getMsg().split(" ").length-1)){
-                if(arg.split(" ")[i].equals("$s") ||
-                        arg.split(" ")[i].equals("$c"))
-                    v.add("");
-                else
-                    v.add(0);
-
-            } else {
-                if(arg.split(" ")[i].equals("$c"))
-                    v.add(m.getMsg().split(" ")[i+1]);
-                else if(arg.split(" ")[i].equals("$n"))
-                    v.add(parseN(m.getMsg().split(" ")[i+1]));
-                else
-                    v.add(parseS(i+1,m.getMsg()));
-            }
-        }
-        return v;
-
+    public void parseArgs(Command cmd, Message m) {
+    	if(cmd==null) return;
+    	Collection<Variable> args = new ArrayList<Variable>();
+    	cmd.publishParameters(args);
+    	if(args.size()==0) return; // команда не имеет аргументов
+    	String tokens[] = m.getMsg().split("\\s+", args.size()+1);
+    	int i=1;
+    	for(Variable v : args) {
+    		if(i>=tokens.length) break;
+    		v.parse(tokens[i]);
+    	}
     }
 
-    /**
-     * Обработка строкового параметра команды
-     * @param c
-     * @param s
-     * @return
-     */
-    private String parseS(int c, String s){
-        int k=0,i=0;
-        for(i=0;i<s.length();i++){
-            if(s.charAt(i)==' ') k++;
-            if(k>=c) break;
-        }
-        return s.substring(i+1);
-    }
-
-    /**
-     * Обработка числового параметра команды
-     * @param s
-     * @return
-     */
-    private int parseN(String s){
-        try{
-            return Integer.parseInt(s);
-        } catch (Exception ex) {}
-        return 0;
-    }
+//    /**
+//     * Массив аргументов по шаблону
+//     * $n - число
+//     * $c - слово без пробелов
+//     * $s - произвольная строка до конца сообщения
+//     *
+//     * @param m
+//     * @return
+//     */
+//    @SuppressWarnings("unchecked")
+//	public Vector getArgs(Message m, String arg) {
+//        Vector v = new Vector();
+//        if(arg.equals("")) return v;
+//        for(int i=0;i<arg.split(" ").length;i++){
+//            if(i>=(m.getMsg().split(" ").length-1)){
+//                if(arg.split(" ")[i].equals("$s") ||
+//                        arg.split(" ")[i].equals("$c"))
+//                    v.add("");
+//                else
+//                    v.add(0);
+//
+//            } else {
+//                if(arg.split(" ")[i].equals("$c"))
+//                    v.add(m.getMsg().split(" ")[i+1]);
+//                else if(arg.split(" ")[i].equals("$n"))
+//                    v.add(parseN(m.getMsg().split(" ")[i+1]));
+//                else
+//                    v.add(parseS(i+1,m.getMsg()));
+//            }
+//        }
+//        return v;
+//
+//    }
+//
+//    /**
+//     * Обработка строкового параметра команды
+//     * @param c
+//     * @param s
+//     * @return
+//     */
+//    private String parseS(int c, String s){
+//        int k=0,i=0;
+//        for(i=0;i<s.length();i++){
+//            if(s.charAt(i)==' ') k++;
+//            if(k>=c) break;
+//        }
+//        return s.substring(i+1);
+//    }
+//
+//    /**
+//     * Обработка числового параметра команды
+//     * @param s
+//     * @return
+//     */
+//    private int parseN(String s){
+//        try{
+//            return Integer.parseInt(s);
+//        } catch (Exception ex) {}
+//        return 0;
+//    }
 }

@@ -108,6 +108,7 @@ public class IcqProtocol extends Destroyable implements Protocol, ProtocolComman
 					q.add(m.getCopy(m.getMsg().substring(i * maxx)));
 				}
 			}
+			return;
 		}
 		if(q.size()>0 || (System.currentTimeMillis()-timeLastOutMsg) < pauseOutMsg) {
 			if(q.size()<=maxOutQueue) {
