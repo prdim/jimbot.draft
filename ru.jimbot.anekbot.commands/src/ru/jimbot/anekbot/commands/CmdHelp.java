@@ -36,7 +36,7 @@ public class CmdHelp extends DefaultCommand {
                     }
                 }
             } else {
-                if(p.getCommands().contains(c)) {
+                if(p.getCommands().contains(c.getValue())) {
                     s += c.getValue() + p.getCommand(c.getValue()).getXHelp();
                 } else {
                     s += "Команда " + c.getValue() + " не найдена.";

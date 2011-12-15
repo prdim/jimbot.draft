@@ -14,4 +14,5 @@ public interface Variable {
 	String getTypeName();
 	boolean parse(String s);
 	String format();
+	void clear();
 }

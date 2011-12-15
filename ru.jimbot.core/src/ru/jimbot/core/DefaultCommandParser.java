@@ -146,6 +146,9 @@ public abstract class DefaultCommandParser implements Parser {
     	String tokens[] = m.getMsg().split("\\s+", args.size()+1);
     	int i=1;
     	for(Variable v : args) {
+    		v.clear();
+    	}
+    	for(Variable v : args) {
     		if(i>=tokens.length) break;
     		v.parse(tokens[i]);
     	}

@@ -63,4 +63,9 @@ public class VariableWord implements Variable {
 		this.value = value;
 	}
 
+	@Override
+	public void clear() {
+		value = "";
+	}
+
 }

@@ -63,4 +63,9 @@ public class VariableString implements Variable {
 		this.value = value;
 	}
 
+	@Override
+	public void clear() {
+		value = "";
+	}
+
 }
