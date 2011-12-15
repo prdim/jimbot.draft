@@ -36,6 +36,7 @@ public class ScriptServer {
         scrm = new HashMap<String, Long>();
         path = "./services/" + p.getService().getServiceName() + "/scripts";
         log = ActivatorScript.getExtendPointRegistry().getLogger();
+        code = ScriptConfig.getInstance().getCode();
     }
     
     public ScriptServer setCode(String s) {

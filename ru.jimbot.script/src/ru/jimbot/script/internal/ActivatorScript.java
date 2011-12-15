@@ -3,15 +3,19 @@ package ru.jimbot.script.internal;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.util.tracker.ServiceTracker;
 
 import ru.jimbot.core.ExtendPointRegistry;
+import ru.jimbot.core.services.AbstractProperties;
+import ru.jimbot.script.ScriptConfig;
 
 public class ActivatorScript implements BundleActivator {
 
 	private static BundleContext context;
 	private static ExtendPointRegistry reg;
 	private ServiceTracker extendsServiceTracker;
+	private ServiceRegistration registration;
 
 	static BundleContext getContext() {
 		return context;
@@ -27,6 +31,8 @@ public class ActivatorScript implements BundleActivator {
 	 */
 	public void start(BundleContext bundleContext) throws Exception {
 		ActivatorScript.context = bundleContext;
+		registration = context.registerService(AbstractProperties.class.getName(), ScriptConfig.getInstance(), null);
+		
 		extendsServiceTracker = new ServiceTracker(context, ExtendPointRegistry.class.getName(), null) {
 
 			/* (non-Javadoc)
@@ -50,6 +56,7 @@ public class ActivatorScript implements BundleActivator {
 	public void stop(BundleContext bundleContext) throws Exception {
 		ActivatorScript.context = null;
 		extendsServiceTracker.close();
+		registration.unregister();
 	}
 
 }

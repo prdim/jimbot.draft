@@ -60,13 +60,9 @@ public class MainProps implements AbstractProperties {
 		try {
 			File t = new File("./config");
 			if(!t.exists()) t.mkdir();
-			
-//			XMLEncoder encoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream("./config/" + FILE_NAME)));
-//			encoder.writeObject(me);
-//			encoder.close();
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			BufferedWriter w = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("./config/" + FILE_NAME), "UTF8"));
-			w.write(gson.toJson(this/*, new TypeToken<MainProps>() {}.getType()*/));
+			w.write(gson.toJson(this));
 			w.close();
 		} catch (Exception e) {
 			System.err.println("Error saving configuration " + e.getMessage());
@@ -76,9 +72,6 @@ public class MainProps implements AbstractProperties {
 	private static synchronized MainProps load(String f) {
 		Object o = null;
 		try {
-//			XMLDecoder decoder = new XMLDecoder(new BufferedInputStream(new FileInputStream("./config/" + f)));
-//			o = decoder.readObject();
-//			decoder.close();
 			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("./config/" + FILE_NAME),"UTF8")); 
 			StringBuilder sb = new StringBuilder();
 			while(br.ready()) {
@@ -86,7 +79,7 @@ public class MainProps implements AbstractProperties {
 			}
 			br.close();
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
-			o = gson.fromJson(sb.toString(), MainProps.class /*new TypeToken<MainProps>() {}.getType()*/);
+			o = gson.fromJson(sb.toString(), MainProps.class);
 		} catch (Exception e) {
 			System.err.println("Error loading configuration " + e.getMessage());
 		}
