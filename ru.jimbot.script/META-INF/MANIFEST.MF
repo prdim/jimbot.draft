@@ -17,4 +17,12 @@ Import-Package: com.google.gson,
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/bsh.jar,
  .
-Export-Package: ru.jimbot.script
+Export-Package: bsh,
+ bsh.classpath,
+ bsh.collection,
+ bsh.commands,
+ bsh.org.objectweb.asm,
+ bsh.reflect,
+ bsh.servlet,
+ bsh.util,
+ ru.jimbot.script

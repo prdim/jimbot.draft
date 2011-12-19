@@ -7,10 +7,13 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import bsh.Interpreter;
+
 import ru.jimbot.anekbot.AnekCommandBuilder;
 import ru.jimbot.core.Command;
 import ru.jimbot.core.Parser;
 import ru.jimbot.script.ScriptServer;
+import ru.jimbot.anekbot.*;
 
 /**
  * @author spec
@@ -30,7 +33,10 @@ public class CommandBuilder extends AnekCommandBuilder {
 	@Override
 	public List<Command> build(Parser p) {
 		this.p = p;
-		ss = new ScriptServer(p);
+		Interpreter b = new Interpreter();
+		// Установим наш загрузчик классов, чтобы скрипт имел доступ к классам в этом бандле
+		b.setClassLoader(this.getClass().getClassLoader());
+		ss = new ScriptServer(p, b);
 		task = new TimerTask() {
 			
 			@Override

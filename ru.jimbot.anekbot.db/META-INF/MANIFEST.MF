@@ -20,3 +20,4 @@ Import-Package: com.amazon.carbonado,
  ru.jimbot.anekbot,
  ru.jimbot.core.exceptions
 Bundle-ActivationPolicy: lazy
+Export-Package: ru.jimbot.anekbot.db
