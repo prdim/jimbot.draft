@@ -94,8 +94,7 @@ public class ActivatorDefaultLogger implements BundleActivator {
 
 		@Override
 		public void handleEvent(Event event) {
-//			System.out.println(">>>" + event.getTopic());
-			log.debug("EVENT", ">>>" + event.getTopic());
+//			log.debug("EVENT", ">>>" + event.getTopic());
 		}
 		
 	}

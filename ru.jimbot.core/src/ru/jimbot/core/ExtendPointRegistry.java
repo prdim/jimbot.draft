@@ -49,7 +49,7 @@ public class ExtendPointRegistry {
 		exts.put(name, p);
 		if("ru.jimbot.core.services.Log".equals(p.getType())) {
 			log.addLogger((Log)p);
-			((Log)p).debug("debug", "Activate logger");
+//			((Log)p).debug("core", "Activate logger");
 		} else if("ru.jimbot.core.services.BotServiceBuilder".equals(p.getType())) {
 			sbs.put(p.getPointName(), (IBotServiceBuilder)p);
 			createAllBotServicesForBuilder(p.getPointName());

@@ -74,7 +74,10 @@ public class CreateBot extends AbstractView<VerticalLayout> {
 			v = (VerticalLayout)this.getContent();
 			v.setMargin(true);
 			v.setSpacing(true);
-			v.setSizeUndefined();
+//			v.setSizeUndefined();
+			v.setSizeFull();
+			this.setHeight("210");
+			this.setWidth("280");
 			HorizontalLayout h = new HorizontalLayout();
 			t = new TextField("Имя сервиса");
 			h.addComponent(t);

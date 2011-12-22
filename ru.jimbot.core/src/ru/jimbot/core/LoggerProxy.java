@@ -45,7 +45,7 @@ public class LoggerProxy extends Log {
 			try {
 				i.setLevel(level);
 			} catch (Exception e) {
-				// TODO: handle exception
+				e.printStackTrace();
 			}
 		}
 	}
@@ -67,7 +67,7 @@ public class LoggerProxy extends Log {
 			try {
 				i.print(type, name, msg);
 			} catch (Exception e) {
-				// TODO: handle exception
+				e.printStackTrace();
 			}
 		}
 	}
@@ -77,12 +77,13 @@ public class LoggerProxy extends Log {
 	 */
 	@Override
 	public void debug(String name, Object msg) {
-		if(level>Log.DEBUG) return;
+		// настройки уровня лога определяются на уровне конкретного сервиса логирования
+//		if(level>Log.DEBUG) return;
 		for(Log i : loggers) {
 			try {
 				i.debug(name, msg);
 			} catch (Exception e) {
-				// TODO: handle exception
+				e.printStackTrace();
 			}
 		}
 	}
@@ -92,12 +93,13 @@ public class LoggerProxy extends Log {
 	 */
 	@Override
 	public void debug(String name, Object msg, Throwable throwable) {
-		if(level>Log.DEBUG) return;
+		// настройки уровня лога определяются на уровне конкретного сервиса логирования
+//		if(level>Log.DEBUG) return;
 		for(Log i : loggers) {
 			try {
 				i.debug(name, msg, throwable);
 			} catch (Exception e) {
-				// TODO: handle exception
+				e.printStackTrace();
 			}
 		}
 	}
@@ -111,7 +113,7 @@ public class LoggerProxy extends Log {
 			try {
 				i.error(name, msg);
 			} catch (Exception e) {
-				// TODO: handle exception
+				e.printStackTrace();
 			}
 		}
 	}
@@ -125,7 +127,7 @@ public class LoggerProxy extends Log {
 			try {
 				i.error(name, msg, throwable);
 			} catch (Exception e) {
-				// TODO: handle exception
+				e.printStackTrace();
 			}
 		}
 	}

@@ -153,13 +153,13 @@ public class TestProtocol extends Destroyable implements Protocol, ProtocolComma
 //	}
 
 	public void connect() {
-		logger.print("test", "test bot", "Test protocol connected");
+//		logger.print("test", "test bot", "Test protocol connected");
 		connected = true;
 		prt.put(screenName, this);
 	}
 
 	public void disconnect() {
-		logger.print("test", "test bot", "Test protocol disconnected");
+//		logger.print("test", "test bot", "Test protocol disconnected");
 		connected = false;
 		prt.remove(screenName);
 	}

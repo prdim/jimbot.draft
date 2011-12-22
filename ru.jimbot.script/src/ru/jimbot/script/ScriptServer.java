@@ -59,13 +59,12 @@ public class ScriptServer {
         List<Command> l = new ArrayList<Command>();
     	try {
     		for(int i=0; i<v.size(); i++){
-//    			Log.getLogger(p.getService().getServiceName()).info("Устанавливаю скрипт: " + v.get(i));
-    			log.print("INFO",p.getService().getServiceName(), "Устанавливаю скрипт: " + v.get(i));
+    			log.debug(p.getService().getServiceName(), "Устанавливаю скрипт: " + v.get(i));
     			scrm.put(v.get(i), new File(v.get(i)).lastModified());
                 Command c = getCommandScript(v.get(i));
                 if(c==null){
 //                    Log.getLogger(p.getService().getServiceName()).info("Ошибка установки, команда игнорируется.");
-                	log.print("INFO",p.getService().getServiceName(), "Ошибка установки, команда игнорируется.");
+                	log.debug(p.getService().getServiceName(), "Ошибка установки, команда игнорируется.");
                 } else {
 //                    c.init();
 //                    p.addCommand(c);
@@ -87,12 +86,12 @@ public class ScriptServer {
             for (int i = 0; i < v.size(); i++) {
                 if (!scrm.containsKey(v.get(i)) || (scrm.get(v.get(i)) != (new File(v.get(i)).lastModified()))) {
 //                    Log.getLogger(p.getService().getServiceName()).info("Обновляю скрипт: " + v.get(i));
-                	log.print("INFO",p.getService().getServiceName(), "Обновляю скрипт: " + v.get(i));
+                	log.debug(p.getService().getServiceName(), "Обновляю скрипт: " + v.get(i));
                 	scrm.put(v.get(i), new File(v.get(i)).lastModified());
                     Command c = getCommandScript(v.get(i));
                     if (c == null) {
 //                        Log.getLogger(p.getService().getServiceName()).info("Ошибка установки, команда игнорируется.");
-                    	log.print("INFO",p.getService().getServiceName(), "Ошибка установки, команда игнорируется.");
+                    	log.debug(p.getService().getServiceName(), "Ошибка установки, команда игнорируется.");
                     } else {
                         p.addCommand(c);
                         c.init();

@@ -203,7 +203,10 @@ public class EditBotPropertyView extends AbstractView<VerticalLayout> {
 			v = (VerticalLayout)me.getContent();
 			v.setMargin(true);
 			v.setSpacing(true);
-			v.setSizeUndefined();
+//			v.setSizeUndefined();
+			v.setSizeFull();
+			me.setHeight("280");
+			me.setWidth("300");
 			uinForm = new Form();
 			uinForm.setCaption("Данные для УИНа");
 			uinForm.setWriteThrough(false); // we want explicit 'apply'
@@ -217,6 +220,7 @@ public class EditBotPropertyView extends AbstractView<VerticalLayout> {
 				
 				@Override
 				public void buttonClick(ClickEvent event) {
+					System.out.println(me.getHeightUnits() + ":" + me.getWidthUnits());
 					uinForm.commit();
 					ActivatorHttpAdmin.getExtendPointRegistry().getBotService(serviceName).getConfig().setUin(uin);
 					ActivatorHttpAdmin.getExtendPointRegistry().getBotService(serviceName).getConfig().save();

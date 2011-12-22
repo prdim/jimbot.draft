@@ -35,6 +35,7 @@ public class LogService extends Log implements ExtendPoint {
 			if(DefaultLogConfig.getInstance().isConsoleMode()) {
 				rootLogger.addAppender(new ConsoleAppender(new PatternLayout(PATTERN)));
 			}
+			rootLogger.setLevel(Level.ALL);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -79,7 +80,7 @@ public class LogService extends Log implements ExtendPoint {
 //		if(!loggers.containsKey(name)) {
 //			loggers.put(name, initLoggerFile(name, ""));
 //		}
-		rootLogger.debug(msg);
+		rootLogger.debug("DEBUG: [" + name + "]:" + msg);
 	}
 
 	/* (non-Javadoc)

@@ -27,7 +27,10 @@ public abstract class ConfirmWindow extends Window {
 		v = (VerticalLayout)me.getContent();
 		v.setMargin(true);
 		v.setSpacing(true);
-		v.setSizeUndefined();
+//		v.setSizeUndefined();
+		v.setSizeFull();
+		me.setHeight("200");
+		me.setWidth("500");
 		Label l = new Label(s);
 		l.setContentMode(Label.CONTENT_PREFORMATTED);
 		addComponent(l);
