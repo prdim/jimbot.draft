@@ -67,7 +67,7 @@ public class LogService extends Log implements ExtendPoint {
 		if(!loggers.containsKey(n)) {
 			loggers.put(n, initLoggerDaily(name, type));
 		}
-		loggers.get(n).info(msg);
+		loggers.get(n).info("LOG: [" + type + "]:[" + name + "]:" + msg);
 	}
 
 	/* (non-Javadoc)

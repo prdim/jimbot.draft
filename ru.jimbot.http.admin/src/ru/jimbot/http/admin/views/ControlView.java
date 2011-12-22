@@ -16,6 +16,7 @@ import ru.jimbot.http.admin.ConfirmWindow;
 import ru.jimbot.http.admin.internal.ActivatorHttpAdmin;
 
 import com.vaadin.ui.Button;
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
@@ -37,6 +38,7 @@ public class ControlView extends AbstractView<VerticalLayout> {
 		super(new VerticalLayout());
 		this.fragment = fragment;
 		getContent().setMargin(true);
+		getContent().setSpacing(true);
 		getContent().addComponent(new Label("Основные команды управления ботом"));
 		Button stopBot = new Button("Остановить JimBot", new Button.ClickListener() {
 			@Override
@@ -66,12 +68,15 @@ public class ControlView extends AbstractView<VerticalLayout> {
 			}
         });
 		getContent().addComponent(stopBot);
+		GridLayout grid = new GridLayout(2, MainProps.getInstance().getServiceNames().size());
+		grid.setSpacing(true);
 		for(final String i : MainProps.getInstance().getServiceNames()) {
-			HorizontalLayout h = new HorizontalLayout();
-			h.setMargin(true);
+//			HorizontalLayout h = new HorizontalLayout();
+//			h.setMargin(true);
 			// TODO Подумать, что сделать со статусом сервиса
 //			String state = Activator.getExtendPointRegistry().getBotService(i).isRun() ? "[ONLINE]" : "[OFFLINE] ";
-			h.addComponent(new Label(i /*+ " " + state + " "*/));
+//			h.addComponent(new Label(i /*+ " " + state + " "*/));
+			grid.addComponent(new Label(i));
 			Button b1 = new Button("Остановить сервис", new Button.ClickListener() {
 				
 				@Override
@@ -97,11 +102,13 @@ public class ControlView extends AbstractView<VerticalLayout> {
 			} else {
 				b1.setVisible(false);
 			}
+			HorizontalLayout h = new HorizontalLayout();
 			h.addComponent(b1);
 			h.addComponent(b2);
+			grid.addComponent(h);
 			bStarts.put(i, b2);
 			bStops.put(i, b1);
-			getContent().addComponent(h);
+			getContent().addComponent(grid);
 		}
 	}
 
