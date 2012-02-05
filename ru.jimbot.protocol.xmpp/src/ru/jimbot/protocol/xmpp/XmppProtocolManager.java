@@ -13,7 +13,7 @@ import ru.jimbot.core.services.Log;
 import ru.jimbot.core.services.Protocol;
 
 /**
- * Создает и хранит объекты, реализующие подключение по протоколу ICQ
+ * Создает и хранит объекты, реализующие подключение по протоколу XMPP
  *
  * @author Prolubnikov Dmitry
  * @author Black_Kot
@@ -68,7 +68,7 @@ public class XmppProtocolManager implements IProtocolManager, ExtendPoint {
 			XmppProtocol p = new XmppProtocol(serviceName, pr);
 			p.setConnectionData(screenName.split("@")[1], 5222, screenName, pass);
 			p.setStatusData(pr.getStatus(), pr.getStatustxt());
-			p.setXStatusData(pr.getXstatus(), pr.getXstatustxt(),null);
+//			p.setXStatusData(pr.getXstatus(), pr.getXstatustxt(),null);
 			p.setLogger(logger);
 			return p;
 		}
@@ -81,7 +81,7 @@ public class XmppProtocolManager implements IProtocolManager, ExtendPoint {
 
 	@Override
 	public String getPointName() {
-		return "XmmpProtocol";
+		return "XmppProtocol";
 	}
 
 	@Override

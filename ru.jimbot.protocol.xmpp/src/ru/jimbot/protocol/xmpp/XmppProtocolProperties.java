@@ -23,19 +23,19 @@ import ru.jimbot.core.services.AbstractProperties;
  *
  */
 public class XmppProtocolProperties implements AbstractProperties {
-	public static final String FILE_NAME = "xmmp-config";
+	public static final String FILE_NAME = "xmpp-config";
     private transient String serviceName = ""; // TODO Зачем он мне?
     private String server = "";
     private int port = 5222;
     private int status = 0;
     private String statustxt = "";
-    private int xstatus = 0;
-    private String xstatustxt = "";
+//    private int xstatus = 0;
+//    private String xstatustxt = "";
 //    private int pauseIn = 3000;
     private int pauseOut = 500;
     private int msgOutLimit = 20;
     private long pauseRestart = 11*60*1000;
-    private int maxOutMsgSize = 500;
+    private int maxOutMsgSize = 5000;
     private int maxOutMsgCount = 5;
     
     public XmppProtocolProperties() {
@@ -73,7 +73,7 @@ public class XmppProtocolProperties implements AbstractProperties {
 	 */
 	@Override
 	public String getTitle() {
-		return "Настройки протокола ICQ";
+		return "Настройки протокола XMPP";
 	}
 
 	/* (non-Javadoc)
@@ -81,7 +81,7 @@ public class XmppProtocolProperties implements AbstractProperties {
 	 */
 	@Override
 	public String getExtendInfo() {
-		return "Настройки протокола ICQ";
+		return "Настройки протокола XMPP";
 	}
 
 	/* (non-Javadoc)
@@ -134,30 +134,30 @@ public class XmppProtocolProperties implements AbstractProperties {
 	/**
 	 * @return the xstatus
 	 */
-	public int getXstatus() {
-		return xstatus;
-	}
+//	public int getXstatus() {
+//		return xstatus;
+//	}
 
 	/**
 	 * @param xstatus the xstatus to set
 	 */
-	public void setXstatus(int xstatus) {
-		this.xstatus = xstatus;
-	}
+//	public void setXstatus(int xstatus) {
+//		this.xstatus = xstatus;
+//	}
 
 	/**
 	 * @param xstatustxt2 the xstatustxt2 to set
-	 */
-	public void setXstatustxt(String xstatustxt) {
-		this.xstatustxt = xstatustxt;
-	}
+//	 */
+//	public void setXstatustxt(String xstatustxt) {
+//		this.xstatustxt = xstatustxt;
+//	}
 
 	/**
 	 * @return the xstatustxt2
 	 */
-	public String getXstatustxt() {
-		return xstatustxt;
-	}
+//	public String getXstatustxt() {
+//		return xstatustxt;
+//	}
 
 //	/**
 //	 * @return the pauseIn

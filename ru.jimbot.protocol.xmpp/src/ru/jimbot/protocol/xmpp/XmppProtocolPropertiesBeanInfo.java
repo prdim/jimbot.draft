@@ -19,14 +19,11 @@ public class XmppProtocolPropertiesBeanInfo extends SimpleBeanInfo {
 			PropertyDescriptor p;
 			
 			p = new PropertyDescriptor("status", XmppProtocolProperties.class);
-			p.setDisplayName("ICQ статус");
+			p.setDisplayName("Статус (1-5)");
 			pr.add(p);
 			
-			p = new PropertyDescriptor("xstatus", XmppProtocolProperties.class);
-			p.setDisplayName("x-статус (0-34)");
-			
-			p = new PropertyDescriptor("xstatustxt", XmppProtocolProperties.class);
-			p.setDisplayName("Текст  x-статуса");
+			p = new PropertyDescriptor("statustxt", XmppProtocolProperties.class);
+			p.setDisplayName("Текст статуса");
 			pr.add(p);
 			
 			p = new PropertyDescriptor("pauseOut", XmppProtocolProperties.class);

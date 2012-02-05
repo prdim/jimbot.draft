@@ -44,7 +44,13 @@ public class ProtocolCommandEventHandler implements EventHandler {
 		int c = (Integer)event.getProperty("command");
 //		System.out.println(">>>EVENT " + event.getTopic() + " : " + c);
 		if(c==EventProxy.STATE_LOGON) {
-			lis.logon(sn);
+			Thread t = new Thread() {
+				@Override
+				public void run() {
+					lis.logon(sn); // Если логон зависнет, то события не будут обрабатываться до таймаута соединения
+				}				
+			};
+			t.start(); // Поэтому запустим его в отдельном потоке
 		} else if(c==EventProxy.STATE_LOGOFF) {
 			lis.logout(sn);
 		} else if(c==EventProxy.CHANGE_STATUS) {
