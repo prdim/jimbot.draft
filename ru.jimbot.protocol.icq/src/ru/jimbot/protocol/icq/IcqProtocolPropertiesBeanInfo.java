@@ -65,6 +65,10 @@ public class IcqProtocolPropertiesBeanInfo extends SimpleBeanInfo {
 			p.setDisplayName("Максимальное число частей исходящего сообщения");
 			pr.add(p);
 			
+			p = new PropertyDescriptor("ignoreSubstring", IcqProtocolProperties.class);
+			p.setDisplayName("Игнорировать сообщения, содержащие подстроку");
+			pr.add(p);
+			
 			return pr.toArray(new PropertyDescriptor[] {});
 		} catch (Exception e) {
 			e.printStackTrace();

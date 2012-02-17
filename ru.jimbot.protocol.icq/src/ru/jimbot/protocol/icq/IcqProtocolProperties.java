@@ -37,6 +37,7 @@ public class IcqProtocolProperties implements AbstractProperties {
     private long pauseRestart = 11*60*1000;
     private int maxOutMsgSize = 500;
     private int maxOutMsgCount = 5;
+    private String ignoreSubstring = "only receives messages from contacts on his contact list or from contacts that have registered their phone number";
     
     public IcqProtocolProperties() {
     	// конструктор без параметра нужен для восстановления сереализованных данных
@@ -297,5 +298,19 @@ public class IcqProtocolProperties implements AbstractProperties {
 	 */
 	public void setServiceName(String serviceName) {
 		this.serviceName = serviceName;
+	}
+
+	/**
+	 * @param ignoreSubstring the ignoreSubstring to set
+	 */
+	public void setIgnoreSubstring(String ignoreSubstring) {
+		this.ignoreSubstring = ignoreSubstring;
+	}
+
+	/**
+	 * @return the ignoreSubstring
+	 */
+	public String getIgnoreSubstring() {
+		return ignoreSubstring;
 	}
 }

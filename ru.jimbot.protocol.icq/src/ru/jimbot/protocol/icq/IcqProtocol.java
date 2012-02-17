@@ -304,6 +304,10 @@ public class IcqProtocol extends Destroyable implements Protocol, ProtocolComman
 		    return;
 		}
 //        notifyMsg(new Message(e.getSenderID(),screenName,e.getMessage(),Message.TYPE_TEXT));
+		if(e.getMessage().indexOf(p.getIgnoreSubstring())>0) {
+			logger.print("IGNORE", screenName, e.getMessage());
+			return;
+		}
         eva.incomingMessage(new Message(e.getSenderID(),screenName,e.getMessage(),Message.TYPE_TEXT));
 	}
 

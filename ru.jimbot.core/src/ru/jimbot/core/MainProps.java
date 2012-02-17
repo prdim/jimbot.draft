@@ -25,7 +25,7 @@ import ru.jimbot.core.services.AbstractProperties;
  *
  */
 public class MainProps implements AbstractProperties {
-	public static final String VERSION = "0.6.0 alpha 2 (24/12/2011)";
+	public static final String VERSION = "0.6.0 alpha 2 (17/02/2012)";
 	private static transient MainProps me = null;
 	private static final String FILE_NAME = "jimbot_config";
 	
