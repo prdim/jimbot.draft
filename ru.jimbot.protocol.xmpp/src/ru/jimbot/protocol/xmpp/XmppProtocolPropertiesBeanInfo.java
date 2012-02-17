@@ -34,8 +34,8 @@ public class XmppProtocolPropertiesBeanInfo extends SimpleBeanInfo {
 			p.setDisplayName("Ограничение очереди исходящих");
 			pr.add(p);
 			
-			p = new PropertyDescriptor("pauseRestart", XmppProtocolProperties.class);
-			p.setDisplayName("Пауза перед перезапуском коннекта");
+			p = new PropertyDescriptor("autoRestart", XmppProtocolProperties.class);
+			p.setDisplayName("Автоматически перезапускать коннект");
 			pr.add(p);
 			
 			p = new PropertyDescriptor("maxOutMsgSize", XmppProtocolProperties.class);

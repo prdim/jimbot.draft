@@ -46,6 +46,10 @@ public class AnekConfigBeanInfo extends SimpleBeanInfo {
 			p.setDisplayName("Пауза подключений уинов при старте бота");
 			pr.add(p);
 			
+			p = new PropertyDescriptor("sendFirstMsg", AnekConfig.class);
+			p.setDisplayName("Отправлять сообщение админам при старте бота");
+			pr.add(p);
+			
 			return pr.toArray(new PropertyDescriptor[] {});
 		} catch (IntrospectionException e) {
 			e.printStackTrace();

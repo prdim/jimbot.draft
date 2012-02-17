@@ -34,7 +34,7 @@ public class XmppProtocolProperties implements AbstractProperties {
 //    private int pauseIn = 3000;
     private int pauseOut = 500;
     private int msgOutLimit = 20;
-    private long pauseRestart = 11*60*1000;
+    private boolean autoRestart = true;
     private int maxOutMsgSize = 5000;
     private int maxOutMsgCount = 5;
     
@@ -204,15 +204,15 @@ public class XmppProtocolProperties implements AbstractProperties {
 	/**
 	 * @return the pauseRestart
 	 */
-	public long getPauseRestart() {
-		return pauseRestart;
+	public boolean isAutoRestart() {
+		return autoRestart;
 	}
 
 	/**
 	 * @param pauseRestart the pauseRestart to set
 	 */
-	public void setPauseRestart(long pauseRestart) {
-		this.pauseRestart = pauseRestart;
+	public void setAutoRestart(boolean autoRestart) {
+		this.autoRestart = autoRestart;
 	}
 
 	/**

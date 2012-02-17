@@ -90,17 +90,14 @@ public class AnekBot extends DefaultBotService {
 		}
 		for(int i=0;i<config.getUins().size();i++) {
 			IProtocolManager pm = ActivatorAnekBot.getExtendPointRegistry().getProtocols().get(config.getUins().get(i).getProtocol());
-			Protocol p = pm.addProtocol(pm.getBuilder(config.getUins().get(i).getScreenName())
-        			.pass(config.getUins().get(i).getPassword())
-//        			.status(config.getStatus())
-//        			.statustxt(config.getStatustxt())
-//        			.xstatus(config.getXstatus())
-//        			.xstatustxt1(config.getXstatustxt1())
-//        			.xstatustxt2(config.getXstatustxt2())
-        			.build(name));
-        	p.setLogger(logger);
-        	protocols.put(config.getUins().get(i).getScreenName(), p);
-        	logger.debug(name, "Create protocol " + p.getScreenName());
+			if(!protocols.containsKey(config.getUins().get(i).getScreenName())) {
+				Protocol p = pm.addProtocol(pm.getBuilder(config.getUins().get(i).getScreenName())
+						.pass(config.getUins().get(i).getPassword())
+						.build(name));
+				p.setLogger(logger);
+				protocols.put(config.getUins().get(i).getScreenName(), p);
+				logger.debug(name, "Create protocol " + p.getScreenName());
+			}
 		}
 		inq = new MsgInQueue(this);
 		inq.start();

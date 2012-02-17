@@ -47,6 +47,7 @@ public class AnekConfig implements BotServiceConfig {
 //    private int maxOutMsgCount = 5;
     private long pauseConnect = 1000;
     private long pauseStart = 10000;
+    private boolean sendFirstMsg = true;
     
 	/**
 	 * 
@@ -264,6 +265,20 @@ public class AnekConfig implements BotServiceConfig {
 	 */
 	public long getPauseStart() {
 		return pauseStart;
+	}
+
+	/**
+	 * @param sendFirstMsg the sendFirstMsg to set
+	 */
+	public void setSendFirstMsg(boolean sendFirstMsg) {
+		this.sendFirstMsg = sendFirstMsg;
+	}
+
+	/**
+	 * @return the sendFirstMsg
+	 */
+	public boolean isSendFirstMsg() {
+		return sendFirstMsg;
 	}
     
     

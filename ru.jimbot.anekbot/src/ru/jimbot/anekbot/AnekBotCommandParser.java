@@ -111,6 +111,7 @@ public class AnekBotCommandParser extends DefaultCommandParser {
     }
     
     private void firstMsg(Message m){
+    	if(!((AnekConfig)srv.getConfig()).isSendFirstMsg()) return;
     	if(!firstStartMsg){
     		String[] s = srv.getConfig().getAdminUins();
     		for(int i=0;i<s.length;i++){

@@ -5,11 +5,13 @@ package ru.jimbot.protocol.xmpp;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManagerListener;
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.SASLAuthentication;
 import org.jivesoftware.smack.XMPPConnection;
@@ -34,7 +36,7 @@ import ru.jimbot.protocol.xmpp.internal.ActivatorXmppProtocol;
  */
 public class XmppProtocol extends Destroyable implements Protocol,
 		ProtocolCommandListener, OutgoingMessageListener, MessageListener,
-		ChatManagerListener {
+		ChatManagerListener, ConnectionListener {
 	private Log logger = ActivatorXmppProtocol.getExtendPointRegistry()
 			.getLogger();
 	private XMPPConnection con = null;
@@ -44,8 +46,6 @@ public class XmppProtocol extends Destroyable implements Protocol,
 	private int port = 5222;
 	private int status = 0;
 	private String statustxt = "";
-	// private int xstatus = 0;
-	// private String xstatustxt = "";
 	private boolean connected = false;
 	private String lastError = "";
 	private String serviceName = "";
@@ -59,32 +59,13 @@ public class XmppProtocol extends Destroyable implements Protocol,
 	private Timer timer;
 	private TimerTask qt;
 	private XmppProtocolProperties p;
+	private ConcurrentHashMap<String, String> realJID = new ConcurrentHashMap<String, String>();
 
 	public XmppProtocol(String serviceName, XmppProtocolProperties p) {
 		super();
 		this.serviceName = serviceName;
 		this.p = p;
-		// // Зарегистрируем себя в качестве обработчика событий
-		// h1 = new OutgoingMessageEventHandler(screenName, this);
-		// h2 = new ProtocolCommandEventHandler(screenName, this);
-		// ActivatorIcqProtocol.regEventHandler(h1,
-		// h1.getHandlerServiceProperties());
-		// ActivatorIcqProtocol.regEventHandler(h2,
-		// h2.getHandlerServiceProperties());
 		eva = new EventProxy(ActivatorXmppProtocol.getEventAdmin(), serviceName);
-		// timer = new Timer("queue out " + screenName);
-		// qt = new TimerTask() {
-		//
-		// @Override
-		// public void run() {
-		// if(q.size()==0) return;
-		// if((System.currentTimeMillis() - timeLastOutMsg) < pauseOutMsg)
-		// return;
-		// Message m = q.poll();
-		// sendMsg(m.getSnOut(), m.getMsg());
-		// timeLastOutMsg = System.currentTimeMillis();
-		// }
-		// };
 	}
 
 	@Override
@@ -126,6 +107,7 @@ public class XmppProtocol extends Destroyable implements Protocol,
 	@Override
 	public void logon(String sn) {
 		connect();
+		if(!connected) return;
 		pauseOutMsg = p.getPauseOut();
 		maxOutQueue = p.getMsgOutLimit();
 		timer = new Timer("queue out " + screenName);
@@ -147,8 +129,12 @@ public class XmppProtocol extends Destroyable implements Protocol,
 
 	@Override
 	public void logout(String sn) {
-		timer.cancel();
-		timer.purge();
+		try { // если коннект завис, то из-за исключения timer не будет создан
+			timer.cancel();
+			timer.purge();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		q.clear();
 		disconnect();
 	}
@@ -210,14 +196,19 @@ public class XmppProtocol extends Destroyable implements Protocol,
 			ConnectionConfiguration config = new ConnectionConfiguration(
 					server, port, server);
 			SASLAuthentication.supportSASLMechanism("PLAIN");
+			config.setReconnectionAllowed(p.isAutoRestart());
 			con = new XMPPConnection(config);
 			con.connect();
-			con.login(screenName.split("@")[0], pass);
+			con.addConnectionListener(this);
+			con.login(screenName.split("@")[0], pass, "JimBot");
 			con.getChatManager().addChatListener(this);
 			setStatus(status, statustxt);
 			connected = true;
+			logger.debug(screenName, "Connected");
 		} catch (Exception ex) {
 			logger.error(screenName, ex.getMessage(), ex);
+			lastError = ex.getMessage();
+			connected = false;
 		}
 
 	}
@@ -226,11 +217,14 @@ public class XmppProtocol extends Destroyable implements Protocol,
 	public void disconnect() {
 		try {
 			// System.out.println("Disconnect...");
+			con.removeConnectionListener(this);
 			con.disconnect();
 			con.getChatManager().removeChatListener(this);
 			con = null;
+			logger.debug(screenName, "Disconnected");
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(screenName, ex.getMessage(), ex);
+			lastError = ex.getMessage();
 		}
 		connected = false;
 	}
@@ -244,14 +238,16 @@ public class XmppProtocol extends Destroyable implements Protocol,
 
 	public void sendMsg(String to, String message) {
 		try {
+			if(realJID.containsKey(to)) to = realJID.get(to); // отправляем ответ с учетом ресурса (при мультилогине юзера)
 			Chat chat = con.getChatManager().getThreadChat(to);
 			if (chat == null)
 				chat = con.getChatManager().createChat(to, to, this);
 			chat.sendMessage(message);
 			// con.getChatManager().removeChatListener(this);
 			// chat.removeMessageListener(this);
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			logger.error(screenName, ex.getMessage(), ex);
+			lastError = ex.getMessage();
 		}
 	}
 
@@ -290,10 +286,11 @@ public class XmppProtocol extends Destroyable implements Protocol,
 	@Override
 	public void processMessage(Chat chat, org.jivesoftware.smack.packet.Message msg) {
 		logger.debug(screenName, ">>> " + msg.getType() + ":" + msg.toXML());
-		System.out.println(">>> " + msg.getType() + ":" + msg.toXML());
 		if (msg.getType() == org.jivesoftware.smack.packet.Message.Type.chat) {
 			if (msg.getBody() == null) return; // извещения о наборе сообщения
 			String SenderID = chat.getParticipant().split("/")[0];
+			// Запомним с какого клиента было послденее сообщение (при мультилогине)
+			realJID.put(SenderID, msg.getFrom());
 			eva.incomingMessage(new Message(SenderID, screenName, msg.getBody(), Message.TYPE_TEXT));
 		}
 	}
@@ -332,6 +329,35 @@ public class XmppProtocol extends Destroyable implements Protocol,
 		if (con == null)
 			return;
 		con.sendPacket(presence);
+	}
+
+	@Override
+	public void connectionClosed() {
+		connected = false;
+	}
+
+	@Override
+	public void connectionClosedOnError(Exception ex) {
+		logger.error(screenName, ex.getMessage(), ex);
+		lastError = ex.getMessage();
+		connected = false;
+	}
+
+	@Override
+	public void reconnectingIn(int t) {
+		logger.debug(screenName, "reconnecting after " + t + " sec");
+	}
+
+	@Override
+	public void reconnectionFailed(Exception ex) {
+		logger.error(screenName, ex.getMessage(), ex);
+		lastError = ex.getMessage();
+		connected = false;
+	}
+
+	@Override
+	public void reconnectionSuccessful() {
+		connected = true;
 	}
 
 }
